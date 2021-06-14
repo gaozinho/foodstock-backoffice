@@ -1,0 +1,78 @@
+composer create-project laravel/laravel backend
+cd backend
+composer require livewire/livewire
+composer require laravel/jetstream
+php artisan jetstream:install livewire --teams
+composer require nascent-africa/jetstrap --dev
+php artisan jetstrap:swap livewire --teams
+npm install
+npm run dev
+composer require flightsadmin/livewire-crud --dev
+npm install --save @fortawesome/fontawesome-free => https://medium.com/swlh/using-font-awesome-with-laravel-8-x-1f80cb6d8f10
+npm run dev
+php artisan storage:link
+composer require lucascudo/laravel-pt-br-localization --dev
+php artisan vendor:publish --tag=laravel-pt-br-localization
+// Altere Linha 83 do arquivo config/app.php para:
+'locale' => 'pt_BR',
+composer require maatwebsite/excel
+npm install cleave.js
+npm install jquery-ui
+npm install tinymce
+npm install moment
+npm install tempusdominus-bootstrap-4
+composer require laravelcollective/html
+composer require krlove/eloquent-model-generator --dev --ignore-platform-reqs
+composer require laravellegends/pt-br-validator => https://github.com/LaravelLegends/pt-br-validator
+composer require barryvdh/laravel-debugbar --dev
+composer require jantinnerezo/livewire-alert
+#composer require proengsoft/laravel-jsvalidation
+#php artisan vendor:publish --provider="Proengsoft\JsValidation\JsValidationServiceProvider"
+
+
+=> WEBPACK
+mix.copyDirectory('node_modules/tinymce/icons', 'public/node_modules/tinymce/icons');
+mix.copyDirectory('node_modules/tinymce/plugins', 'public/node_modules/tinymce/plugins');
+mix.copyDirectory('node_modules/tinymce/skins', 'public/node_modules/tinymce/skins');
+mix.copyDirectory('node_modules/tinymce/themes', 'public/node_modules/tinymce/themes');
+mix.copy('node_modules/tinymce/jquery.tinymce.js', 'public/node_modules/tinymce/jquery.tinymce.js');
+mix.copy('node_modules/tinymce/jquery.tinymce.min.js', 'public/node_modules/tinymce/jquery.tinymce.min.js');
+mix.copy('node_modules/tinymce/tinymce.js', 'public/node_modules/tinymce/tinymce.js');
+mix.copy('node_modules/tinymce/tinymce.min.js', 'public/node_modules/tinymce/tinymce.min.js');
+mix.copyDirectory('node_modules/cleave.js/dist', 'public/node_modules/cleave.js');
+mix.copyDirectory('node_modules/moment/min', 'public/node_modules/moment');
+mix.copyDirectory('node_modules/tempusdominus-bootstrap-4/build', 'public/node_modules/tempusdominus-bootstrap-4');
+
+mix.copy('vendor/proengsoft/laravel-jsvalidation/resources/views', 'resources/views/vendor/jsvalidation')
+    .copy('vendor/proengsoft/laravel-jsvalidation/public', 'public/vendor/jsvalidation');
+
+mix.autoload({ 'jquery': ['window.$', 'window.jQuery'] });
+
+=> BOOTSTRAP.JS linha 11
+
+window.$ = window.jQuery = global.$ = global.jQuery = require('jquery');
+
+
+
+
+
+
+
+
+##################### Comandos
+php artisan krlove:generate:model Restaurant --output-path=/Projetos/foodstock/backend/app/Models --namespace=App\Models
+
+php artisan krlove:generate:model Broker --output-path=/Projetos/foodstock/backend/app/Models --namespace=App\Models
+php artisan krlove:generate:model RappiBroker --output-path=/Projetos/foodstock/backend/app/Models --namespace=App\Models
+php artisan krlove:generate:model IfoodBroker --output-path=/Projetos/foodstock/backend/app/Models --namespace=App\Models
+
+
+php-cgi -b 127.0.0.1:9000
+start nginx
+
+
+
+
+
+SRFG-LPSP
+HDHZ-DGSJ
