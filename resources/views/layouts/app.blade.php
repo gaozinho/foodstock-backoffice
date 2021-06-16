@@ -27,11 +27,11 @@
         <x-jet-banner />
         @livewire('navigation-menu')
 
-        @if($header)
+        @if(isset($header))
         <!-- Page Heading -->
         <header class="d-flex py-3 bg-white shadow-sm border-bottom">
             <div class="container">
-                <span class="h4 font-weight-bold">{{ $header }}</span>
+                <span class="h3 text-muted">{{ $header }}</span>
             </div>
         </header>
         @endif

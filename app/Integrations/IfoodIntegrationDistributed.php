@@ -31,7 +31,7 @@ class IfoodIntegrationDistributed extends IfoodIntegration
         $ifoodBroker->merchant_json = null;
         $ifoodBroker->expiresIn = null;
         $ifoodBroker->name = null;
-        $ifoodBroker->corporateName = null;     
+        $ifoodBroker->corporateName = null; 
         $ifoodBroker->validated_at = null;   
         $ifoodBroker->validated = 0;
         $ifoodBroker->save();
@@ -71,26 +71,24 @@ class IfoodIntegrationDistributed extends IfoodIntegration
     public function getToken($authorizationCode, $brokerId)
     {
         $ifoodBroker = IfoodBroker::findOrFail($brokerId);
-        try{
-            if(!$this->tokenIsExpired(strtotime($ifoodBroker->expiresIn))){ //Token não expirado
-                $this->credentials["authorizationCode"] = $authorizationCode;
-                $this->credentials["authorizationCodeVerifier"] = $ifoodBroker->authorizationCodeVerifier;
-                $httpResponse = $this->httpClient->post($this->broker->authenticationApi, ["form_params" => $this->credentials]);
-                $responseToken = $this->parseTokenResponse($httpResponse->getBody()->getContents());
-                if($responseToken){
-                    $ifoodBroker->authorizationCode = $this->credentials["authorizationCode"];
-                    $ifoodBroker->accessToken = $responseToken->accessToken;
-                    $ifoodBroker->refreshToken = $responseToken->refreshToken;
-                    $ifoodBroker->expiresIn = $this->defineExpirationTime($responseToken->expiresIn);
-                    $ifoodBroker->save();
-                }
-            }else{
-                throw new Exception("Código expirado.");
+
+        if(!$this->tokenIsExpired(strtotime($ifoodBroker->usercode_expires))){ //Token não expirado
+            $this->credentials["authorizationCode"] = $authorizationCode;
+            $this->credentials["authorizationCodeVerifier"] = $ifoodBroker->authorizationCodeVerifier;
+            $httpResponse = $this->httpClient->post($this->broker->authenticationApi, ["form_params" => $this->credentials]);
+            $responseToken = $this->parseTokenResponse($httpResponse->getBody()->getContents());
+            if($responseToken){
+                $ifoodBroker->authorizationCode = $this->credentials["authorizationCode"];
+                $ifoodBroker->accessToken = $responseToken->accessToken;
+                $ifoodBroker->refreshToken = $responseToken->refreshToken;
+                $ifoodBroker->expiresIn = $this->defineExpirationTime($responseToken->expiresIn);
+                $ifoodBroker->save();
             }
-            return $this->broker->access_token;
-        }catch(\Exception $exception){
-            throw new Exception($exception->getMessage());
+        }else{
+            throw new \Exception("Código expirado. Por favor, comece novamente o processo de integração."); 
         }
+        return $this->broker->access_token;
+
     }
 
     public function getMerchants($brokerId, $enableOnSuccess = true){

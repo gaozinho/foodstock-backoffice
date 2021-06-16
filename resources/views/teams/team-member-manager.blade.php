@@ -5,20 +5,20 @@
         <!-- Add Team Member -->
         <x-jet-form-section submit="addTeamMember">
             <x-slot name="title">
-                {{ __('Add Team Member') }}
+                {{ __('Adicionar membro à equipe') }}
             </x-slot>
 
             <x-slot name="description">
-                {{ __('Add a new team member to your team, allowing them to collaborate with you.') }}
+                {{ __('Adicione um novo integrante à sua equipe e permita que ele colabore em seu processo.') }}
             </x-slot>
 
             <x-slot name="form">
                 <x-jet-action-message on="saved">
-                    {{ __('Added.') }}
+                    {{ __('Adicionado com sucesso.') }}
                 </x-jet-action-message>
 
                 <div class="mb-3">
-                    {{ __('Please provide the email address of the person you would like to add to this team. The email address must be associated with an existing account.') }}
+                    {{ __('Forneça o e-mail e indique o papel da pessoa que gostaria de adicionar à sua equipe.') }}
                 </div>
 
                     <!-- Member Email -->
@@ -35,7 +35,7 @@
                 @if (count($this->roles) > 0)
                     <div class="my-3 w-md-75">
                         <div class="form-group">
-                            <x-jet-label for="role" value="{{ __('Role') }}" />
+                            <x-jet-label for="role" value="{{ __('Papel') }}" />
 
                             <input type="hidden" class="{{ $errors->has('role') ? 'is-invalid' : '' }}">
                             <x-jet-input-error for="role" />
@@ -79,11 +79,11 @@
         <!-- Team Member Invitations -->
         <x-jet-action-section>
             <x-slot name="title">
-                {{ __('Pending Team Invitations') }}
+                {{ __('Convites pendentes') }}
             </x-slot>
 
             <x-slot name="description">
-                {{ __('These people have been invited to your team and have been sent an invitation email. They may join the team by accepting the email invitation.') }}
+                {{ __('Estas pessoas foram convidadas a participar de seu equipe através do e-mail. Solicite que elas aceitem para entrar em sua equipe.') }}
             </x-slot>
 
             <x-slot name="content">
@@ -112,11 +112,11 @@
         <!-- Manage Team Members -->
         <x-jet-action-section>
             <x-slot name="title">
-                {{ __('Team Members') }}
+                {{ __('Integrantes da equipe') }}
             </x-slot>
 
             <x-slot name="description">
-                {{ __('All of the people that are part of this team.') }}
+                {{ __('Pessoas que atualmente estão em sua equipe.') }}
             </x-slot>
 
             <!-- Team Member List -->

@@ -38,7 +38,7 @@ class Restaurants extends BaseConfigurationComponent
         $viewName = 'livewire.configuration.restaurants';
         if($this->isWizard()) $viewName = 'livewire.configuration.wizard';
 
-        return view($viewName, [])->layout('layouts.app', ['header' => 'Dados do delivery']);
+        return view($viewName, [])->layout('layouts.app', ['header' => 'Sobre seu delivery']);
     }
 
     public function save()

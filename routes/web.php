@@ -29,7 +29,7 @@ Route::get('/eventos', Eventos::class)->name('eventos.index')->middleware('auth'
 Route::get('/eventos/edit', Eventos::class)->name('eventos.edit')->middleware('auth');
 
 use App\Http\Livewire\Configuration\{
-    Brokers, Restaurants, ProductionLines, WizardSuccess
+    Brokers, Restaurants, ProductionLines, WizardSuccess, Teams
 };
 
 Route::get('/wizard/restaurants', Restaurants::class)->name('wizard.restaurant.index')->middleware('auth');
@@ -40,9 +40,12 @@ Route::get('/wizard/success', WizardSuccess::class)->name('wizard.success.index'
 Route::get('/configuration/restaurants', Restaurants::class)->name('configuration.restaurant.index')->middleware('auth');
 Route::get('/configuration/brokers', Brokers::class)->name('configuration.broker.index')->middleware('auth');
 Route::get('/configuration/production-lines', ProductionLines::class)->name('configuration.production-line.index')->middleware('auth');
+Route::get('/configuration/teams', Teams::class)->name('configuration.teams.index')->middleware('auth');
+
 
 //################### TESTES
 
+use App\Integrations\RappiIntegration;
 use App\Integrations\IfoodIntegrationCentralized;
 use App\Integrations\IfoodIntegrationDistributed;
 
@@ -61,5 +64,9 @@ Route::get('/integrations', function () {
     //$token = $IfoodIntegration->getToken('KGLD-NKVR', 2);
     //$merchants = $IfoodIntegration->getMerchants(2);
     //dd($merchants);
+
+    //RAPPI
+    $rappiIntegration = new RappiIntegration();
+    $token = $rappiIntegration->getToken(3);
 
 });

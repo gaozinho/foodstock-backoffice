@@ -33,7 +33,7 @@ class ProductionLines extends BaseConfigurationComponent
             ProductionLineVersion::where("restaurant_id", $restaurant->id)->where("is_active", 1)->update(['is_active' => 0]);
             ProductionLine::where("restaurant_id", $restaurant->id)->where("is_active", 1)->update(['is_active' => 0]);
             $productionLines = json_decode($json, true);
-            
+
             $steps = $productionLines["step"];
 
             for($i = 0; $i < count($steps); $i++){
@@ -63,11 +63,11 @@ class ProductionLines extends BaseConfigurationComponent
                     "can_pause" => 0,
                 ];
                 
-                foreach($productionLines["clickable"] as $clicakble) if($clicakble == $productionLines["step"][$i]) $productionLine["clicakble"] = 1;
+                foreach($productionLines["clickable"] as $clicakble) if($clicakble == $productionLines["step"][$i]) $productionLine["clickable"] = 1;
                 foreach($productionLines["see_previous"] as $see_previous) if($see_previous == $productionLines["step"][$i]) $productionLine["see_previous"] = 1;
                 foreach($productionLines["next_on_click"] as $next_on_click) if($next_on_click == $productionLines["step"][$i]) $productionLine["next_on_click"] = 1;
                 foreach($productionLines["can_pause"] as $can_pause) if($can_pause == $productionLines["step"][$i]) $productionLine["can_pause"] = 1;
-    
+
                 ProductionLine::create($productionLine);
             }
             $this->productionLines();
@@ -105,7 +105,7 @@ class ProductionLines extends BaseConfigurationComponent
         if($this->isWizard()) $viewName = 'livewire.configuration.wizard';
 
         return view($viewName)
-            ->layout('layouts.app', ['header' => 'Seu processo']);
+            ->layout('layouts.app', ['header' => 'Processo de produção']);
     }
 
     public function createDefaultProductionLine($showMessage = true){
