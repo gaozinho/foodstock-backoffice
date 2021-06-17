@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
+ * @property integer $user_id
  * @property integer $production_line_id
  * @property integer $restaurant_id
  * @property integer $order_summary_id
@@ -16,11 +17,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property boolean $step_finished
  * @property string $created_at
  * @property string $updated_at
+ * @property string $finished_at
  * @property Order $order
  * @property OrderSummary $orderSummary
  * @property ProductionLine $productionLine
  * @property ProductionLineVersion $productionLineVersion
  * @property Restaurant $restaurant
+ * @property User $user
  * @property ProductionLine $productionLine
  */
 class ProductionMovement extends Model
@@ -35,7 +38,7 @@ class ProductionMovement extends Model
     /**
      * @var array
      */
-    protected $fillable = ['production_line_id', 'restaurant_id', 'finished_at', 'order_summary_id', 'order_id', 'next_step_id', 'production_line_version_id', 'current_step_number', 'step_finished', 'created_at', 'updated_at'];
+    protected $fillable = ['user_id', 'production_line_id', 'restaurant_id', 'order_summary_id', 'order_id', 'next_step_id', 'production_line_version_id', 'current_step_number', 'step_finished', 'created_at', 'updated_at', 'finished_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -75,6 +78,14 @@ class ProductionMovement extends Model
     public function restaurant()
     {
         return $this->belongsTo('App\Models\Restaurant');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
     }
 
     /**

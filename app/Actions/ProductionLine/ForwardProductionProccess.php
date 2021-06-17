@@ -11,7 +11,7 @@ use App\Actions\ProductionLine\GenerateOrderJson;
 
 class ForwardProductionProccess
 {
-    public function forward($orderNumber){
+    public function forward($orderNumber, $user_id){
         $order = null;
         try{
             $order = Order::findOrFail($orderNumber);
@@ -40,7 +40,8 @@ class ForwardProductionProccess
                     'order_summary_id' => $productionMovement->order_summary_id,
                     'order_id' => $order->id,
                     'next_step_id'=> $productionLineNextStep ? $productionLineNextStep->id : null,
-                    'production_line_version_id' => $productionMovement->production_line_version_id
+                    'production_line_version_id' => $productionMovement->production_line_version_id,
+                    'user_id' => $user_id
             ]);
         }catch(\Exception $e){
             if(env('APP_DEBUG')) throw $e;
@@ -54,15 +55,14 @@ class ForwardProductionProccess
             'order_id' => $orderId
         ])->firstOrFail();
 
-        $orderSummary->finished = 1;
-        $orderSummary->finishedAt = date("Y-m-d H:i:s");
+        $orderSummary->finalized = 1;
+        $orderSummary->finalized_at = date("Y-m-d H:i:s");
         $orderSummary->save();
     }
 
     protected function firstStep($restaurant_id){
         return ProductionLine::where("restaurant_id", $restaurant_id)->where("is_active", 1)->where("step", 1)->firstOrFail();
     }
-
 
     protected function nextStep($restaurant_id, $current_step){
         return ProductionLine::where("restaurant_id", $restaurant_id)->where("is_active", 1)->where("step", ($current_step + 1))->first();

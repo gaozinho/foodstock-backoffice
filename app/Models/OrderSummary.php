@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id
  * @property integer $restaurant_id
  * @property int $order_id
+ * @property int $friendly_number
  * @property mixed $order_json
  * @property boolean $finalized
  * @property string $created_at
@@ -30,7 +31,7 @@ class OrderSummary extends Model
     /**
      * @var array
      */
-    protected $fillable = ['restaurant_id', 'order_id', 'order_json', 'finalized', 'created_at', 'updated_at', 'started_at', 'finalized_at'];
+    protected $fillable = ['restaurant_id', 'order_id', 'friendly_number', 'order_json', 'finalized', 'created_at', 'updated_at', 'started_at', 'finalized_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

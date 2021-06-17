@@ -32,6 +32,10 @@ use App\Http\Livewire\Configuration\{
     Brokers, Restaurants, ProductionLines, WizardSuccess, Teams
 };
 
+use App\Http\Livewire\Panels\{
+    ProductionLinePanel
+};
+
 Route::get('/wizard/restaurants', Restaurants::class)->name('wizard.restaurant.index')->middleware('auth');
 Route::get('/wizard/brokers', Brokers::class)->name('wizard.broker.index')->middleware('auth');
 Route::get('/wizard/production-lines', ProductionLines::class)->name('wizard.production-line.index')->middleware('auth');
@@ -42,6 +46,7 @@ Route::get('/configuration/brokers', Brokers::class)->name('configuration.broker
 Route::get('/configuration/production-lines', ProductionLines::class)->name('configuration.production-line.index')->middleware('auth');
 Route::get('/configuration/teams', Teams::class)->name('configuration.teams.index')->middleware('auth');
 
+Route::get('/panel/production-line/{name}', ProductionLinePanel::class)->name('panels.production-line-panel.index')->middleware('auth');
 
 //################### TESTES
 
@@ -51,15 +56,20 @@ use App\Integrations\IfoodIntegrationDistributed;
 
 use App\Actions\ProductionLine\StartProductionProccess;
 use App\Actions\ProductionLine\ForwardProductionProccess;
+use App\Actions\ProductionLine\RecoveryOrders;
 
 Route::get('/production', function () {
-    $startProductionProccess = new StartProductionProccess();
-    $productionMovement = $startProductionProccess->start(113668);
 
-    $forwardProductionProccess = new ForwardProductionProccess();
-    $productionMovement = $forwardProductionProccess->forward(113668);
+    //$startProductionProccess = new StartProductionProccess();
+    //$productionMovement = $startProductionProccess->start(113668);
+
+    //$forwardProductionProccess = new ForwardProductionProccess();
+    //$productionMovement = $forwardProductionProccess->forward(113668, 2);
     
-    dd($productionMovement);
+    $recoveryOrders = new RecoveryOrders();
+    $orders = $recoveryOrders->recoveryByStep(2, 1);
+
+    dd($orders);
 });
 
 Route::get('/integrations', function () {

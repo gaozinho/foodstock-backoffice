@@ -16,9 +16,14 @@ class StartProductionProccess
         try{
             $order = Order::findOrFail($orderNumber);
             $generateOrderJson = new GenerateOrderJson();
+            $orderJson = $generateOrderJson->generate($order->id);
 
-            $orderSummary = OrderSummary::create([
+            $orderSummary = OrderSummary::firstOrCreate([
+                'order_id' => $order->id, 
+                'restaurant_id' => $order->restaurant_id
+                ],[
                 'order_id' => $order->id,
+                'friendly_number' => $orderJson->friendly_number,
                 'restaurant_id' => $order->restaurant_id,
                 'started_at' => date('Y-m-d H:i:s'),
                 'order_json' => $generateOrderJson->generateString($order->id)
