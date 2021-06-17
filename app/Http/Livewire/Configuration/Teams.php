@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Restaurant;
 use App\Models\Role;
 use App\Http\Livewire\Configuration\BaseConfigurationComponent;
+use Illuminate\Support\Facades\Hash;
 
 class Teams extends Component
 {
@@ -19,7 +20,7 @@ class Teams extends Component
 
     protected $rules = [
         'user.name' => 'required|string|min:1|max:255',
-        'user.email' => 'email|max:255|required',
+        'user.email' => 'email|max:255|required|unique:users,email',
         'user.password' => 'min:4|max:8|required',
         'password_confirmation' => 'min:4|max:8|required|same:user.password',
     ];
@@ -72,6 +73,7 @@ class Teams extends Component
     public function store()
     {
         try {	
+            $this->user->password = Hash::make($this->user->password);
             $this->user->save();
             $selectedRoles = array_values(array_diff( $this->selectedRoles, [false]));
             $this->user->roles()->sync($selectedRoles);
@@ -102,6 +104,7 @@ class Teams extends Component
     public function update()
     {
         try {
+            $this->user->password = Hash::make($this->user->password);
             $this->user->save();
             $selectedRoles = array_values(array_diff( $this->selectedRoles, [false]));
             $this->user->roles()->sync($selectedRoles);            

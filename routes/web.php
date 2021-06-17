@@ -49,6 +49,19 @@ use App\Integrations\RappiIntegration;
 use App\Integrations\IfoodIntegrationCentralized;
 use App\Integrations\IfoodIntegrationDistributed;
 
+use App\Actions\ProductionLine\StartProductionProccess;
+use App\Actions\ProductionLine\ForwardProductionProccess;
+
+Route::get('/production', function () {
+    $startProductionProccess = new StartProductionProccess();
+    $productionMovement = $startProductionProccess->start(113668);
+
+    $forwardProductionProccess = new ForwardProductionProccess();
+    $productionMovement = $forwardProductionProccess->forward(113668);
+    
+    dd($productionMovement);
+});
+
 Route::get('/integrations', function () {
 
     //LOGIN CENTRALIZADO

@@ -7,15 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property integer $id
  * @property integer $restaurant_id
- * @property int $version
- * @property boolean $is_active
+ * @property int $order_id
+ * @property mixed $order_json
+ * @property boolean $finalized
  * @property string $created_at
  * @property string $updated_at
+ * @property string $started_at
+ * @property string $finalized_at
+ * @property Order $order
  * @property Restaurant $restaurant
- * @property ProductionLine[] $productionLines
  * @property ProductionMovement[] $productionMovements
  */
-class ProductionLineVersion extends Model
+class OrderSummary extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
@@ -27,7 +30,15 @@ class ProductionLineVersion extends Model
     /**
      * @var array
      */
-    protected $fillable = ['restaurant_id', 'version', 'is_active', 'created_at', 'updated_at'];
+    protected $fillable = ['restaurant_id', 'order_id', 'order_json', 'finalized', 'created_at', 'updated_at', 'started_at', 'finalized_at'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function order()
+    {
+        return $this->belongsTo('App\Models\Order');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -35,14 +46,6 @@ class ProductionLineVersion extends Model
     public function restaurant()
     {
         return $this->belongsTo('App\Models\Restaurant');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function productionLines()
-    {
-        return $this->hasMany('App\Models\ProductionLine');
     }
 
     /**

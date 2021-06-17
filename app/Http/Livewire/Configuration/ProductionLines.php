@@ -27,10 +27,10 @@ class ProductionLines extends BaseConfigurationComponent
             DB::beginTransaction();
 
             $restaurant = $this->userRestaurant();
-            //TODO Checar se existe production_movements. Se não houver, apagar ao invés de desativar
-
-            $productionLineVersion = $this->createProductionLineVersion();
+            //TODO Checar se existe production_movements. Se não houver, apagar ao invés de desativa
+            
             ProductionLineVersion::where("restaurant_id", $restaurant->id)->where("is_active", 1)->update(['is_active' => 0]);
+            $productionLineVersion = $this->createProductionLineVersion();
             ProductionLine::where("restaurant_id", $restaurant->id)->where("is_active", 1)->update(['is_active' => 0]);
             $productionLines = json_decode($json, true);
 
