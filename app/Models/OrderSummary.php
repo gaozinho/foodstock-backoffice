@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property integer $id
  * @property integer $restaurant_id
+ * @property integer $broker_id
  * @property int $order_id
  * @property int $friendly_number
  * @property mixed $order_json
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $updated_at
  * @property string $started_at
  * @property string $finalized_at
+ * @property Broker $broker
  * @property Order $order
  * @property Restaurant $restaurant
  * @property ProductionMovement[] $productionMovements
@@ -31,7 +33,15 @@ class OrderSummary extends Model
     /**
      * @var array
      */
-    protected $fillable = ['restaurant_id', 'order_id', 'friendly_number', 'order_json', 'finalized', 'created_at', 'updated_at', 'started_at', 'finalized_at'];
+    protected $fillable = ['restaurant_id', 'broker_id', 'order_id', 'friendly_number', 'order_json', 'finalized', 'created_at', 'updated_at', 'started_at', 'finalized_at'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function broker()
+    {
+        return $this->belongsTo('App\Models\Broker');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

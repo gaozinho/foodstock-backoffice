@@ -46,7 +46,7 @@ Route::get('/configuration/brokers', Brokers::class)->name('configuration.broker
 Route::get('/configuration/production-lines', ProductionLines::class)->name('configuration.production-line.index')->middleware('auth');
 Route::get('/configuration/teams', Teams::class)->name('configuration.teams.index')->middleware('auth');
 
-Route::get('/panel/production-line/{name}', ProductionLinePanel::class)->name('panels.production-line-panel.index')->middleware('auth');
+Route::get('/panel/production-line/{role_name}', ProductionLinePanel::class)->name('panels.production-line-panel.index')->middleware('auth');
 
 //################### TESTES
 
@@ -60,16 +60,28 @@ use App\Actions\ProductionLine\RecoveryOrders;
 
 Route::get('/production', function () {
 
-    //$startProductionProccess = new StartProductionProccess();
-    //$productionMovement = $startProductionProccess->start(113668);
+    $startProductionProccess = new StartProductionProccess();
+    $forwardProductionProccess = new ForwardProductionProccess();
 
-    //$forwardProductionProccess = new ForwardProductionProccess();
-    //$productionMovement = $forwardProductionProccess->forward(113668, 2);
-    
-    $recoveryOrders = new RecoveryOrders();
-    $orders = $recoveryOrders->recoveryByStep(2, 1);
+    $productionMovement = $startProductionProccess->start(113666);
 
-    dd($orders);
+    $productionMovement = $startProductionProccess->start(113667);
+    $productionMovement = $forwardProductionProccess->forward(113667, 2);
+
+    $productionMovement = $startProductionProccess->start(113668);
+    $productionMovement = $forwardProductionProccess->forward(113668, 2);
+    $productionMovement = $forwardProductionProccess->forward(113668, 2);
+
+    $productionMovement = $startProductionProccess->start(113660);
+    $productionMovement = $forwardProductionProccess->forward(113660, 2);
+    $productionMovement = $forwardProductionProccess->forward(113660, 2);    
+    $productionMovement = $forwardProductionProccess->forward(113660, 2);    
+
+    $productionMovement = $startProductionProccess->start(113661);
+    $productionMovement = $forwardProductionProccess->forward(113661, 2);
+    $productionMovement = $forwardProductionProccess->forward(113661, 2);    
+    $productionMovement = $forwardProductionProccess->forward(113661, 2);   
+    $productionMovement = $forwardProductionProccess->forward(113661, 2);        
 });
 
 Route::get('/integrations', function () {

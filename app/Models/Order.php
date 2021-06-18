@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $company_id
  * @property integer $restaurant_id
+ * @property integer $broker_id
  * @property string $idIfood
  * @property string $reference
  * @property int $shortReference
@@ -21,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $localizer
  * @property string $json
  * @property string $rawJson
+ * @property Broker $broker
  * @property Company $company
  * @property Restaurant $restaurant
  * @property Customer[] $customers
@@ -38,7 +40,15 @@ class Order extends Model
     /**
      * @var array
      */
-    protected $fillable = ['company_id', 'restaurant_id', 'idIfood', 'reference', 'shortReference', 'createdAt', 'type', 'subTotal', 'totalPrice', 'deliveryFee', 'deliveryDateTime', 'preparationTimeInSeconds', 'localizer', 'json', 'rawJson'];
+    protected $fillable = ['company_id', 'restaurant_id', 'broker_id', 'idIfood', 'reference', 'shortReference', 'createdAt', 'type', 'subTotal', 'totalPrice', 'deliveryFee', 'deliveryDateTime', 'preparationTimeInSeconds', 'localizer', 'json', 'rawJson'];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function broker()
+    {
+        return $this->belongsTo('App\Models\Broker');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -117,7 +127,7 @@ class Order extends Model
      */
     public function productionMovements()
     {
-        return $this->hasMany('App\Models\ProductionMovement', 'orders_id');
+        return $this->hasMany('App\Models\ProductionMovement');
     }
 
     /**

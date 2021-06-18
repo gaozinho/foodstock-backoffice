@@ -11,7 +11,7 @@ class GenerateOrderJson
 
     public function generateString($orderId){
         return '{
-            "friendly_number" : 1234
+            "friendly_number" : ' . $orderId . '
         }';
     }
 }

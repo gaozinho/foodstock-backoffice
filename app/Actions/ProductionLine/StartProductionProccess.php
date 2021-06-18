@@ -11,10 +11,10 @@ use App\Actions\ProductionLine\GenerateOrderJson;
 
 class StartProductionProccess
 {
-    public function start($orderNumber){
+    public function start($order_id){
         $order = null;
         try{
-            $order = Order::findOrFail($orderNumber);
+            $order = Order::findOrFail($order_id);
             $generateOrderJson = new GenerateOrderJson();
             $orderJson = $generateOrderJson->generate($order->id);
 
@@ -23,6 +23,7 @@ class StartProductionProccess
                 'restaurant_id' => $order->restaurant_id
                 ],[
                 'order_id' => $order->id,
+                'broker_id' => $order->broker_id,
                 'friendly_number' => $orderJson->friendly_number,
                 'restaurant_id' => $order->restaurant_id,
                 'started_at' => date('Y-m-d H:i:s'),
