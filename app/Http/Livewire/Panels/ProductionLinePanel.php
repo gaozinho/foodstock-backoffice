@@ -14,6 +14,8 @@ use App\Actions\ProductionLine\ForwardProductionProccess;
 class ProductionLinePanel extends Component
 {
 
+    protected $listeners = ['loadData'];
+
     public $orderSummaries;
     public $orderSummariesPreviousStep;
     public $productionLine;

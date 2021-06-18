@@ -22,6 +22,13 @@
             <div class="card loading">
                 <div class="card-body">
 
+                    @if($total_orders == 0)
+                    <div class="text-center">
+                        <img src="{{ asset('images/ico-logo.png') }}" class="mt-2 mb-2">
+                            <h3>Nenhum item pendente.</h3>
+                    </div>
+                    @endif
+
 
                     <div class="row">
                         @foreach ($orderSummariesPreviousStep as $orderSummary)
@@ -163,7 +170,11 @@
 
             Livewire.on('closeOrderModal', postId => {
                 $('#order-modal').modal('hide');
-            })              
+            })       
+            
+            setInterval(() => { 
+                Livewire.emit('loadData');
+             }, 60000);
         });
     </script>
 
