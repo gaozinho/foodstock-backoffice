@@ -91,9 +91,30 @@ class IfoodIntegrationDistributed extends IfoodIntegration
 
     }
 
+    public function refreshToken($brokerId){
+        $ifoodBroker = IfoodBroker::findOrFail($brokerId);
+        $this->credentials["grantType"] = "refresh_token";
+        $this->credentials["refreshToken"] = $ifoodBroker->refreshToken;
+        $httpResponse = $this->httpClient->post($this->broker->authenticationApi, ["form_params" => $this->credentials]);
+        $responseToken = $this->parseTokenResponse($httpResponse->getBody()->getContents());  
+        if($responseToken){
+            $ifoodBroker->accessToken = $responseToken->accessToken;
+            $ifoodBroker->refreshToken = $responseToken->refreshToken;
+            $ifoodBroker->expiresIn = $this->defineExpirationTime($responseToken->expiresIn);
+            $ifoodBroker->save();
+        }else{
+            throw new \Exception("Não foi possível renovar o token do ifood."); 
+        }       
+    }
+
     public function getMerchants($brokerId, $enableOnSuccess = true){
         try{
             $ifoodBroker = IfoodBroker::findOrFail($brokerId);
+
+            if($this->tokenIsExpired(strtotime($ifoodBroker->expiresIn))){
+                $this->refreshToken($brokerId);
+            }
+            
             $this->requestOptions["headers"]["Authorization"] = "Bearer " . $ifoodBroker->accessToken;
             $httpResponse = $this->httpClient->get($this->broker->merchantsApi, $this->requestOptions);
             $jsonMerchants = $this->parseMerchantsResponse($httpResponse->getBody()->getContents());
@@ -108,7 +129,7 @@ class IfoodIntegrationDistributed extends IfoodIntegration
             if(env('APP_DEBUG')) throw $exception;
             return false;
         }        
-    }    
+    }
 
     public function enableMerchant($ifoodBroker, $jsonMerchants){
         foreach($jsonMerchants as $jsonMerchant){
