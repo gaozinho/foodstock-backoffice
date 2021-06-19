@@ -74,7 +74,7 @@
                     <div class="col-md-10">
                         <h1 class="ftco-heading ftco-animate">Gerencie seu delivery. Simples e fácil!</h1>
                         <h2 class="h5 ftco-subheading mb-5 ftco-animate">FoodStock: uma ferramenta gratuita para gerenciar seu processo
-                            de produção dos pedidos feitos nas principais ferramentas de delivery de mercado.</h2>
+                            de produção e despacho de pedidos. Integramos com as principais ferramentas de delivery do mercado.</h2>
                         <p><a href="https://free-template.co/" target="_blank"
                                 class="btn btn-banner ftco-animate">Cadastre-se agora</a></p>
                     </div>

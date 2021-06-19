@@ -53,12 +53,12 @@
                                 </div>
                                 <div class="col-xs-12 col-sm-12 col-md-12">
                                     <strong>Qual é o papel deste integrante? *</strong>
-                                    <div class="row mt-2">
+                                    <div class="row mt-2 loading">
                                         @foreach($roles as $role)
                                         <div class="col-xs-12 col-sm-6 col-md-6">
                                             <div class="form-group">
                                                 <div class="pretty p-switch p-fill">
-                                                    <input name="role_id[{{ $role->id }}]" type="checkbox" 
+                                                    <input onClick='$(".loading").LoadingOverlay("show")' name="role_id[{{ $role->id }}]" type="checkbox" 
                                                         wire:model="selectedRoles.{{ $role->id }}" 
                                                         value="{{ $role->id }}"
                                                     />
@@ -140,3 +140,15 @@
     </div>
 </div>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
+@push('scripts')
+    <script>
+
+        $(document).ready(function() {
+            Livewire.on('stopLoading', function(){
+                $(".loading").LoadingOverlay("hide");
+            })
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+@endpush

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 class Teams extends Component
 {
 
-    public User $user;
+    public $user;
     public $restaurantUsers;
     public $restaurant;
     public $roles;
@@ -20,7 +20,7 @@ class Teams extends Component
 
     protected $rules = [
         'user.name' => 'required|string|min:1|max:255',
-        'user.email' => 'email|max:255|required|unique:users,email',
+        'user.email' => 'max:255|required|unique:users,email',
         'user.password' => 'min:4|max:8|required',
         'password_confirmation' => 'min:4|max:8|required|same:user.password',
     ];
@@ -46,15 +46,20 @@ class Teams extends Component
         return view($viewName, [])->layout('layouts.app', ['header' => 'Equipe de trabalho']);
     }
 
+    public function hydrateUser(){
+        $this->emit('stopLoading');
+    }
+
     public function loadUser($id){
         $this->user = User::findOrFail($id);
-        $this->selectedRoles = $this->user->roles()->pluck("id", "id");
+        $this->selectedRoles = $this->user->roles()->pluck("id", "id")->toArray();
         $this->resetErrorBag();
         $this->resetValidation();
     }
 
     public function save()
     {
+        $this->rules['user.email'] = 'max:255|required|unique:users,email,' . $this->user->id;
         $this->validate();
         
 		if(intval($this->user->id) > 0){
@@ -74,6 +79,7 @@ class Teams extends Component
     {
         try {	
             $this->user->password = Hash::make($this->user->password);
+            $this->user->restaurant_member = 1;
             $this->user->save();
             $selectedRoles = array_values(array_diff( $this->selectedRoles, [false]));
             $this->user->roles()->sync($selectedRoles);
@@ -104,9 +110,10 @@ class Teams extends Component
     public function update()
     {
         try {
+            
             $this->user->password = Hash::make($this->user->password);
             $this->user->save();
-            $selectedRoles = array_values(array_diff( $this->selectedRoles, [false]));
+            $selectedRoles = count($this->selectedRoles) > 0 ? array_values(array_diff( $this->selectedRoles, [false])) : [];
             $this->user->roles()->sync($selectedRoles);            
             $this->reloadForm();
 			$this->simpleAlert('success', 'Integrante atualizado com sucesso.');

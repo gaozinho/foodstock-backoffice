@@ -45,7 +45,7 @@
                                     {!! $productionLine->color != '' ? 'style="background-color: ' . $stepColors[$orderSummary->current_step_number] . '"' : '' !!}>
                                     <div class="card-body">
                                         <h4 class="text-white">{{ $orderSummary->friendly_number }}</h4>
-                                        <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }} - {{$orderSummary->production_line_id}} - {{$stepColors[$orderSummary->current_step_number]}}</div>
+                                        <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -64,7 +64,7 @@
                                     {!! $productionLine->color != '' ? 'style="background-color: ' . (isset($stepColors[$orderSummary->current_step_number]) ? $stepColors[$orderSummary->current_step_number] : "") . '"' : '' !!}>
                                     <div class="card-body">
                                         <h4 class="text-white">{{ $orderSummary->friendly_number }}</h4>
-                                        <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }} - {{$orderSummary->production_line_id}} - {{$orderSummary->current_step_number}}</div>
+                                        <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }}</div>
                                     </div>
                                 </div>
                             </div>
