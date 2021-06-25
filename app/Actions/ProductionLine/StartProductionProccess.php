@@ -15,8 +15,8 @@ class StartProductionProccess
         $order = null;
         try{
             $order = Order::findOrFail($order_id);
-            $generateOrderJson = new GenerateOrderJson();
-            $orderJson = $generateOrderJson->generate($order->id);
+            $generateOrderJson = new GenerateOrderJson($order);
+            $orderJson = $generateOrderJson->generate();
 
             $orderSummary = OrderSummary::firstOrCreate([
                 'order_id' => $order->id, 
@@ -24,10 +24,10 @@ class StartProductionProccess
                 ],[
                 'order_id' => $order->id,
                 'broker_id' => $order->broker_id,
-                'friendly_number' => $orderJson->friendly_number,
+                'friendly_number' => $orderJson->shortOrderNumber,
                 'restaurant_id' => $order->restaurant_id,
                 'started_at' => date('Y-m-d H:i:s'),
-                'order_json' => $generateOrderJson->generateString($order->id)
+                'order_json' => $generateOrderJson->generateString()
             ]);
 
             $productionLine = $this->firstStep($order->restaurant_id);
