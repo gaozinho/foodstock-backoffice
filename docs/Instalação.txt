@@ -29,6 +29,9 @@ composer require jantinnerezo/livewire-alert
 #composer require proengsoft/laravel-jsvalidation
 #php artisan vendor:publish --provider="Proengsoft\JsValidation\JsValidationServiceProvider"
 
+composer require laravel/passport
+php artisan migrate
+php artisan passport:install
 
 => WEBPACK
 mix.copyDirectory('node_modules/tinymce/icons', 'public/node_modules/tinymce/icons');

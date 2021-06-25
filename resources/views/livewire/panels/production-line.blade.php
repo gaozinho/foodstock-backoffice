@@ -162,8 +162,25 @@
 @push('scripts')
     <script>
 
+        function reloadPage(){
+            return setInterval(() => { 
+                Livewire.emit('loadData');
+             }, 60000);
+        }
+
         $(document).ready(function() {
+            var reloadDataInterval = reloadPage();
+
+            $('#order-modal').on('hide.bs.modal', function (e) {
+                reloadDataInterval = reloadPage();
+            });
+
+            $('#order-modal').on('show.bs.modal', function (e) {
+                clearInterval(reloadDataInterval);
+            });            
+
             Livewire.on('openOrderModal', function(){
+                clearInterval(reloadDataInterval);
                 $(".loading").LoadingOverlay("hide");
                 $('#order-modal').modal();
             })
@@ -171,10 +188,6 @@
             Livewire.on('closeOrderModal', postId => {
                 $('#order-modal').modal('hide');
             })       
-            
-            setInterval(() => { 
-                Livewire.emit('loadData');
-             }, 60000);
         });
     </script>
 

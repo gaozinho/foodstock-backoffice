@@ -103,6 +103,7 @@ class ProductionLinePanel extends Component
         }else{
             $this->emit('openOrderModal');
         }
+        
         $this->loadData();
     }
 
