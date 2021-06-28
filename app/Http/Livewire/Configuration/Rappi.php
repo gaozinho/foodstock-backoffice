@@ -7,6 +7,7 @@ use App\Models\Broker;
 use App\Models\Restaurant;
 use App\Models\RappiBroker;
 use App\Enums\BrokerType;
+use App\Actions\ProductionLine\RecoverUserRestaurant;
 
 class Rappi extends Component
 {
@@ -26,11 +27,13 @@ class Rappi extends Component
     ];
 
     private function userRestaurant(){
-        return Restaurant::where("user_id", "=", auth()->user()->id)->firstOrFail();
+        //return Restaurant::where("user_id", "=", auth()->user()->id)->firstOrFail();
+        return (new RecoverUserRestaurant())->recover(auth()->user()->id);
     }
 
     public function mount()
     {
+        if(!auth()->user()->hasRole("admin")) return redirect()->to('/dashboard');
         $this->wizardStep = 2;
         try{
             //MVP 1 - Um ifoodBrokere por usuário

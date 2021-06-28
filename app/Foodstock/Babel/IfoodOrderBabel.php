@@ -19,8 +19,8 @@ class IfoodOrderBabel extends OrderBabel implements OrderBabelInterface
                 foreach($item->options as $option){
                     $itemBabel->addSubitem(new ItemBabel($option->name, $option->quantity, $option->unitPrice, $option->price, $option->externalCode ?? null, $option->observations ?? null));
                 }
-                $items[] = $itemBabel;
             }
+            $items[] = $itemBabel;
         }
         return $items;
     }

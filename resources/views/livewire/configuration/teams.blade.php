@@ -43,6 +43,9 @@
                                     <div class="form-group">
                                         <strong>Senha *</strong>
                                         {!! Form::text('password', $user->password, ['wire:model.defer' => 'user.password', 'class' => 'form-control']) !!}
+                                        @if(intval($user->id) > 0)
+                                        <small>Deixe em branco para não alterar a senha atual.</small>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="col-xs-12 col-sm-6 col-md-6">

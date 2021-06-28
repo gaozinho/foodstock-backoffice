@@ -28,6 +28,8 @@ class Restaurants extends BaseConfigurationComponent
 
     public function mount()
     {
+        if(!auth()->user()->hasRole("admin")) return redirect()->to('/dashboard');
+        
         $this->wizardStep = 1;
         //MVP 1 - Um restaurante por usuário
         $this->restaurant = Restaurant::where("user_id", "=", auth()->user()->id)->firstOrNew();

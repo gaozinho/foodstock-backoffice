@@ -2,17 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -21,32 +10,29 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
-use App\Http\Livewire\{
-    Eventos
-};
-
-Route::get('/eventos', Eventos::class)->name('eventos.index')->middleware('auth');
-Route::get('/eventos/edit', Eventos::class)->name('eventos.edit')->middleware('auth');
-
 use App\Http\Livewire\Configuration\{
     Brokers, Restaurants, ProductionLines, WizardSuccess, Teams
 };
 
 use App\Http\Livewire\Panels\{
-    ProductionLinePanel
+    ProductionLinePanel, DeliveryPanel
 };
 
-Route::get('/wizard/restaurants', Restaurants::class)->name('wizard.restaurant.index')->middleware('auth');
-Route::get('/wizard/brokers', Brokers::class)->name('wizard.broker.index')->middleware('auth');
-Route::get('/wizard/production-lines', ProductionLines::class)->name('wizard.production-line.index')->middleware('auth');
-Route::get('/wizard/success', WizardSuccess::class)->name('wizard.success.index')->middleware('auth');
-
-Route::get('/configuration/restaurants', Restaurants::class)->name('configuration.restaurant.index')->middleware('auth');
-Route::get('/configuration/brokers', Brokers::class)->name('configuration.broker.index')->middleware('auth');
-Route::get('/configuration/production-lines', ProductionLines::class)->name('configuration.production-line.index')->middleware('auth');
-Route::get('/configuration/teams', Teams::class)->name('configuration.teams.index')->middleware('auth');
+Route::group(['middleware' => ['role:admin']], function (){
+   Route::get('/wizard/restaurants', Restaurants::class)->name('wizard.restaurant.index')->middleware('auth');
+   Route::get('/wizard/brokers', Brokers::class)->name('wizard.broker.index')->middleware('auth');
+   Route::get('/wizard/production-lines', ProductionLines::class)->name('wizard.production-line.index')->middleware('auth');
+   Route::get('/wizard/success', WizardSuccess::class)->name('wizard.success.index')->middleware('auth');
+   
+   Route::get('/configuration/restaurants', Restaurants::class)->name('configuration.restaurant.index')->middleware('auth');
+   Route::get('/configuration/brokers', Brokers::class)->name('configuration.broker.index')->middleware('auth');
+   Route::get('/configuration/production-lines', ProductionLines::class)->name('configuration.production-line.index')->middleware('auth');
+   Route::get('/configuration/teams', Teams::class)->name('configuration.teams.index')->middleware('auth');
+});
 
 Route::get('/panel/production-line/{role_name}', ProductionLinePanel::class)->name('panels.production-line-panel.index')->middleware('auth');
+Route::get('/panel/delivery', DeliveryPanel::class)->name('panels.delivery-panel.index')->middleware('auth');
+
 
 //################### TESTES
 

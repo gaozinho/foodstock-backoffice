@@ -8,6 +8,7 @@ use App\Models\Restaurant;
 use App\Models\Role;
 use App\Http\Livewire\Configuration\BaseConfigurationComponent;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class Teams extends Component
 {
@@ -33,6 +34,8 @@ class Teams extends Component
 
     public function mount()
     {
+        if(!auth()->user()->hasRole("admin")) return redirect()->to('/dashboard');
+
         //MVP 1 - Um restaurante por usuário
         $this->restaurant = Restaurant::where("user_id", "=", auth()->user()->id)->firstOrNew();
         $this->user = new User();
@@ -60,7 +63,7 @@ class Teams extends Component
     public function save()
     {
         $this->rules['user.email'] = 'max:255|required|unique:users,email,' . $this->user->id;
-        $this->validate();
+        //$this->validate();
         
 		if(intval($this->user->id) > 0){
 			$this->update();
@@ -77,6 +80,9 @@ class Teams extends Component
 
     public function store()
     {
+
+        $this->validate();
+
         try {	
             $this->user->password = Hash::make($this->user->password);
             $this->user->restaurant_member = 1;
@@ -97,7 +103,11 @@ class Teams extends Component
     public function destroy()
     {
         try {
-            //$this->user->delete();
+
+            $user = User::findOrFail($this->user->id);
+            $user->email = "DELETED-" . Str::random(10) . "-" . $this->user->email;
+            $user->save();
+            
             $this->restaurant->usersPivot()->detach($this->user);
             $this->reloadForm();
 			$this->simpleAlert('success', 'Integrante removido com sucesso.');
@@ -109,9 +119,19 @@ class Teams extends Component
 
     public function update()
     {
-        try {
-            
+
+        if(trim($this->user->password) == ""){
+            $this->user->password = auth()->user()->password;
+            unset($this->rules["user.password"]);
+            unset($this->rules["password_confirmation"]);
+        }else{
             $this->user->password = Hash::make($this->user->password);
+        }
+
+        $this->validate();
+
+        try {
+            $this->user->restaurant_member = 1;
             $this->user->save();
             $selectedRoles = count($this->selectedRoles) > 0 ? array_values(array_diff( $this->selectedRoles, [false])) : [];
             $this->user->roles()->sync($selectedRoles);            

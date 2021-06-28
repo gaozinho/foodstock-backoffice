@@ -10,6 +10,7 @@ use Spatie\Permission\Models\Role;
 use App\Enums\ProductionLineType;
 use Illuminate\Support\Facades\DB;
 use App\Http\Livewire\Configuration\BaseConfigurationComponent;
+use App\Actions\ProductionLine\RecoverUserRestaurant;
 
 class ProductionLines extends BaseConfigurationComponent
 {
@@ -88,6 +89,7 @@ class ProductionLines extends BaseConfigurationComponent
 
     public function mount()
     {
+        if(!auth()->user()->hasRole("admin")) return redirect()->to('/dashboard');
         $this->wizardStep = 3;
 
         //MVP 1 - Um restaurante por usuário
@@ -224,7 +226,8 @@ class ProductionLines extends BaseConfigurationComponent
     }
 
     private function userRestaurant(){
-        return Restaurant::where("user_id", "=", auth()->user()->id)->firstOrFail();
+        //return Restaurant::where("user_id", "=", auth()->user()->id)->firstOrFail();
+        return (new RecoverUserRestaurant())->recover(auth()->user()->id);
     }
 
     private function productionLines(){

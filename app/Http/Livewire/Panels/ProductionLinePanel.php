@@ -10,6 +10,10 @@ use App\Models\ProductionLine;
 use App\Models\OrderSummary;
 use App\Actions\ProductionLine\RecoveryOrders;
 use App\Actions\ProductionLine\ForwardProductionProccess;
+use App\Actions\ProductionLine\PauseProductionProccess;
+use App\Actions\ProductionLine\RecoverUserRestaurant;
+
+use App\Foodstock\Babel\OrderBabelized;
 
 class ProductionLinePanel extends Component
 {
@@ -28,17 +32,33 @@ class ProductionLinePanel extends Component
     public $role_name;
     public $total_orders = 0;
 
+    public $orderBabelized;
+
     protected $messages = [
         //'user.password.required' => 'O CNPJ informado é inválido.'
     ]; 
 
     public function mount($role_name)
     {
+
+        if(!(auth()->user()->hasRole("admin") || auth()->user()->hasRole($role_name))){
+            return redirect()->to('/dashboard');
+        }
+
         $this->role_name = $role_name;
         $this->orderSummaryDetail = new OrderSummary();
+        $this->orderSummaryDetail->orderBabelized = new OrderBabelized('{}');
 
         //MVP 1 - Um restaurante por usuário
-        $this->restaurant = Restaurant::where("user_id", "=", auth()->user()->id)->firstOrFail();
+
+        try{
+            $this->restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
+        }catch(\Exception $e){
+            session()->flash('error', 'Você não está vinculado a um delivery. Solicite ao responsável a sua correta vinculação.');
+            return redirect()->route('dashboard');
+        }
+
+        //$this->restaurant = Restaurant::where("user_id", "=", auth()->user()->id)->firstOrFail();
         $recoveryOrders = new RecoveryOrders();
         $this->productionLine = $recoveryOrders->getCurrentProductionLineByRoleName($this->restaurant->id, $role_name);
         $this->stepColors = $recoveryOrders->getProductionLineColors($this->restaurant->id);
@@ -85,21 +105,32 @@ class ProductionLinePanel extends Component
         return $legend;
     }
 
+    private function prepareOrderSummary($order_summary_id){
+        //$orderSummary = OrderSummary::findOrFail($order_summary_id);
+
+        $orderSummary =  OrderSummary::join("production_movements", "production_movements.order_summary_id", "order_summaries.id")
+            ->where("order_summaries.id", $order_summary_id)
+            ->select(['order_summaries.*', 'production_movements.paused'])
+            ->orderBy("production_movements.id", "desc")
+            ->firstOrFail();
+
+        $orderSummary->orderBabelized = new OrderBabelized($orderSummary->order_json);
+        return $orderSummary;
+    }
+
     public function orderDetailAndMoveForward($order_summary_id){
-        $this->orderSummaryDetail = OrderSummary::findOrFail($order_summary_id);
-        $forwardProductionProccess = new ForwardProductionProccess();
-        $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $this->restaurant->id);
+        $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
+        (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $this->restaurant->id);
         $this->emit('openOrderModal');
         $this->loadData();
     }
 
     public function orderDetail($order_summary_id, $production_line_id){
-        $this->orderSummaryDetail = OrderSummary::findOrFail($order_summary_id);
+        $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
         $productionLine = ProductionLine::findOrFail($production_line_id);
-
+        
         if($productionLine->next_on_click == 1){ //Se passa para próximo passo no clique
-            $forwardProductionProccess = new ForwardProductionProccess();
-            $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $this->restaurant->id);
+            (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $this->restaurant->id);
         }else{
             $this->emit('openOrderModal');
         }
@@ -115,6 +146,8 @@ class ProductionLinePanel extends Component
     }
 
     public function pause($order_summary_id){
+        $pauseProductionProccess = new PauseProductionProccess();
+        $pauseProductionProccess->pause($this->orderSummaryDetail->order_id, auth()->user()->id);
         $this->loadData();
         $this->emit('closeOrderModal');
     }

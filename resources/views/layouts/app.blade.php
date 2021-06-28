@@ -17,35 +17,9 @@
 
         @livewireStyles
 
-        <!-- Scripts -->
-        <script src="{{ mix('js/app.js') }}"></script>
-
-        <script src="{{ asset('js/spectrum/spectrum.js') }}" type="text/javascript" charset="utf-8"></script>
-        <link href="{{ asset('js/spectrum/spectrum.css') }}" rel="stylesheet" type="text/css">
-
-        
-    </head>
-    <body class="font-sans antialiased bg-light">
-        <x-jet-banner />
-        @livewire('navigation-menu')
-
-        @if(isset($header))
-        <!-- Page Heading -->
-        <header class="d-flex py-3 bg-white shadow-sm border-bottom">
-            <div class="container">
-                <span class="h3 text-muted">{{ $header }}</span>
-            </div>
-        </header>
-        @endif
-
-        <!-- Page Content -->
-        <main class="container my-5">
-            {{ $slot }}
-        </main>
-
+        <!-- SCRIPTS -->
         @stack('modals')
-
-              
+     
 
         @livewireScripts
 
@@ -54,7 +28,36 @@
         
         <x-livewire-alert::scripts />
 
+        <!-- Scripts -->
+        <script src="{{ mix('js/app.js') }}"></script>
+
+        <script src="{{ asset('js/spectrum/spectrum.js') }}" type="text/javascript" charset="utf-8"></script>
+        <link href="{{ asset('js/spectrum/spectrum.css') }}" rel="stylesheet" type="text/css">
+
+
         @stack('scripts')
+        
+
+    </head>
+    <body class="font-sans antialiased bg-light">
+        <x-jet-banner />
+        @livewire('navigation-menu')
+
+        @if(isset($header))
+        <!-- Page Heading -->
+        <header class="d-flex py-3 bg-white shadow-sm border-bottom full-screen">
+            <div class="container">
+                <span class="h3 text-muted">{{ $header }}</span>
+            </div>
+        </header>
+        @endif
+
+        <!-- Page Content -->
+        <main id="main-container" class="container my-5">
+            {{ $slot }}
+        </main>
+
+
         
     </body>
 </html>

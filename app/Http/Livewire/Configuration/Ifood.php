@@ -9,6 +9,7 @@ use App\Models\IfoodBroker;
 use App\Enums\BrokerType;
 use App\Integrations\IfoodIntegration;
 use App\Integrations\IfoodIntegrationDistributed;
+use App\Actions\ProductionLine\RecoverUserRestaurant;
 
 class Ifood extends Component
 {
@@ -32,11 +33,14 @@ class Ifood extends Component
     ];
 
     private function userRestaurant(){
-        return Restaurant::where("user_id", "=", auth()->user()->id)->firstOrFail();
+        //return Restaurant::where("user_id", "=", auth()->user()->id)->firstOrFail();
+        return (new RecoverUserRestaurant())->recover(auth()->user()->id);
     }
 
     public function mount()
     {
+        if(!auth()->user()->hasRole("admin")) return redirect()->to('/dashboard');
+        
         try{
             //MVP 1 - Um ifoodBrokere por usuário
             $restaurant = $this->userRestaurant();

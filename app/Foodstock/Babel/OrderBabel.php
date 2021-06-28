@@ -26,6 +26,8 @@ class OrderBabel
             $this->ordersCountOnMerchant = $this->ordersCountOnMerchant(); 
             $this->customerName = $this->customerName(); 
             $this->deliveryFormattedAddress = $this->deliveryFormattedAddress(); 
+        }else{
+            throw new \Exception("Invalid JSON string.");
         }
     }         
 

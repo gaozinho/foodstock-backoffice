@@ -8,10 +8,11 @@
     </x-slot>
 
     <x-slot name="form">
-
-        <x-jet-action-message on="saved">
-            {{ __('Saved.') }}
-        </x-jet-action-message>
+        <x-slot name="actions">
+            <x-jet-action-message on="saved">
+                {{ __('Atualizado com sucesso.') }}
+            </x-jet-action-message>
+        </x-slot>
 
         <!-- Profile Photo -->
         @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())

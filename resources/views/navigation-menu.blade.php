@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-light bg-white border-bottom sticky-top">
+<nav class="navbar navbar-expand-md navbar-light bg-white border-bottom sticky-top full-screen">
     <div class="container">
         <a class="navbar-brand mr-4" href="/">
             <img src="{{ asset('images/logo.png') }}" style="height: 30px">
@@ -17,6 +17,7 @@
 
                 <livewire:menu.roles />
 
+                @role('admin')
                 <x-jet-dropdown id="teamManagementDropdown">
                     <x-slot name="trigger">
                         Seu delivery
@@ -31,7 +32,7 @@
                             {{ __('Integrações e processo') }}
                         </h6>
                         -->
-
+                        
                         <x-jet-dropdown-link href="{{ route('wizard.restaurant.index') }}">
                             {{ __('Configuração expressa') }}
                         </x-jet-dropdown-link>  
@@ -59,6 +60,12 @@
                         </x-jet-dropdown-link>
                     </x-slot>
                 </x-jet-dropdown>
+
+                <x-jet-nav-link href="{{ route('panels.delivery-panel.index') }}" :active="request()->routeIs('panels.delivery-panel.index')">
+                    <i class="fas fa-tv"></i> {{ __('Painel') }}
+                </x-jet-nav-link>
+
+                @endrole
             </ul>
             <ul class="navbar-nav ml-auto align-items-baseline">
                 @auth

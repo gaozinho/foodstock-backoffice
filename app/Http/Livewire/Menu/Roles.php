@@ -18,7 +18,8 @@ class Roles extends Component
 
         if($user->hasRole('admin')){
             $this->roles = Role::join("production_lines", "production_lines.role_id", "=", "roles.id")
-                ->where("production_lines.is_active", 1)
+            ->where("production_lines.is_active", 1)
+                ->where("production_lines.production_line_id", null)
                 ->where("production_lines.restaurant_id", $restaurant->id)
                 ->where("roles.guard_name", "production-line")
                 ->select(["roles.*", 'production_lines.name as custom_name'])

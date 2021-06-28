@@ -5,6 +5,7 @@ namespace App\Actions\Jetstream;
 use Illuminate\Support\Facades\DB;
 use Laravel\Jetstream\Contracts\DeletesTeams;
 use Laravel\Jetstream\Contracts\DeletesUsers;
+use Illuminate\Support\Str;
 
 class DeleteUser implements DeletesUsers
 {
@@ -38,7 +39,9 @@ class DeleteUser implements DeletesUsers
             $this->deleteTeams($user);
             $user->deleteProfilePhoto();
             $user->tokens->each->delete();
-            $user->delete();
+            //$user->delete();
+            $user->email = "DELETED-" . Str::random(10) . "-" . $user->email;
+            $user->save();            
         });
     }
 

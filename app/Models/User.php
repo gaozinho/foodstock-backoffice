@@ -62,4 +62,9 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function restaurants()
+    {
+        return $this->belongsToMany('App\Models\Restaurant', 'restaurant_has_users');
+    }    
 }

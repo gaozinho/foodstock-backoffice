@@ -1,90 +1,59 @@
 <div>
-    <div>
-        <h2 class="mt-3 mb-0 pb-0">{{ $productionLine->name }} 
-            <span class="badge badge-secondary">{{ $total_orders }}</span> 
-        </h2>
-        <span class="legend mt-0 pt-0">Legenda:
-            @foreach ($legends as $legend)
-                @php
-                    $startText = "";
-                    if($legend['order'] == "previous") $startText = "Passou na ";
-                    else if($legend['order'] == "current") $startText = "Aguardando ";
-                @endphp
-                <span class="badge" style="color: #fff; background-color: {{$legend['color']}}">{{$startText}}{{$legend['name']}}</span> 
-            @endforeach
-            @if($productionLine->can_pause)
-                <span class="badge" style="color: #fff; background-color: rgb(165, 162, 0)">Pausado</span> 
-            @endif
-        </span>
+    <div class="full-screen mb-3">
+        <div class="d-flex justify-content-between align-items-end">
+            <div>
+                <h2 class="mt-3 mb-0 pb-0">Painel de delivery
+                    <span class="badge badge-secondary">{{ $total_orders }}</span>
+                </h2>
+                <span class="legend mt-0 pt-0">Legenda:
+                    <span class="badge bg-danger p-1">Produzindo</span> 
+                    <span class="badge bg-success p-1">Pronto para retirar</span>
+                </span>                
+            </div>
+            <div>
+                <button class="btn btn-sm btn-primary" id="bt-fullscreen"><i class="fas fa-expand-arrows-alt"></i> Modo painel <small>(F4)</small></button>
+            </div>
+       </div>
+
+        
     </div>
-    <div class="row mt-3">
-        <div class="col">
-            <div class="card loading">
-                <div class="card-body">
 
-                    @if($total_orders == 0)
-                    <div class="text-center">
-                        <img src="{{ asset('images/ico-logo.png') }}" class="mt-2 mb-2">
-                            <h3>Nenhum item pendente.</h3>
-                    </div>
-                    @endif
-
-
-                    <div class="row">
-                        @foreach ($orderSummariesPreviousStep as $orderSummary)
-                            @php
-                                $clickAction = "";
-                                if($productionLine->clickable == 1){
-                                    $clickAction = 'wire:click="orderDetailAndMoveForward(' . $orderSummary->id . ')"';
-                                }
-                            @endphp
-                            <div class="mb-2 text-center col-xl-2 col-lg-2 col-md-4 col-6">
-                                <div {!!$clickAction!!}
-                                    onClick='$(".loading").LoadingOverlay("show")'
-                                    class="order-card card {{ $productionLine->color == '' ? 'bg-secondary' : '' }}"
-                                    {!! $productionLine->color != '' ? 'style="background-color: ' . $stepColors[$orderSummary->current_step_number] . '"' : '' !!}>
-                                    <div class="card-body">
-                                        <h4 class="text-white">{{ $orderSummary->friendly_number }}</h4>
-                                        <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }}</div>
-                                    </div>
-                                </div>
+    <div class="card loading">
+        <div class="card-body">
+            @if($total_orders == 0)
+            <div class="text-center">
+                <img src="{{ asset('images/ico-logo.png') }}" class="mt-2 mb-2">
+                    <h3>Nenhum item em produção ou pronto.</h3>
+            </div>
+            @endif
+            <div class="row">
+                @php
+                    $prevStartNumber = -1;                        
+                @endphp                        
+                @foreach ($orderSummaries as $index => $orderSummary)
+                    @php
+                        $clickAction = 'wire:click="orderDetail(' . $orderSummary->id . ', ' . $orderSummary->production_line_id . ')"';
+                        $curStartNumber = intval(substr($orderSummary->friendly_number, 0, 1));
+                        if($curStartNumber != $prevStartNumber){
+                            if($prevStartNumber >= 0) echo '</div>';
+                            $prevStartNumber = $curStartNumber;
+                            //Abre coluna
+                            if($index < count($orderSummaries)) echo '<div class="text-center col">';
+                        }
+                    @endphp
+                        <div {!!$clickAction!!}
+                            onClick='$(".loading").LoadingOverlay("show")'
+                            class="order-card card mb-2 {{$lastStepProductionLine->id == $orderSummary->production_line_id ? 'bg-success' : 'bg-danger'}}">
+                            <div class="card-body">
+                                <h4 class="text-white">{{ $orderSummary->friendly_number }}</h4>
+                                <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }}</div>
                             </div>
-                        @endforeach
-                        @foreach ($orderSummaries as $orderSummary)
-                            @php
-                                $clickAction = "";
-                                if($productionLine->clickable == 1){
-                                    $clickAction = 'wire:click="orderDetail(' . $orderSummary->id . ', ' . $orderSummary->production_line_id . ')"';
-                                }
-
-                                $cardColor = "";
-                                if($orderSummary->paused == 1){
-                                    $cardColor = 'style="background-color: rgb(165, 162, 0)"';
-                                }elseif($productionLine->color != '' && isset($stepColors[$orderSummary->current_step_number])){
-                                    $cardColor = 'style="background-color: ' . $stepColors[$orderSummary->current_step_number] . '"';
-                                }
-
-                                
-                            @endphp
-
-                            <div class="mb-2 text-center col-xl-2 col-lg-2 col-md-4 col-6">
-                                <div {!!$clickAction!!}
-                                    onClick='$(".loading").LoadingOverlay("show")'
-                                    class="order-card card {{ $productionLine->color == '' ? 'bg-secondary' : '' }}"
-                                    {!! $cardColor !!}
-                                    >
-                                    <div class="card-body">
-                                        <h4 class="text-white">{{ $orderSummary->friendly_number }}</h4>
-                                        <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
+                        </div>
+                @endforeach
             </div>
         </div>
     </div>
+
 
     @if(is_object($orderSummaryDetail) && is_object($orderSummaryDetail->orderBabelized))
     <div class="modal fade order-modal" id="order-modal" tabindex="-1" role="dialog" aria-labelledby="order-modal"
@@ -154,12 +123,9 @@
                                 <div class="col-3 small text-right">@money($orderSummaryDetail->orderBabelized->orderAmount)</div>
                             </div>
                         </div><span></span>
+                        @if($lastStepProductionLine->id == $orderSummaryDetail->production_line_id)
                         <div>
-                            <div role="toolbar" class="btn-toolbar"><button type="button" name="nextStep" value="nextStep" wire:click="nextStep({{$orderSummaryDetail->id}})" class="mt-2 btn btn-success btn-block"><i wire:loading wire:target="nextStep" class="fas fa-cog fa-spin"></i> {{ $productionLine->name }} OK</button></div>
-                        </div>
-                        @if($productionLine->can_pause && $orderSummaryDetail->paused != 1)
-                        <div>
-                            <div role="toolbar" class="btn-toolbar"><button type="button" name="pause" value="pause" wire:click="pause({{$orderSummaryDetail->id}})" class="mt-2 btn btn-warning btn-block"><i wire:loading wire:target="pause" class="fas fa-cog fa-spin"></i> Pausar</button></div>
+                            <div role="toolbar" class="btn-toolbar"><button type="button" name="finishProcess" value="finishProcess" wire:click="finishProcess({{$orderSummaryDetail->id}})" class="mt-2 btn btn-success btn-block"><i wire:loading wire:target="finishProcess" class="fas fa-cog fa-spin"></i> Despachar</button></div>
                         </div>
                         @endif
                         <div>
@@ -183,7 +149,43 @@
              }, 60000);
         }
 
+        function fullScreen(){
+            $(".full-screen").hide();
+            $("#main-container").attr("fullscreen" , "1").addClass("container-full").removeClass("container").removeClass("my-5");
+            Swal.fire({
+                text: 'Aperte ESC para sair do modo painel.',
+                timer: 3000,
+                showCancelButton: false,
+                showCloseButton: false
+            });
+        }
+
+        function cancelFullScreen(){
+            $(".full-screen").show();
+            $("#main-container").removeAttr("fullscreen").removeClass("container-full").addClass("container").addClass("my-5");
+        }        
+
         $(document).ready(function() {
+
+            $(document).keyup(function(e) {
+
+                if (e.key === "Escape") { // escape key maps to keycode `27`
+                    cancelFullScreen();
+                }else if (e.key === "F4") { // escape key maps to keycode `27`
+                    fullScreen();
+                }
+           });
+            
+            Livewire.hook('element.updated', (el, component) => {
+                if($("#main-container").attr("fullscreen") == "1"){
+                    fullScreen();
+                }
+            })
+
+            $("#bt-fullscreen").on("click", function(){
+                fullScreen();
+            });
+
             var reloadDataInterval = reloadPage();
 
             $('#order-modal').on('hide.bs.modal', function (e) {
