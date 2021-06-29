@@ -110,6 +110,7 @@ class ProductionLinePanel extends Component
 
         $orderSummary =  OrderSummary::join("production_movements", "production_movements.order_summary_id", "order_summaries.id")
             ->where("order_summaries.id", $order_summary_id)
+            ->where("order_summaries.restaurant_id", $this->restaurant->id)
             ->select(['order_summaries.*', 'production_movements.paused'])
             ->orderBy("production_movements.id", "desc")
             ->firstOrFail();
@@ -127,6 +128,7 @@ class ProductionLinePanel extends Component
 
     public function orderDetail($order_summary_id, $production_line_id){
         $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
+        
         $productionLine = ProductionLine::findOrFail($production_line_id);
         
         if($productionLine->next_on_click == 1){ //Se passa para próximo passo no clique

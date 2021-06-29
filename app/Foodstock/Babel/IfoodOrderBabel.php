@@ -25,6 +25,12 @@ class IfoodOrderBabel extends OrderBabel implements OrderBabelInterface
         return $items;
     }
 
+    
+
+    public function brokerId(){
+        return $this->orderJson->id;
+    }       
+
     public function subtotal(){
         return $this->orderJson->total->subTotal;
     }    

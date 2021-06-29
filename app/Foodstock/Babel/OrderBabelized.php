@@ -29,6 +29,10 @@ class OrderBabelized extends OrderBabel implements OrderBabelInterface
         return $items;
     }
 
+    public function brokerId(){
+        return $this->orderJson->brokerId ?? null;
+    }       
+
     public function subtotal(){
         return $this->orderJson->subtotal ?? null;
     }    

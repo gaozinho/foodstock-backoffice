@@ -7,11 +7,12 @@ use App\Models\User;
 use App\Models\Restaurant;
 use App\Models\ProductionLine;
 use App\Models\OrderSummary;
-use App\Models\ProductionMovement;
 use App\Foodstock\Babel\OrderBabelized;
 use App\Actions\ProductionLine\ForwardProductionProccess;
 
 use App\Actions\ProductionLine\RecoverUserRestaurant;
+use App\Actions\ProductionLine\GenerateTrackingOrdersQr;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class DeliveryPanel extends Component
 {
@@ -23,10 +24,14 @@ class DeliveryPanel extends Component
     public $orderSummaries = [];
     public $orderSummaryDetail;
     public $lastStepProductionLine;
+    public $qrCodeUrl;
 
     public function mount()
     {
         $this->restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
+
+
+        $this->qrCodeUrl = route('panels.public-delivery-panel.index', (new GenerateTrackingOrdersQr())->encode($this->restaurant->id));
 
         $this->lastStepProductionLine = ProductionLine::where("restaurant_id", $this->restaurant->id)
             ->where("is_active", 1)
@@ -41,6 +46,7 @@ class DeliveryPanel extends Component
         $this->orderSummaries = OrderSummary::join("production_movements", "order_summaries.id", "=", "production_movements.order_summary_id")
             //->where("production_movements.production_line_id", $this->lastStepProductionLine->id)
             ->where("production_movements.step_finished", 0)
+            ->where("production_movements.restaurant_id", $this->restaurant->id)
             ->where("order_summaries.finalized", 0)
             ->select("order_summaries.*" , "production_movements.production_line_id")
             ->orderBy("order_summaries.friendly_number")

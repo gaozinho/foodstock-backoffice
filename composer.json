@@ -1,12 +1,14 @@
 {
-    "name": "laravel/laravel",
+    "name": "Foodstock Backoffice",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "Área do cliente",
     "keywords": [
-        "framework",
-        "laravel"
+        "Delivery",
+        "IFOOD",
+        "RAPPI",
+        "Gerencie"
     ],
-    "license": "MIT",
+    "license": "SaaS",
     "require": {
         "php": "^7.3|^8.0",
         "bensampo/laravel-enum": "^3.3",
@@ -24,7 +26,9 @@
         "livewire/livewire": "^2.0",
         "maatwebsite/excel": "^3.1",
         "proengsoft/laravel-jsvalidation": "^4.4",
-        "spatie/laravel-permission": "^4.2"
+        "simplesoftwareio/simple-qrcode": "~4",
+        "spatie/laravel-permission": "^4.2",
+        "vinkla/hashids": "^9.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",

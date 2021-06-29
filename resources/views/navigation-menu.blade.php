@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom sticky-top full-screen">
     <div class="container">
-        <a class="navbar-brand mr-4" href="/">
+        <a class="navbar-brand mr-4" href="{{route('dashboard')}}">
             <img src="{{ asset('images/logo.png') }}" style="height: 30px">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -63,6 +63,10 @@
 
                 <x-jet-nav-link href="{{ route('panels.delivery-panel.index') }}" :active="request()->routeIs('panels.delivery-panel.index')">
                     <i class="fas fa-tv"></i> {{ __('Painel') }}
+                </x-jet-nav-link>
+
+                <x-jet-nav-link href="{{ route('orders.keyboard.index') }}" :active="request()->routeIs('orders.keyboard.index')">
+                    <i class="fas fa-search"></i> {{ __('Localizador') }}
                 </x-jet-nav-link>
 
                 @endrole

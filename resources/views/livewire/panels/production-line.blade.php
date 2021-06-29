@@ -53,9 +53,6 @@
                         @foreach ($orderSummaries as $orderSummary)
                             @php
                                 $clickAction = "";
-                                if($productionLine->clickable == 1){
-                                    $clickAction = 'wire:click="orderDetail(' . $orderSummary->id . ', ' . $orderSummary->production_line_id . ')"';
-                                }
 
                                 $cardColor = "";
                                 if($orderSummary->paused == 1){
@@ -68,16 +65,35 @@
                             @endphp
 
                             <div class="mb-2 text-center col-xl-2 col-lg-2 col-md-4 col-6">
-                                <div {!!$clickAction!!}
-                                    onClick='$(".loading").LoadingOverlay("show")'
-                                    class="order-card card {{ $productionLine->color == '' ? 'bg-secondary' : '' }}"
-                                    {!! $cardColor !!}
-                                    >
-                                    <div class="card-body">
-                                        <h4 class="text-white">{{ $orderSummary->friendly_number }}</h4>
-                                        <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }}</div>
+
+                                @if($productionLine->clickable == 1)
+                                    <div wire:click="orderDetail({{$orderSummary->id}}, {{$orderSummary->production_line_id}})"
+                                        onClick='$(".loading").LoadingOverlay("show")' 
+                                        class="order-card card {{ $productionLine->color == '' ? 'bg-secondary' : '' }}"
+                                        {!! $cardColor !!}
+                                        >
+                                        <div class="card-body">
+                                            <h4 class="text-white">{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</h4>
+                                            <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }}</div>
+                                        </div>
                                     </div>
-                                </div>
+                                @else
+                                    @php
+                                        $babelized = new App\Foodstock\Babel\OrderBabelized($orderSummary->order_json);
+                                    @endphp
+                                    <div class="card {{ $productionLine->color == '' ? 'bg-secondary' : '' }}" {!! $cardColor !!}>
+                                        <div class="card-body text-white">
+                                            <div>
+                                                <span class="h4">{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</span> <span class="text-white">({{ $orderSummary->broker->name }})</span>
+                                            </div>
+                                            <div>
+                                            @foreach($babelized->items as $item)
+                                                <p class="my-0">{{$item->quantity}} :: {{$item->name}}</p>
+                                            @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         @endforeach
                     </div>
@@ -92,68 +108,13 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <div class="h6 modal-title h4" id="contained-modal-title-vcenter">
-                        <p class="my-0">{{$orderSummaryDetail->orderBabelized->shortOrderNumber}}<span class="small my-0"> :: IFOOD </span> <span class="small"><time
-                                    datetime="1623940830000">{{$orderSummaryDetail->orderBabelized->getFormattedCreatedDate()}}</time> (<time
-                                    datetime="1623940830000">18:13</time>)</span></p>
-                        <p class="my-0">{{$orderSummaryDetail->orderBabelized->customerName()}}</p>
-                        <div>
-                            <p class="small my-0">Endereço: {{$orderSummaryDetail->orderBabelized->deliveryFormattedAddress}}</p>
-                        </div>
-                        <p class="small my-0">Número de pedidos: {{$orderSummaryDetail->orderBabelized->ordersCountOnMerchant}}</p>
-                    </div><button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
+                      @include('livewire.panels.order-header-include')
                 </div>
                 <div class="modal-body">
                     <div data-testid="wrapper" class="_loading_overlay_wrapper css-79elbk">
-                        <div class="small">
-                            <div class="row pb-2">
-                                <div class="col-2 col-lg-1 col-sm-1 small font-weight-bold">Qtde</div>
-                                <div class="col-7 col-lg-8 col-sm-8 small font-weight-bold">Item</div>
-                                <div class="col-3 col-lg-3 small text-right font-weight-bold">Total</div>
-                            </div>
-                            @foreach($orderSummaryDetail->orderBabelized->items as $item)
-                            <div>
-                                <div class="row pb-2">
-                                    <div class="col-2 col-lg-1 col-sm-1">
-                                        <h6 class="m-0">{{$item->quantity}}</h6>
-                                    </div>
-                                    <div class="col-7 col-lg-8 col-sm-8 small">{{$item->name}} 
-                                        @if($item->observations) <span class="px-1 bg-warning text-dark">{{$item->observations}}</span> @endif
-                                    </div>
-                                    <div class="col-3 col-lg-3 small text-right">@money($item->totalPrice)</div>
-                                    @foreach($item->subitems as $subitem)
-                                    <div class="col-12 small">
-                                        <div>
-                                            <div class="row">
-                                                <div class="col-7 offset-2">{{$subitem->quantity}} {{$subitem->name}} 
-                                                    @if($subitem->observations) <span class="px-1 bg-warning text-dark">{{$subitem->observations}}</span> @endif
-                                                </div>
-                                                <div class="col-3 text-right">@money($subitem->totalPrice)</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            @endforeach
-                            <hr class="my-2">
-                            <div class="row pb-0">
-                                <div class="col-9 small">
-                                    <div>Subtotal</div>
-                                </div>
-                                <div class="col-3 small text-right">@money($orderSummaryDetail->orderBabelized->subtotal)</div>
-                            </div>
-                            <div class="row pb-0">
-                                <div class="col-9 small">Entrega</div>
-                                <div class="col-3 small text-right">@money($orderSummaryDetail->orderBabelized->deliveryFee)</div>
-                            </div>
-                            <div class="row pb-0">
-                                <div class="col-9 small">Total</div>
-                                <div class="col-3 small text-right">@money($orderSummaryDetail->orderBabelized->orderAmount)</div>
-                            </div>
-                        </div><span></span>
+                        
+                        @include('livewire.panels.order-detail-include')
+
                         <div>
                             <div role="toolbar" class="btn-toolbar"><button type="button" name="nextStep" value="nextStep" wire:click="nextStep({{$orderSummaryDetail->id}})" class="mt-2 btn btn-success btn-block"><i wire:loading wire:target="nextStep" class="fas fa-cog fa-spin"></i> {{ $productionLine->name }} OK</button></div>
                         </div>
@@ -163,7 +124,7 @@
                         </div>
                         @endif
                         <div>
-                            <div role="toolbar" class="btn-toolbar"><button type="button" data-dismiss="modal" class="mt-2 btn btn-secondary btn-block">Voltar</button></div>
+                            <div role="toolbar" class="btn-toolbar"><button type="button" data-dismiss="modal" class="mt-2 btn btn-secondary btn-block">Fechar</button></div>
                         </div>
                     </div>
                 </div>

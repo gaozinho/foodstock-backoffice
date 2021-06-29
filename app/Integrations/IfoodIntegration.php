@@ -3,8 +3,6 @@ namespace App\Integrations;
 
 use App\Models\Broker;
 use GuzzleHttp\Client;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
 use App\Enums\BrokerType;
 
 class IfoodIntegration

@@ -10,13 +10,14 @@ class OrderBabel
     protected $orderJson = null;
 
     public $items, $subtotal, $deliveryFee, $orderAmount, $shortOrderNumber,
-        $createdDate, $ordersCountOnMerchant, $customerName, $deliveryFormattedAddress;
+        $createdDate, $ordersCountOnMerchant, $customerName, $deliveryFormattedAddress, $brokerId;
 
     public function __construct($orderString){
         if($this->isJson($orderString)){
             $this->orderString = $orderString;
             $this->orderJson = json_decode($orderString);
 
+            $this->brokerId = $this->brokerId(); 
             $this->items = $this->items(); 
             $this->subtotal = $this->subtotal(); 
             $this->deliveryFee = $this->deliveryFee(); 
@@ -43,9 +44,13 @@ class OrderBabel
         return (array) $this;
     }   
 
+    public function brokerId(){
+        return $this->brokerId;
+    }
+
     public function orderString(){
         return $this->orderString;
-    }
+    }    
 
     public function orderJson(){
         return $this->orderJson;

@@ -38,19 +38,13 @@
 
     </head>
     <body class="font-sans antialiased bg-light">
-        <x-jet-banner />
-        @livewire('navigation-menu')
 
-        @if(isset($header))
-        <!-- Page Heading -->
-        <header class="d-flex py-3 bg-white shadow-sm border-bottom full-screen mb-4">
-            <div class="container">
-                <span class="h3 text-muted">{{ $header }}</span>
-            </div>
-        </header>
-        @endif
+        <div class="container text-center mt-3">
+            <a class="navbar-brand mr-4" href="/">
+                <img src="{{ asset('images/logo.png') }}" style="height: 30px">
+            </a>
+        </div>
 
-        <!-- Page Content -->
         <main id="main-container" class="container">
             {{ $slot }}
         </main>

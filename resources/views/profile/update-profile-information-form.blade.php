@@ -1,10 +1,10 @@
 <x-jet-form-section submit="updateProfileInformation">
     <x-slot name="title">
-        {{ __('Profile Information') }}
+        {{ __('Dados pessoais') }}
     </x-slot>
 
     <x-slot name="description">
-        {{ __('Update your account\'s profile information and email address.') }}
+        {{ __('Atualize seus dados pessoais e endereço de e-mail.') }}
     </x-slot>
 
     <x-slot name="form">
@@ -76,7 +76,7 @@
     <x-slot name="actions">
 		<div class="d-flex align-items-baseline">
 			<x-jet-button>
-				{{ __('Save') }}
+				{{ __('Salvar') }}
 			</x-jet-button>
 		</div>
     </x-slot>

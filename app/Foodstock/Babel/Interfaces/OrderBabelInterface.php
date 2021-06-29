@@ -2,7 +2,7 @@
 namespace App\Foodstock\Babel\Interfaces;
 
 interface OrderBabelInterface{
-    /*
+
     public function items();
     public function subtotal();
     public function deliveryFee();
@@ -13,5 +13,6 @@ interface OrderBabelInterface{
     public function ordersCountOnMerchant();
     public function customerName();
     public function deliveryFormattedAddress();
-    */
+    public function brokerId();
+
 }

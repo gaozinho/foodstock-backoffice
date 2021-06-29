@@ -15,8 +15,11 @@ use App\Http\Livewire\Configuration\{
 };
 
 use App\Http\Livewire\Panels\{
-    ProductionLinePanel, DeliveryPanel
+   ProductionLinePanel, DeliveryPanel
 };
+
+use App\Http\Livewire\Deliveryman\DeliverymanPanel;
+use App\Http\Livewire\Keyboard\NumericKeyboard;
 
 Route::group(['middleware' => ['role:admin']], function (){
    Route::get('/wizard/restaurants', Restaurants::class)->name('wizard.restaurant.index')->middleware('auth');
@@ -32,6 +35,9 @@ Route::group(['middleware' => ['role:admin']], function (){
 
 Route::get('/panel/production-line/{role_name}', ProductionLinePanel::class)->name('panels.production-line-panel.index')->middleware('auth');
 Route::get('/panel/delivery', DeliveryPanel::class)->name('panels.delivery-panel.index')->middleware('auth');
+Route::get('/panel/deliveryman/{restaurant_id}', DeliverymanPanel::class)->name('panels.public-delivery-panel.index');
+
+Route::get('/order/keyboard', NumericKeyboard::class)->name('orders.keyboard.index')->middleware('auth');
 
 
 //################### TESTES
