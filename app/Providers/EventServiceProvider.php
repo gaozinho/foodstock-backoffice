@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Event;
 use App\Listeners\LoadUserRolesToSession;
 use App\Listeners\GrantAdminToUser;
 
+use App\Events\FinishedProccess;
+use App\Listeners\DispatchOrderOnBroker;
+
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -27,6 +30,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         Registered::class => [
             GrantAdminToUser::class,
+        ],
+        FinishedProccess::class => [
+            DispatchOrderOnBroker::class,
         ],
     ];
 

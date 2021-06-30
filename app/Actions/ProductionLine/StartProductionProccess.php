@@ -9,6 +9,8 @@ use App\Models\ProductionLine;
 use App\Models\ProductionLineVersion;
 use App\Actions\ProductionLine\GenerateOrderJson;
 
+use App\Models\FederatedSale;
+
 class StartProductionProccess
 {
     public function start($order_id){
@@ -34,7 +36,7 @@ class StartProductionProccess
             $productionLineNextStep = $this->nextStep($order->restaurant_id, $productionLine->step);
             $productionLineVersion = ProductionLineVersion::where("restaurant_id", $order->restaurant_id)->where("is_active", 1)->firstOrFail();
             
-            return ProductionMovement::firstOrCreate([
+            $productionMovement = ProductionMovement::firstOrCreate([
                     'order_id' => $order->id, 
                     'production_line_id' => $productionLine->id
                 ],
@@ -48,6 +50,14 @@ class StartProductionProccess
                     'next_step_id'=> $productionLineNextStep ? $productionLineNextStep->id : null,
                     'production_line_version_id' => $productionLineVersion->id
             ]);
+
+            try{
+                FederatedSale::create(array_merge(["restaurant_id" => $order->restaurant_id, "broker_id" => $order->broker_id], (array) $orderJson));
+            }catch(\Exception $e){
+
+            }
+
+            return $productionMovement;
         }catch(\Exception $e){
             if(env('APP_DEBUG')) throw $e;
             $mensagem = 'Não foi possível iniciar o processo do pedido %d. Mais detalhes: %s';

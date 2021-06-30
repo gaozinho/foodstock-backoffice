@@ -29,6 +29,7 @@ class Ifood extends Component
         //'ifoodBroker.password' => 'max:255|required',
         'ifoodBroker.enabled' => 'boolean|nullable',
         'ifoodBroker.acknowledgment' => 'boolean|nullable',
+        'ifoodBroker.dispatch' => 'boolean|nullable',
         'ifoodBroker.authorizationCode' => 'nullable',     
     ];
 

@@ -48,7 +48,7 @@ class IfoodOrderBabel extends OrderBabel implements OrderBabelInterface
     }
 
     public function createdDate(){
-        return $this->orderJson->createdAt;
+        return date("Y-m-d H:i:s", strtotime($this->orderJson->createdAt));
     }
 
     public function getFormattedCreatedDate(){

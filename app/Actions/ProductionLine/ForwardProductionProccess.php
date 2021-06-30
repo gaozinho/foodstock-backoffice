@@ -11,6 +11,7 @@ use App\Models\ProductionLineVersion;
 use App\Actions\ProductionLine\GenerateOrderJson;
 use GuzzleHttp\Client;
 use App\Foodstock\Babel\OrderBabelized;
+use App\Events\FinishedProccess;
 
 class ForwardProductionProccess
 {
@@ -61,22 +62,10 @@ class ForwardProductionProccess
         $orderSummary->finalized = 1;
         $orderSummary->finalized_at = date("Y-m-d H:i:s");
         $orderSummary->save();
-
-
-        //TODO - Refatorar
-        $orderBabelized = new OrderBabelized($orderSummary->order_json);
-        $ifoodBroker = IfoodBroker::where("restaurant_id", $orderSummary->restaurant_id)->firstOrFail();
-        //Avisa ifood
-        $payload = [
-            'headers' => [
-                'Authorization' => 'Bearer '. env('INTEGRATION_TOKEN'),
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/x-www-form-urlencoded',
-            ],
-            "form_params" => ["ifood_broker_id" => $ifoodBroker->id, "ifood_order_id" => $orderBabelized->brokerId]
-        ];
-        $httpClient = new Client(["verify" => false]);
-        $httpResponse = $httpClient->post(env('INTEGRATION_IFOOD_DISPATCH_URI'), $payload);
+        FinishedProccess::dispatch(
+            new OrderBabelized($orderSummary->order_json), 
+            IfoodBroker::where("restaurant_id", $orderSummary->restaurant_id)->firstOrFail()
+        );
     }
 
     protected function firstStep($restaurant_id){

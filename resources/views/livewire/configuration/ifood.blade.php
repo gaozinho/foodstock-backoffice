@@ -194,12 +194,11 @@
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <div class="pretty p-switch p-fill">
-                                                <input id="enabled" wire:model.defer='ifoodBroker.enabled'
+                                                <input wire:model.defer='ifoodBroker.enabled'
                                                     name="enabled" type="checkbox" value="1"
                                                     {{ old('enabled', optional($ifoodBroker)->enabled) == '1' ? 'checked' : '' }} />
                                                 <div class="state">
-                                                    <label>Ativar imediatamente integração com o {{ $ifood->name }}
-                                                        ao salvar</label>
+                                                    <label>Ativar integração com o {{ $ifood->name }}</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -207,7 +206,7 @@
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <div class="pretty p-switch p-fill">
-                                                <input id="acknowledgment" wire:model.defer='ifoodBroker.acknowledgment'
+                                                <input wire:model.defer='ifoodBroker.acknowledgment'
                                                     name="acknowledgment" type="checkbox" value="1"
                                                     {{ old('acknowledgment', optional($ifoodBroker)->acknowledgment) == '1' ? 'checked' : '' }} />
                                                 <div class="state">
@@ -217,6 +216,18 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12">
+                                        <div class="form-group">
+                                            <div class="pretty p-switch p-fill">
+                                                <input wire:model.defer='ifoodBroker.dispatch'
+                                                    name="dispatch" type="checkbox" value="1"
+                                                    {{ old('dispatch', optional($ifoodBroker)->dispatch) == '1' ? 'checked' : '' }} />
+                                                <div class="state">
+                                                    <label>Avisar o {{ $ifood->name }} que o pedido está pronto.</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                    
                                 </div>
                                 <div class="form-group text-right">
                                     @if ($ifoodBroker->id > 0)

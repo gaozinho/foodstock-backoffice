@@ -31,6 +31,7 @@ mix.copyDirectory('node_modules/jquery/dist', 'public/node_modules/jquery/dist')
 mix.copyDirectory('node_modules/cleave.js/dist', 'public/node_modules/cleave.js');
 mix.copyDirectory('node_modules/moment/min', 'public/node_modules/moment');
 mix.copyDirectory('node_modules/tempusdominus-bootstrap-4/build', 'public/node_modules/tempusdominus-bootstrap-4');
+mix.copyDirectory('node_modules/apexcharts/dist', 'public/node_modules/apexcharts');
 
 mix.copy('node_modules/evol-colorpicker/js/evol-colorpicker.min.js', 'public/node_modules/evol-colorpicker/js/evol-colorpicker.min.js');
 mix.copy('node_modules/evol-colorpicker/css/evol-colorpicker.min.css', 'public/node_modules/evol-colorpicker/css/evol-colorpicker.min.css');

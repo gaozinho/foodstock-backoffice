@@ -28,6 +28,7 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.15.3",
+        "apexcharts": "^3.27.1",
         "cleave.js": "^1.6.0",
         "evol-colorpicker": "^3.4.2",
         "jquery-ui": "^1.12.1",
