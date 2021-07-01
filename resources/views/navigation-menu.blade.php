@@ -40,31 +40,31 @@
                             {{ __('Sobre seu delivery') }}
                         </x-jet-dropdown-link>
 
-                        @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
+                        @if(auth()->user()->hasRestaurants()))
                             <x-jet-dropdown-link href="{{ route('configuration.broker.index') }}">
                                 {{ __('Integrações') }}
                             </x-jet-dropdown-link>
-                        @endcan
 
-                        @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
                             <x-jet-dropdown-link href="{{ route('configuration.production-line.index') }}">
                                 {{ __('Processo de produção') }}
                             </x-jet-dropdown-link>
-                        @endcan
-
-                        <x-jet-dropdown-link href="{{ route('configuration.teams.index') }}">
-                            {{ __('Equipe de trabalho') }}
-                        </x-jet-dropdown-link>
+                        
+                            <x-jet-dropdown-link href="{{ route('configuration.teams.index') }}">
+                                {{ __('Equipe de trabalho') }}
+                            </x-jet-dropdown-link>
+                        @endif
                     </x-slot>
                 </x-jet-dropdown>
 
-                <x-jet-nav-link href="{{ route('panels.delivery-panel.index') }}" :active="request()->routeIs('panels.delivery-panel.index')">
-                    <i class="fas fa-tv"></i> {{ __('Painel') }}
-                </x-jet-nav-link>
+                @if(auth()->user()->hasRestaurants()))
+                    <x-jet-nav-link href="{{ route('panels.delivery-panel.index') }}" :active="request()->routeIs('panels.delivery-panel.index')">
+                        <i class="fas fa-tv"></i> {{ __('Painel') }}
+                    </x-jet-nav-link>
 
-                <x-jet-nav-link href="{{ route('orders.keyboard.index') }}" :active="request()->routeIs('orders.keyboard.index')">
-                    <i class="fas fa-search"></i> {{ __('Localizador') }}
-                </x-jet-nav-link>
+                    <x-jet-nav-link href="{{ route('orders.keyboard.index') }}" :active="request()->routeIs('orders.keyboard.index')">
+                        <i class="fas fa-search"></i> {{ __('Localizador') }}
+                    </x-jet-nav-link>
+                @endif
 
                 @endrole
             </ul>

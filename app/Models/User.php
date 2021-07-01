@@ -66,5 +66,9 @@ class User extends Authenticatable
     public function restaurants()
     {
         return $this->belongsToMany('App\Models\Restaurant', 'restaurant_has_users');
-    }    
+    }
+
+    public function hasRestaurants(){
+        return $this->restaurants()->count() > 0;
+    }
 }

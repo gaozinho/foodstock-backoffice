@@ -50,7 +50,7 @@ class OrderBabelized extends OrderBabel implements OrderBabelInterface
     }
 
     public function createdDate(){
-        return $this->orderJson->createdDate ?? null;
+        return isset($this->orderJson->createdDate) ? date("Y-m-d H:i:s", strtotime($this->orderJson->createdDate)) : null;
     }
 
     public function getFormattedCreatedDate(){

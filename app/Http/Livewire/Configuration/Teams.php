@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Http\Livewire\Configuration\BaseConfigurationComponent;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Actions\ProductionLine\RecoverUserRestaurant;
 
 class Teams extends Component
 {
@@ -45,8 +46,13 @@ class Teams extends Component
 
     public function render()
     {
-        $viewName = 'livewire.configuration.teams';
-        return view($viewName, [])->layout('layouts.app', ['header' => 'Equipe de trabalho']);
+        try{
+            $restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
+            $viewName = 'livewire.configuration.teams';
+            return view($viewName, [])->layout('layouts.app', ['header' => 'Equipe de trabalho']);
+        }catch(\Exception $e){
+            abort(404);
+        }
     }
 
     public function hydrateUser(){

@@ -44,7 +44,7 @@
                                     class="order-card card {{ $productionLine->color == '' ? 'bg-secondary' : '' }}"
                                     {!! $productionLine->color != '' ? 'style="background-color: ' . $stepColors[$orderSummary->current_step_number] . '"' : '' !!}>
                                     <div class="card-body">
-                                        <h4 class="text-white">{{ $orderSummary->friendly_number }}</h4>
+                                        <h4 class="text-white">{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</h4>
                                         <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }}</div>
                                     </div>
                                 </div>
@@ -64,9 +64,8 @@
                                 
                             @endphp
 
-                            <div class="mb-2 text-center col-xl-2 col-lg-2 col-md-4 col-6">
-
-                                @if($productionLine->clickable == 1)
+                            @if($productionLine->clickable == 1)
+                                <div class="mb-2 text-center col-xl-2 col-lg-2 col-md-4 col-6">
                                     <div wire:click="orderDetail({{$orderSummary->id}}, {{$orderSummary->production_line_id}})"
                                         onClick='$(".loading").LoadingOverlay("show")' 
                                         class="order-card card {{ $productionLine->color == '' ? 'bg-secondary' : '' }}"
@@ -77,14 +76,17 @@
                                             <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }}</div>
                                         </div>
                                     </div>
-                                @else
-                                    @php
-                                        $babelized = new App\Foodstock\Babel\OrderBabelized($orderSummary->order_json);
-                                    @endphp
+                                </div>
+                            @else
+                                @php
+                                    $babelized = new App\Foodstock\Babel\OrderBabelized($orderSummary->order_json);
+                                @endphp
+                                <div class="mb-2 text-center col-xl-3 col-lg-3 col-md-4 col-6">
                                     <div class="card {{ $productionLine->color == '' ? 'bg-secondary' : '' }}" {!! $cardColor !!}>
                                         <div class="card-body text-white">
                                             <div>
-                                                <span class="h4">{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</span> <span class="text-white">({{ $orderSummary->broker->name }})</span>
+                                                <span class="h4">{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</span><br />
+                                                <small><span class="text-white">{{ $orderSummary->broker->name }} :: {{\Carbon\Carbon::parse($orderSummary->created_at)->diffForhumans()}}</small></span>
                                             </div>
                                             <div>
                                             @foreach($babelized->items as $item)
@@ -93,8 +95,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                @endif
-                            </div>
+                                </div>
+                            @endif
+                            
                         @endforeach
                     </div>
                 </div>
@@ -131,13 +134,22 @@
             </div>
         </div>
     </div>
+        
+    <script>
+        $(document).ready(function() {
+            moment.locale('pt-br');
+            var time = moment('{{$orderSummaryDetail->orderBabelized->createdDate}}').fromNow();
+            $('#clock').html(time);
+        });
+    </script>
+        
     @endif
 
 
 </div>
+
 @push('scripts')
     <script>
-
         function reloadPage(){
             return setInterval(() => { 
                 Livewire.emit('loadData');
@@ -146,7 +158,7 @@
 
         $(document).ready(function() {
             var reloadDataInterval = reloadPage();
-
+            
             $('#order-modal').on('hide.bs.modal', function (e) {
                 reloadDataInterval = reloadPage();
             });

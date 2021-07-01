@@ -10,6 +10,7 @@ use App\Enums\BrokerType;
 use App\Http\Livewire\Configuration\BaseConfigurationComponent;
 use App\Integrations\IfoodIntegration;
 use App\Integrations\IfoodIntegrationDistributed;
+use App\Actions\ProductionLine\RecoverUserRestaurant;
 
 class Brokers extends BaseConfigurationComponent
 {
@@ -20,8 +21,16 @@ class Brokers extends BaseConfigurationComponent
 
     public function render()
     {
-        $viewName = 'livewire.configuration.brokers';
-        if($this->isWizard()) $viewName = 'livewire.configuration.wizard';
-        return view($viewName)->layout('layouts.app', ['header' => 'Integrações']);
+
+        try{
+            $restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
+            $viewName = 'livewire.configuration.brokers';
+            if($this->isWizard()) $viewName = 'livewire.configuration.wizard';
+            return view($viewName)->layout('layouts.app', ['header' => 'Integrações']);
+        }catch(\Exception $e){
+            abort(404);
+        }
+
+
     } 
 }
