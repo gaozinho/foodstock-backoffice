@@ -37,7 +37,7 @@ class Broker extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'logo', 'endpoint', 'authenticationApi', 'merchantApi', 'usercodeApi', 'enabled', 'guidelines', 'access_token', 'expires', 'client_centralized_id', 'client_centralized_secret', 'client_distributed_id', 'client_distributed_secret', 'created_at', 'updated_at'];
+    protected $fillable = ['name', 'logo', 'endpoint', 'authenticationApi', 'merchantApi', 'usercodeApi', 'enabled', 'guidelines', 'access_token', 'expires', 'client_centralized_id', 'client_centralized_secret', 'client_distributed_id', 'client_distributed_secret', 'created_at', 'updated_at', 'code'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

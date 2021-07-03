@@ -38,7 +38,8 @@ class Teams extends Component
         if(!auth()->user()->hasRole("admin")) return redirect()->to('/dashboard');
 
         //MVP 1 - Um restaurante por usuário
-        $this->restaurant = Restaurant::where("user_id", "=", auth()->user()->id)->firstOrNew();
+        $this->restaurant =  (new RecoverUserRestaurant())->recoverOrNew(auth()->user()->id);
+        //$this->restaurant = Restaurant::where("user_id", "=", auth()->user()->id)->firstOrNew();
         $this->user = new User();
         $this->roles = Role::where("guard_name", "production-line")->get();
         $this->restaurantUsers = $this->restaurant->usersPivot()->get();

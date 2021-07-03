@@ -10,10 +10,11 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Auth\Notifications\VerifyEmail;
 
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
     use HasFactory;
@@ -68,7 +69,13 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Models\Restaurant', 'restaurant_has_users');
     }
 
-    public function hasRestaurants(){
-        return $this->restaurants()->count() > 0;
+    public function adminRestaurants()
+    {
+        return $this->hasMany('App\Models\Restaurant');
+    }    
+
+    public function menagesRestaurants(){
+        return $this->adminRestaurants()->count() > 0;
     }
+
 }

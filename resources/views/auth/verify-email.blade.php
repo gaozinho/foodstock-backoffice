@@ -6,12 +6,12 @@
 
         <div class="card-body">
             <div class="mb-3 small text-muted">
-                {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
+                {{ __('Bem-vindo ao foodStock! Antes e começar, por favor, acesse sua caixa de e-mail e valide-o clicando no link que acabamos de enviar para você. Se você não recebeu o e-mail, pode clicar no link abaixo ara reenviarmos a mensagem.') }}
             </div>
 
             @if (session('status') == 'verification-link-sent')
                 <div class="alert alert-success" role="alert">
-                    {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+                    {{ __('Um novo link de verificação foi enviado para o endereço de e-mail que você cadastrou.') }}
                 </div>
             @endif
 
@@ -21,7 +21,7 @@
 
                     <div>
                         <x-jet-button type="submit">
-                            {{ __('Resend Verification Email') }}
+                            {{ __('Reenviar e-mail de verificação') }}
                         </x-jet-button>
                     </div>
                 </form>
@@ -30,7 +30,7 @@
                     @csrf
 
                     <button type="submit" class="btn btn-link">
-                        {{ __('Log Out') }}
+                        {{ __('Sair') }}
                     </button>
                 </form>
             </div>

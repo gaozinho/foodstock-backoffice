@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Configuration;
 use Livewire\Component;
 use App\Models\Restaurant;
 use App\Http\Livewire\Configuration\BaseConfigurationComponent;
+use App\Actions\ProductionLine\RecoverUserRestaurant;
 
 class Restaurants extends BaseConfigurationComponent
 {
@@ -32,7 +33,8 @@ class Restaurants extends BaseConfigurationComponent
         
         $this->wizardStep = 1;
         //MVP 1 - Um restaurante por usuário
-        $this->restaurant = Restaurant::where("user_id", "=", auth()->user()->id)->firstOrNew();
+        $this->restaurant =  (new RecoverUserRestaurant())->recoverOrNew(auth()->user()->id);
+        //$this->restaurant = Restaurant::where("user_id", "=", auth()->user()->id)->firstOrNew();
     }    
 
     public function render()

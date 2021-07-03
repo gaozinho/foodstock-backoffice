@@ -40,7 +40,7 @@ class SalesWeek extends Component
                 ->setAnimated(true)
         );
 
-       FederatedDaySale::where("restaurant_id", 2)
+       FederatedDaySale::where("restaurant_id", $restaurant->id)
             ->whereBetween("date", [Carbon::now()->subDays(13)->toDateString(), Carbon::now()->subDays(7)->toDateString()])
             ->orderBy("date")
             ->get()

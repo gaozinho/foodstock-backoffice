@@ -30,7 +30,7 @@ class BaseConfigurationComponent extends Component
             'showCancelButton' =>  false, 
             'showConfirmButton' =>  false, 
         ]);
-    }
+    }  
 
     public function isWizard(){
         return $this->wizard;

@@ -6,6 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Role;
 use App\Models\Restaurant;
+use App\Actions\ProductionLine\RecoverUserRestaurant;
 
 class Roles extends Component
 {
@@ -14,7 +15,8 @@ class Roles extends Component
     public function mount(){
         $user = Auth::user();
         //MVP 1 - Um restaurante por usuário
-        $restaurant = Restaurant::where("user_id", "=", auth()->user()->id)->firstOrNew();
+        $restaurant = (new RecoverUserRestaurant())->recoverOrNew(auth()->user()->id);
+        //$restaurant = Restaurant::where("user_id", "=", auth()->user()->id)->firstOrNew();
 
         if($user->hasRole('admin')){
             $this->roles = Role::join("production_lines", "production_lines.role_id", "=", "roles.id")

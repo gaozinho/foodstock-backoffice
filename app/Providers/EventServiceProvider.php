@@ -22,14 +22,12 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        Registered::class => [
-            SendEmailVerificationNotification::class,
-        ],
         Login::class => [
             LoadUserRolesToSession::class,
         ],
         Registered::class => [
             GrantAdminToUser::class,
+            SendEmailVerificationNotification::class,
         ],
         FinishedProccess::class => [
             DispatchOrderOnBroker::class,

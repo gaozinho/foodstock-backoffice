@@ -3,6 +3,7 @@
 namespace App\Actions\ProductionLine;
 
 use App\Models\Restaurant;
+use App\Actions\ProductionLine\RecoverUserRestaurant;
 
 class RecoverUserRestaurant
 {
@@ -16,5 +17,9 @@ class RecoverUserRestaurant
         if($user->restaurant_member == 1){
             return $user->restaurants()->firstOrFail();
         }
+    }
+
+    public function recoverOrNew($user_id){
+        return Restaurant::where("user_id", "=", $user_id)->firstOrNew();
     }
 }

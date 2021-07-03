@@ -12,6 +12,6 @@ class WizardSuccess extends BaseConfigurationComponent
         if(!auth()->user()->hasRole("admin")) return redirect()->to('/dashboard');
         
         return view('livewire.configuration.wizard-success')
-            ->layout('layouts.app', ['header' => 'Pronto! Seu delivery está configurado.']);;
+            ->layout('layouts.app');
     }
 }

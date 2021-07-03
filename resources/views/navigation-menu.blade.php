@@ -18,53 +18,57 @@
                 <livewire:menu.roles />
 
                 @role('admin')
-                <x-jet-dropdown id="teamManagementDropdown">
-                    <x-slot name="trigger">
-                        <i class="fas fa-motorcycle"></i> Seu delivery
-                    </x-slot>
+                    <x-jet-dropdown id="teamManagementDropdown">
+                        <x-slot name="trigger">
+                            <i class="fas fa-motorcycle"></i> Seu delivery
+                        </x-slot>
 
-                    <x-slot name="content">
-                        <!--
-                        <h6 class="dropdown-header">
-                            {{ __('Integrações e processo') }}
-                        </h6>
-                        -->
-                        
-                        <x-jet-dropdown-link href="{{ route('wizard.restaurant.index') }}">
-                            {{ __('Configuração expressa') }}
-                        </x-jet-dropdown-link>  
-                        
-                        <hr class="dropdown-divider">
+                        <x-slot name="content">
+                            <!--
+                            <h6 class="dropdown-header">
+                                {{ __('Integrações e processo') }}
+                            </h6>
+                            -->
+                            
+                            <x-jet-dropdown-link href="{{ route('wizard.restaurant.index') }}">
+                                {{ __('Configuração expressa') }}
+                            </x-jet-dropdown-link>  
+                            
+                            <hr class="dropdown-divider">
 
-                        <x-jet-dropdown-link href="{{ route('configuration.restaurant.index') }}">
-                            {{ __('Sobre seu delivery') }}
-                        </x-jet-dropdown-link>
-
-                        @if(auth()->user()->hasRestaurants()))
-                            <x-jet-dropdown-link href="{{ route('configuration.broker.index') }}">
-                                {{ __('Integrações') }}
+                            <x-jet-dropdown-link href="{{ route('configuration.restaurant.index') }}">
+                                {{ __('Sobre seu delivery') }}
                             </x-jet-dropdown-link>
 
-                            <x-jet-dropdown-link href="{{ route('configuration.production-line.index') }}">
-                                {{ __('Processo de produção') }}
-                            </x-jet-dropdown-link>
-                        
-                            <x-jet-dropdown-link href="{{ route('configuration.teams.index') }}">
-                                {{ __('Equipe de trabalho') }}
-                            </x-jet-dropdown-link>
-                        @endif
-                    </x-slot>
-                </x-jet-dropdown>
+                            @if(auth()->user()->menagesRestaurants())
+                                <x-jet-dropdown-link href="{{ route('configuration.broker.index') }}">
+                                    {{ __('Integrações') }}
+                                </x-jet-dropdown-link>
 
-                @if(auth()->user()->hasRestaurants()))
-                    <x-jet-nav-link href="{{ route('panels.delivery-panel.index') }}" :active="request()->routeIs('panels.delivery-panel.index')">
-                        <i class="fas fa-tv"></i> {{ __('Painel') }}
-                    </x-jet-nav-link>
+                                <x-jet-dropdown-link href="{{ route('configuration.production-line.index') }}">
+                                    {{ __('Processo de produção') }}
+                                </x-jet-dropdown-link>
+                            
+                                <x-jet-dropdown-link href="{{ route('configuration.teams.index') }}">
+                                    {{ __('Equipe de trabalho') }}
+                                </x-jet-dropdown-link>
+                            @endif
+                        </x-slot>
+                    </x-jet-dropdown>
 
-                    <x-jet-nav-link href="{{ route('orders.keyboard.index') }}" :active="request()->routeIs('orders.keyboard.index')">
-                        <i class="fas fa-search"></i> {{ __('Localizador') }}
-                    </x-jet-nav-link>
-                @endif
+                    @if(auth()->user()->menagesRestaurants())
+                        <x-jet-nav-link href="{{ route('panels.delivery-panel.index') }}" :active="request()->routeIs('panels.delivery-panel.index')">
+                            <i class="fas fa-tv"></i> {{ __('Painel') }}
+                        </x-jet-nav-link>
+
+                        <x-jet-nav-link href="{{ route('orders.keyboard.index') }}" :active="request()->routeIs('orders.keyboard.index')">
+                            <i class="fas fa-search"></i> {{ __('Localizador') }}
+                        </x-jet-nav-link>
+
+                        <x-jet-nav-link href="{{ route('welcome') }}" :active="request()->routeIs('info')">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </x-jet-nav-link>                        
+                    @endif
 
                 @endrole
             </ul>

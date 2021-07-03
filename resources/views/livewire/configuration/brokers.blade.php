@@ -1,12 +1,9 @@
 <div>
 
-            <livewire:configuration.ifood />
-
-    <hr />
-
-
-            <livewire:configuration.rappi />
-
+    @foreach($brokers as $broker)
+        @livewire('configuration.' . $broker->code)
+        <hr />
+    @endforeach
 
     @if($wizard)
     <hr />

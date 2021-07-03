@@ -1,5 +1,5 @@
 <div>
-    <div class="full-screen mb-3">
+    <div class="mb-3">
         <div class="d-flex justify-content-between align-items-end">
             <div>
                 <h2 class="mt-3 mb-0 pb-0">Painel de delivery
@@ -24,7 +24,21 @@
             </div>
        </div>
     </div>
+    @if(!is_object($lastStepProductionLine))
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-danger">
 
+                        <i class="fas fa-exclamation-circle"></i> Atenção! Você ainda não configurou o seu processo de produção. 
+                        <br />Para que os pedidos apareçam aqui, é necessário configurar pelo menos uma <b>integração</b> e também configurar o seu <b>processo de produção</b>.
+                        <br />
+                        <a href="{{route('configuration.production-line.index')}}" class="btn btn-secondary">Configurar processo de produção</a>
+
+            </div>
+        </div>
+    </div>
+        
+    @endif
     <div class="card loading">
         <div class="card-body">
             @if($total_orders == 0)

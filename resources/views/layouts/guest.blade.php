@@ -15,8 +15,16 @@
 
         <!-- Scripts -->
         <script src="{{ mix('js/app.js') }}" defer></script>
+
+        <!-- Templates -->
+        <link rel="stylesheet" href="{{ asset('landing/css/style.css') }}">
     </head>
     <body class="bg-light font-sans antialiased">
+
+        @include('header')
+
         {{ $slot }}
+
+        @include('footer')     
     </body>
 </html>

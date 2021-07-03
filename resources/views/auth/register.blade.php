@@ -1,3 +1,4 @@
+
 <x-guest-layout>
     <x-jet-authentication-card>
         <x-slot name="logo">
@@ -14,7 +15,7 @@
                     <x-jet-label value="{{ __('Name') }}" />
 
                     <x-jet-input class="{{ $errors->has('name') ? 'is-invalid' : '' }}" type="text" name="name"
-                                 :value="old('name')" required autofocus autocomplete="name" />
+                                :value="old('name')" required autofocus autocomplete="name" />
                     <x-jet-input-error for="name"></x-jet-input-error>
                 </div>
 
@@ -22,7 +23,7 @@
                     <x-jet-label value="{{ __('Email') }}" />
 
                     <x-jet-input class="{{ $errors->has('email') ? 'is-invalid' : '' }}" type="email" name="email"
-                                 :value="old('email')" required />
+                                :value="old('email')" required />
                     <x-jet-input-error for="email"></x-jet-input-error>
                 </div>
 
@@ -30,7 +31,7 @@
                     <x-jet-label value="{{ __('Password') }}" />
 
                     <x-jet-input class="{{ $errors->has('password') ? 'is-invalid' : '' }}" type="password"
-                                 name="password" required autocomplete="new-password" />
+                                name="password" required autocomplete="new-password" />
                     <x-jet-input-error for="password"></x-jet-input-error>
                 </div>
 

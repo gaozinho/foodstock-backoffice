@@ -30,14 +30,15 @@ class DeliveryPanel extends Component
     {
         $this->restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
 
-
         $this->qrCodeUrl = route('panels.public-delivery-panel.index', (new GenerateTrackingOrdersQr())->encode($this->restaurant->id));
 
         $this->lastStepProductionLine = ProductionLine::where("restaurant_id", $this->restaurant->id)
             ->where("is_active", 1)
             ->where("production_line_id", null)
             ->orderBy("step", "desc")
-            ->firstOrFail();
+            ->first();
+
+        
 
         $this->loadData();
     }    
@@ -84,8 +85,22 @@ class DeliveryPanel extends Component
 
     public function render()
     {
+       
         $viewName = 'livewire.panels.delivery';
         return view($viewName, []);
     }
+
+    public function bigAlert($type, $message){
+        $this->alert($type, $message, [
+            'position' =>  'top-end', 
+            'timer' =>  3000,  
+            'toast' =>  true, 
+            'text' =>  '', 
+            'confirmButtonText' =>  'Ok', 
+            'cancelButtonText' =>  'Cancel', 
+            'showCancelButton' =>  false, 
+            'showConfirmButton' =>  false, 
+        ]);
+    }  
 
 }

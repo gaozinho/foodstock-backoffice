@@ -117,6 +117,7 @@ class Ifood extends Component
         if($responseUserCode){
             $this->ifoodBroker->enabled = 1;
             $this->ifoodBroker->acknowledgment = 1;
+            $this->ifoodBroker->dispatch = 1;
             $this->ifoodBroker->userCode = $responseUserCode->userCode;
             $this->ifoodBroker->verificationUrlComplete = $responseUserCode->verificationUrlComplete;
             $this->save(false);
