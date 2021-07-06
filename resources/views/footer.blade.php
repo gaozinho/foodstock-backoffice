@@ -1,5 +1,7 @@
 <footer class="ftco-footer ftco-bg-dark">
     <div class="container">
+        @php
+        /*
         <div class="row mb-5">
             <div class="col-md-8">
                 <div class="row">
@@ -48,11 +50,13 @@
                 </div>
             </div>
         </div>
+        */
+        @endphp
         <div class="row">
             <div class="col-md text-left">
-                <p>&copy; Exclusivity 2017. All Rights Reserved. Made with <span
-                        class="icon-heart text-danger"></span> by <a
-                        href="https://free-template.co/">Free-Template.co</a></p>
+                <p>&copy; foodStock :: <a
+                        href="#">Política de uso e privacidade</a></p>
+                        <p>Versão BETA {{env('APP_VERSION')}}</>
             </div>
         </div>
     </div>

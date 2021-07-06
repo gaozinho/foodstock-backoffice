@@ -2,10 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <!-- 
-    More Templates Visit ==> Free-Template.co
-    -->
-    <title>Exclusivity - Free Bootstrap 4 Template</title>
+    <title>foodStock - delivery simples</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Free Template by Free-Template.co" />
@@ -13,6 +10,7 @@
     <meta name="author" content="Wagner Gonçalves wagnerggg@gmail.com" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('landing/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('landing/css/open-iconic-bootstrap.min.css') }}">
@@ -37,7 +35,7 @@
                         <h1 class="ftco-heading ftco-animate">Gerencie seu delivery. Simples e fácil!</h1>
                         <h2 class="h5 ftco-subheading mb-5 ftco-animate">FoodStock: uma ferramenta gratuita para gerenciar seu processo
                             de produção e despacho de pedidos. Integramos com as principais ferramentas de delivery do mercado.</h2>
-                        <p><a href="https://free-template.co/" target="_blank"
+                        <p><a href="{{ route('register') }}"
                                 class="btn btn-banner ftco-animate">Cadastre-se agora</a></p>
                     </div>
                 </div>
@@ -51,79 +49,61 @@
 
                 <div class="row">
                     <div class="col-md-12 text-center mb-5 ftco-animate">
-                        <h2 class="text-uppercase ftco-uppercase">Our Awesome Features</h2>
-                        <div class="row justify-content-center">
-                            <div class="col-md-7">
-                                <p class="lead">Far far away, behind the word mountains, far from the countries Vokalia and
-                                    Consonantia, there live the blind texts.</p>
+                        <h2 class="text-uppercase ftco-uppercase">Com o foodStock você tem</h2>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="media d-block mb-4 text-center ftco-media p-md-5 p-4 ftco-animate">
+                            <div class="ftco-icon mb-3"><i class="fas fa-3x fa-utensils"></i></div>
+                            <div class="media-body">
+                                <h5 class="mt-0">Integração com vários market places</h5>
+                                <p class="mb-5">Centraliza os pedidos dos market places e informa sobre pedidos recebidos e despachados.</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="media d-block mb-4 text-center ftco-media p-md-5 p-4 ftco-animate">
-                            <div class="ftco-icon mb-3"><span class="oi oi-thumb-up display-4 text-muted"></span></div>
+                            <div class="ftco-icon mb-3"><i class="fas fa-3x fa-chart-bar"></i></div>
                             <div class="media-body">
-                                <h5 class="mt-0">Free Bootstrap 4</h5>
-                                <p class="mb-5">Far far away, behind the word mountains, far from the countries Vokalia and
-                                    Consonantia, there live the blind texts.</p>
-                                <p class="mb-0"><a href="#" class="btn btn-primary btn-sm">Learn More</a></p>
+                                <h5 class="mt-0">Gestão à vista</h5>
+                                <p class="mb-5">Funciona com o conceito de gestão à vista e disponibiliza quadros kankan que representam as etapas do processo produtivo do delivery.</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="media d-block mb-4 text-center ftco-media p-md-5 p-4 ftco-animate">
-                            <div class="ftco-icon mb-3"><span class="oi oi-bolt display-4 text-muted"></span></div>
+                            <div class="ftco-icon mb-3"><i class="fas fa-3x fa-tasks"></i></div>
                             <div class="media-body">
-                                <h5 class="mt-0">Fast Loading</h5>
-                                <p class="mb-5">Far far away, behind the word mountains, far from the countries Vokalia and
-                                    Consonantia, there live the blind texts.</p>
-                                <p class="mb-0"><a href="#" class="btn btn-primary btn-sm">Learn More</a></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="media d-block mb-4 text-center ftco-media p-md-5 p-4 ftco-animate">
-                            <div class="ftco-icon mb-3"><span class="oi oi-person display-4 text-muted"></span></div>
-                            <div class="media-body">
-                                <h5 class="mt-0">Designer &amp; Developer</h5>
-                                <p class="mb-5">Far far away, behind the word mountains, far from the countries Vokalia and
-                                    Consonantia, there live the blind texts.</p>
-                                <p class="mb-0"><a href="#" class="btn btn-primary btn-sm">Learn More</a></p>
+                                <h5 class="mt-0">Processo de produção gerenciado</h5>
+                                <p class="mb-5">dispobiliza painéis para as equipes, desde o cozinheiro ao despacho. Painéis também para os motoboys, na TV e no celular.</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-lg-4 col-md-6">
                         <div class="media d-block mb-4 text-center ftco-media p-md-5 p-4 ftco-animate">
-                            <div class="ftco-icon mb-3"><span class="oi oi-code display-4 text-muted"></span></div>
+                            <div class="ftco-icon mb-3"><i class="fas fa-3x fa-funnel-dollar"></i></div>
                             <div class="media-body">
-                                <h5 class="mt-0">Clean Code</h5>
-                                <p class="mb-5">Far far away, behind the word mountains, far from the countries Vokalia and
-                                    Consonantia, there live the blind texts.</p>
-                                <p class="mb-0"><a href="#" class="btn btn-primary btn-sm">Learn More</a></p>
+                                <h5 class="mt-0">Gestão de vendas e pedidos</h5>
+                                <p class="mb-5">Tenha relatórios visuais de vendas e pedidos. Saiba em tempo real o que acontece no processo de produção do seu delivery.</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="media d-block mb-4 text-center ftco-media p-md-5 p-4 ftco-animate">
-                            <div class="ftco-icon mb-3"><span class="oi oi-magnifying-glass display-4 text-muted"></span>
+                            <div class="ftco-icon mb-3"><i class="fas fa-3x fa-users-cog"></i>
                             </div>
                             <div class="media-body">
-                                <h5 class="mt-0">Search Engine</h5>
-                                <p class="mb-5">Far far away, behind the word mountains, far from the countries Vokalia and
-                                    Consonantia, there live the blind texts.</p>
-                                <p class="mb-0"><a href="#" class="btn btn-primary btn-sm">Learn More</a></p>
+                                <h5 class="mt-0">Faça times de trabalho</h5>
+                                <p class="mb-5">Gerencie times de produção e, para que cada membro, forneça acesso somenta à parte do processo onde ele trabalha.</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="media d-block mb-4 text-center ftco-media p-md-5 p-4 ftco-animate">
-                            <div class="ftco-icon mb-3"><span class="oi oi-phone display-4 text-muted"></span></div>
+                            <div class="ftco-icon mb-3"><i class="fas fa-3x fa-user-check"></i></div>
                             <div class="media-body">
-                                <h5 class="mt-0">Fully Responsive</h5>
-                                <p class="mb-5">Far far away, behind the word mountains, far from the countries Vokalia and
-                                    Consonantia, there live the blind texts.</p>
-                                <p class="mb-0"><a href="#" class="btn btn-primary btn-sm">Learn More</a></p>
+                                <h5 class="mt-0">Configure você mesmo</h5>
+                                <p class="mb-5">Nossa intenção é ser simples. Você mesmo integra com os market places e configura o seu time e processo de trabalho. Tudo do seu jeito.</p>
                             </div>
                         </div>
                     </div>
@@ -136,11 +116,10 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 text-center ftco-animate">
-                        <h2 class="text-uppercase ftco-uppercase">Services</h2>
+                        <h2 class="text-uppercase ftco-uppercase">Funcionalidades</h2>
                         <div class="row justify-content-center mb-5">
                             <div class="col-md-7">
-                                <p class="lead">Far far away, behind the word mountains, far from the countries Vokalia and
-                                    Consonantia, there live the blind texts.</p>
+                                <p class="lead">Conheça um pouco das funcionalidades do foodStock. Tentamos manter os processos simples para manter você com foco no seu negócio.</p>
                             </div>
                         </div>
                     </div>
@@ -148,57 +127,43 @@
                 <!-- END row -->
                 <div class="row">
                     <div class="col-lg-4 mb-5 ftco-animate">
-                        <figure><img src="{{ asset('landing/images/img_2.jpg') }}" class="img-fluid"></figure>
+                        <figure><img src="{{ asset('images/landing/tela-configure.png') }}" class="img-fluid"></figure>
                         <div class="p-3">
-                            <h3 class="h4">Title of Service here</h3>
-                            <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia and
-                                Consonantia, there live the blind texts.</p>
+                            <h3 class="h4">Configure você mesmo</h3>
                             <ul class="list-unstyled ftco-list-check text-left">
-                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Free
-                                        template for designer and developers</span></li>
-                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Vokalia
-                                        and consonantia blind texts</span></li>
-                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Behind the
-                                        word mountains blind texts</span></li>
+                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Não há necessidade de consultoria especializada.</span></li>
+                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>As configurações são rápidas.</span></li>
+                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Mantemos tutoriais e vídeos para auxiliá-lo.</span></li>
                             </ul>
                         </div>
                     </div>
 
                     <div class="col-lg-4 mb-5 ftco-animate">
-                        <figure><img src="{{ asset('landing/images/img_1.jpg') }}"
+                        <figure><img src="{{ asset('images/landing/tela-pedido.png') }}"
                                 alt="Free Template by Free-Template.co" class="img-fluid"></figure>
                         <div class="p-3">
-                            <h3 class="h4">Title of Service here</h3>
-                            <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia and
-                                Consonantia, there live the blind texts.</p>
+                            <h3 class="h4">Os pedidos em um só lugar</h3>
                             <ul class="list-unstyled ftco-list-check text-left">
-                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Free
-                                        template for designer and developers</span></li>
-                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Vokalia
-                                        and consonantia blind texts</span></li>
-                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Behind the
-                                        word mountains blind texts</span></li>
+                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Veja detalhes dos seus pedidos em qualquer ponto da produção</span></li>
+                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Você pode colocar painéis (TVs ou tablets) para os seu time acompanhar a produção (até para o entregador)</span></li>
+                            </ul>
+                        </div>
+                    </div>                    
+
+                    <div class="col-lg-4 mb-5 ftco-animate">
+                        <figure><img src="{{ asset('images/landing/tela-dashboard.png') }}"
+                                alt="Free Template by Free-Template.co" class="img-fluid"></figure>
+                        <div class="p-3">
+                            <h3 class="h4">Painel de vendas</h3>
+                            <ul class="list-unstyled ftco-list-check text-left">
+                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Acompanhe em tempo real como está a produção no seu delivery</span></li>
+                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Tenha uma visão semanal de vendas</span></li>
+                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Compare a semana de vendas com a semana anterior</span></li>
                             </ul>
                         </div>
                     </div>
 
-                    <div class="col-lg-4 mb-5 ftco-animate">
-                        <figure><img src="{{ asset('landing/images/img_3.jpg') }}"
-                                alt="Free Template by Free-Template.co" class="img-fluid"></figure>
-                        <div class="p-3">
-                            <h3 class="h4">Title of Service here</h3>
-                            <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia and
-                                Consonantia, there live the blind texts.</p>
-                            <ul class="list-unstyled ftco-list-check text-left">
-                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Free
-                                        template for designer and developers</span></li>
-                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Vokalia
-                                        and consonantia blind texts</span></li>
-                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Behind the
-                                        word mountains blind texts</span></li>
-                            </ul>
-                        </div>
-                    </div>
+
 
                 </div>
             </div>
@@ -208,15 +173,16 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 text-center ftco-animate">
-                        <h2 class="text-uppercase ftco-uppercase">Pricing</h2>
+                        <h2 class="text-uppercase ftco-uppercase">Planos</h2>
                         <div class="row justify-content-center mb-5">
                             <div class="col-md-7">
-                                <p class="lead">Far far away, behind the word mountains, far from the countries Vokalia and
-                                    Consonantia, there live the blind texts.</p>
+                                <p class="lead">No período de lançamento do foodStock você não paga nada! Seja um parceiro e ajude-nos a melhorar sempre, testantando novas funcionalidades e nos fornecendo feedbacks da interação com o sistema.</p>
                             </div>
                         </div>
                     </div>
                 </div>
+                @php
+                /*
                 <!-- END row -->
                 <div class="row">
                     <div class="col-md bg-white p-5 m-2 text-center mb-2 ftco-animate">
@@ -271,238 +237,42 @@
                         </div>
                     </div>
                 </div>
+                */
+                @endphp
             </div>
         </section>
 
-        <section class="ftco-section ftco-slant ftco-slant-light">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 text-center ftco-animate">
-                        <h2 class="text-uppercase ftco-uppercase">More Features</h2>
-                        <div class="row justify-content-center mb-5">
-                            <div class="col-md-7">
-                                <p class="lead">Far far away, behind the word mountains, far from the countries Vokalia and
-                                    Consonantia, there live the blind texts.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- END row -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="owl-carousel ftco-owl">
+        <section class="ftco-section bg-white ftco-slant ftco-slant-dark" id="section-faq">
 
-                            <div class="item ftco-animate">
-                                <div class="media d-block text-left ftco-media p-md-5 p-4">
-                                    <div class="ftco-icon mb-3"><span class="oi oi-pencil display-4"></span></div>
-                                    <div class="media-body">
-                                        <h5 class="mt-0">Easy to Customize</h5>
-                                        <p>Far far away, behind the word mountains, far from the countries Vokalia and
-                                            Consonantia, there live the blind texts.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item ftco-animate">
-                                <div class="media d-block text-left ftco-media p-md-5 p-4">
-                                    <div class="ftco-icon mb-3"><span class="oi oi-monitor display-4"></span></div>
-                                    <div class="media-body">
-                                        <h5 class="mt-0">Web Development</h5>
-                                        <p>Far far away, behind the word mountains, far from the countries Vokalia and
-                                            Consonantia, there live the blind texts.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item ftco-animate">
-                                <div class="media d-block text-left ftco-media p-md-5 p-4">
-                                    <div class="ftco-icon mb-3"><span class="oi oi-location display-4"></span></div>
-                                    <div class="media-body">
-                                        <h5 class="mt-0">Free Bootstrap 4</h5>
-                                        <p>Far far away, behind the word mountains, far from the countries Vokalia and
-                                            Consonantia, there live the blind texts.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item ftco-animate">
-                                <div class="media d-block text-left ftco-media p-md-5 p-4">
-                                    <div class="ftco-icon mb-3"><span class="oi oi-person display-4"></span></div>
-                                    <div class="media-body">
-                                        <h5 class="mt-0">For People Like You</h5>
-                                        <p>Far far away, behind the word mountains, far from the countries Vokalia and
-                                            Consonantia, there live the blind texts.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <section class="ftco-section ftco-slant ftco-slant-light  bg-light ftco-slant ftco-slant-white" id="section-faq">
             <div class="container">
                 <div class="row mb-5">
                     <div class="col-md-12 text-center ftco-animate">
-                        <h2 class="text-uppercase ftco-uppercase">FAQ</h2>
-                        <div class="row justify-content-center mb-5">
-                            <div class="col-md-7">
-                                <p class="lead">Far far away, behind the word mountains, far from the countries Vokalia and
-                                    Consonantia, there live the blind texts.</p>
-                            </div>
-                        </div>
+                        <h2 class="text-uppercase ftco-uppercase">Perguntas frequentes</h2>
                     </div>
                 </div>
                 <!-- END row -->
                 <div class="row">
                     <div class="col-md-6 mb-5 ftco-animate">
-                        <h3 class="h5 mb-4">What is Exclusivity?</h3>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there
-                            live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics,
-                            a large language ocean.</p>
-                        <p class="mb-5"><a href="#">Learn More</a></p>
+                        <h3 class="h5 mb-4">O foodStock é gratuito?</h3>
+                        <p>Algumas funcionalidades sim, são gratuitas. Mas não se preocupe, com elas é possível gerenciar seu delivery.</p>
+                        <p>Em breve oferecemos funcionalidades PREMIUM, com elas ajudaremos ainda mais o seu negócio.</p>
                     </div>
                     <div class="col-md-6 mb-5 ftco-animate">
-                        <h3 class="h5 mb-4">Can I upgrade?</h3>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there
-                            live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics,
-                            a large language ocean.</p>
-                        <p class="mb-5"><a href="#">Learn More</a></p>
+                        <h3 class="h5 mb-4">Eu poderei migrar para um novo plano?</h3>
+                        <p>Sim, claro! A medida que os planos forem sendo lançados, informaremos você sobre as novidades.</p>
                     </div>
                     <div class="col-md-6 mb-5 ftco-animate">
-                        <h3 class="h5 mb-4">Can I have more than 5 users?</h3>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there
-                            live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics,
-                            a large language ocean.</p>
-                        <p class="mb-5"><a href="#">Learn More</a></p>
+                        <h3 class="h5 mb-4">Quais são as funcionalidades PREMIUM?</h3>
+                        <p>Ainda estamos trabalhando nisso. Por enquanto disponibilizamos as funcionalidades gratuitas. Em breve mais novidades.</p>
                     </div>
                     <div class="col-md-6 mb-5 ftco-animate">
-                        <h3 class="h5 mb-4">If I need support who do I contact?</h3>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there
-                            live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics,
-                            a large language ocean.</p>
-                        <p class="mb-5"><a href="#">Learn More</a></p>
+                        <h3 class="h5 mb-4">Onde consigo suporte?</h3>
+                        <p>Trabalhamos no email contato@foodstock.com.br. Envie-nos suas dúvidas e sugestões.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="ftco-section ftco-slant ftco-slant-light" id="section-about">
-            <div class="container">
-
-                <div class="row mb-5">
-                    <div class="col-md-12 text-center ftco-animate">
-                        <h2 class="text-uppercase ftco-uppercase">About Us</h2>
-                        <div class="row justify-content-center mb-5">
-                            <div class="col-md-7">
-                                <p class="lead">Far far away, behind the word mountains, far from the countries Vokalia and
-                                    Consonantia, there live the blind texts. Feel free to send us an email to <a
-                                        href="#">info@yourdomain.com</a></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- END row -->
-
-
-                <div class="row no-gutters align-items-center ftco-animate">
-                    <div class="col-md-6 mb-md-0 mb-5">
-                        <img src="{{ asset('landing/images/bg_3.jpg') }}" alt="Free Template by Free-Template.co"
-                            class="img-fluid">
-                    </div>
-                    <div class="col-md-6 p-md-5">
-                        <h3 class="h3 mb-4">Far far away, behind the word mountains</h3>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there
-                            live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics,
-                            a large language ocean.</p>
-                        <p class="mb-5"><a href="#">Learn More</a></p>
-                    </div>
-                </div>
-                <div class="row no-gutters align-items-center ftco-animate">
-                    <div class="col-md-6 order-md-3 mb-md-0 mb-5">
-                        <img src="{{ asset('landing/images/bg_1.jpg') }}" alt="Free Template by Free-Template.co"
-                            class="img-fluid">
-                    </div>
-                    <div class="col-md-6 p-md-5 order-md-1">
-                        <h3 class="h3 mb-4">Far from the countries Vokalia and Consonantia</h3>
-                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there
-                            live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics,
-                            a large language ocean.</p>
-                        <p class="mb-5"><a href="#">Learn More</a></p>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-        <section class="ftco-section bg-light ftco-slant ftco-slant-white" id="section-counter">
-            <div class="container">
-                <div class="row mb-5">
-                    <div class="col-md-12 text-center ftco-animate">
-                        <h2 class="text-uppercase ftco-uppercase">Fun Facts</h2>
-                        <div class="row justify-content-center mb-5">
-                            <div class="col-md-7">
-                                <p class="lead">Far far away, behind the word mountains, far from the countries Vokalia and
-                                    Consonantia, there live the blind texts.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- END row -->
-                <div class="row">
-                    <div class="col-md ftco-animate">
-                        <div class="ftco-counter text-center">
-                            <span class="ftco-number" data-number="34146">0</span>
-                            <span class="ftco-label">Lines of Codes</span>
-                        </div>
-                    </div>
-                    <div class="col-md ftco-animate">
-                        <div class="ftco-counter text-center">
-                            <span class="ftco-number" data-number="1239">0</span>
-                            <span class="ftco-label">Pizza Consume</span>
-                        </div>
-                    </div>
-                    <div class="col-md ftco-animate">
-                        <div class="ftco-counter text-center">
-                            <span class="ftco-number" data-number="124">0</span>
-                            <span class="ftco-label">Number of Clients</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-        <section class="ftco-section bg-white ftco-slant ftco-slant-dark" id="section-contact">
-            <div class="container">
-                <div class="row">
-
-                    <div class="col-md pr-md-5 mb-5">
-                        <form action="" method="post">
-                            <div class="form-group">
-                                <label for="name" class="sr-only">Name</label>
-                                <input type="text" class="form-control" id="name" placeholder="Enter your name">
-                            </div>
-                            <div class="form-group">
-                                <label for="email" class="sr-only">Email</label>
-                                <input type="text" class="form-control" id="email" placeholder="Enter your email">
-                            </div>
-                            <div class="form-group">
-                                <label for="message" class="sr-only">Message</label>
-                                <textarea name="message" id="message" cols="30" rows="10" class="form-control"
-                                    placeholder="Write your message"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" class="btn btn-primary" value="Send Message">
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col-md" id="map">
-                    </div>
-                </div>
-            </div>
-        </section>
 
         @include('footer')
 

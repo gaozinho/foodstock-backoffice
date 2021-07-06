@@ -22,8 +22,12 @@
     <body class="bg-light font-sans antialiased">
 
         @include('header')
+        <main id="main-container" class="container">
+            {{ $slot }}
+        </main>
+        <section class="ftco-section ftco-slant ftco-slant-dark" id="section-faq">
 
-        {{ $slot }}
+        </section>
 
         @include('footer')     
     </body>

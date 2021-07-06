@@ -21,18 +21,34 @@ class ProductionLines extends BaseConfigurationComponent
     public $roles;
     public $jsonProductionLines;
 
+    public function prepareProductionLine($restaurant_id){
+        $totalMovements = ProductionLineVersion::join("production_movements", "production_movements.production_line_id", "=", "production_line_versions.id")
+            ->where("production_line_versions.restaurant_id", $restaurant_id)
+            ->where("production_line_versions.is_active", 1)
+            ->count();
+
+        if($totalMovements == 0){ //Se não houve movmentos, apaga a versão definitivamente para deixar o banco mais leve.
+            ProductionLine::where("restaurant_id", $restaurant_id)
+                ->where("is_active", 1)
+                ->delete();
+        }else{
+            //TODO - Se houver movimentos, coloca todos na última etapa
+
+            ProductionLine::where("restaurant_id", $restaurant_id)->where("is_active", 1)->update(['is_active' => 0]);
+        }
+
+        ProductionLineVersion::where("restaurant_id", $restaurant_id)->where("is_active", 1)->update(['is_active' => 0]);
+    }
+
     public function saveProductionUpdated($json)
     {
 
         try{
             DB::beginTransaction();
-
             $restaurant = $this->userRestaurant();
-            //TODO Checar se existe production_movements. Se não houver, apagar ao invés de desativa
-            
-            ProductionLineVersion::where("restaurant_id", $restaurant->id)->where("is_active", 1)->update(['is_active' => 0]);
+            $this->prepareProductionLine($restaurant->id);
             $productionLineVersion = $this->createProductionLineVersion();
-            ProductionLine::where("restaurant_id", $restaurant->id)->where("is_active", 1)->update(['is_active' => 0]);
+
             $productionLines = json_decode($json, true);
 
             $steps = $productionLines["step"];
@@ -113,8 +129,11 @@ class ProductionLines extends BaseConfigurationComponent
     public function createDefaultProductionLine($showMessage = true){
         try{
             DB::beginTransaction();
-            $productionLineVersion = $this->createProductionLineVersion();
             $restaurant = $this->userRestaurant();
+            $this->prepareProductionLine($restaurant->id);
+            $productionLineVersion = $this->createProductionLineVersion();
+            
+            
             
             /**
             $version = ProductionLine::where("restaurant_id", $restaurant->id)->max('version');
