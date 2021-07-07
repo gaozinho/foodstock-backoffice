@@ -5,7 +5,7 @@
     <title>foodStock - delivery simples</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Free Template by Free-Template.co" />
+    <meta name="description" content="foodStock :: Seu delivery simples!" />
     <meta name="keywords" content="foodstock, delivery, gestão de produção, rappi, ifood, uber eats" />
     <meta name="author" content="Wagner Gonçalves wagnerggg@gmail.com" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -139,8 +139,7 @@
                     </div>
 
                     <div class="col-lg-4 mb-5 ftco-animate">
-                        <figure><img src="{{ asset('images/landing/tela-pedido.png') }}"
-                                alt="Free Template by Free-Template.co" class="img-fluid"></figure>
+                        <figure><img src="{{ asset('images/landing/tela-pedido.png') }}" class="img-fluid"></figure>
                         <div class="p-3">
                             <h3 class="h4">Os pedidos em um só lugar</h3>
                             <ul class="list-unstyled ftco-list-check text-left">
@@ -151,8 +150,7 @@
                     </div>                    
 
                     <div class="col-lg-4 mb-5 ftco-animate">
-                        <figure><img src="{{ asset('images/landing/tela-dashboard.png') }}"
-                                alt="Free Template by Free-Template.co" class="img-fluid"></figure>
+                        <figure><img src="{{ asset('images/landing/tela-dashboard.png') }}"  class="img-fluid"></figure>
                         <div class="p-3">
                             <h3 class="h4">Painel de vendas</h3>
                             <ul class="list-unstyled ftco-list-check text-left">
