@@ -119,10 +119,6 @@ class IfoodIntegrationDistributed extends IfoodIntegration
             $httpResponse = $this->httpClient->get($this->broker->merchantsApi, $this->requestOptions);
             $jsonMerchants = $this->parseMerchantsResponse($httpResponse->getBody()->getContents());
 
-            //TODO - O QUE ACONTECE SE RETORNA MAIS DEUM MERCHANT? TESTAR
-            if($enableOnSuccess && $jsonMerchants){
-                $this->enableMerchant($ifoodBroker, $jsonMerchants);
-            }
             
             return $jsonMerchants;
         }catch(\Exception $exception){
@@ -132,14 +128,22 @@ class IfoodIntegrationDistributed extends IfoodIntegration
     }
 
     public function enableMerchant($ifoodBroker, $jsonMerchants){
+        $success = false;
         foreach($jsonMerchants as $jsonMerchant){
-            $ifoodBroker->merchant_id = $jsonMerchant->id;
-            $ifoodBroker->name = $jsonMerchant->name;
-            $ifoodBroker->corporateName = $jsonMerchant->corporateName;
-            $ifoodBroker->validated = 1;
-            $ifoodBroker->validated_at = date("Y-m-d H:i:s");
-            $ifoodBroker->merchant_json = json_encode($jsonMerchants);
-            $ifoodBroker->save();
+            $usedMerchants = IfoodBroker::where("merchant_id", $jsonMerchant->id )
+                ->where("id", "<>", $ifoodBroker->id)
+                ->count();
+            if($usedMerchants == 0){
+                $ifoodBroker->merchant_id = $jsonMerchant->id;
+                $ifoodBroker->name = $jsonMerchant->name;
+                $ifoodBroker->corporateName = $jsonMerchant->corporateName;
+                $ifoodBroker->validated = 1;
+                $ifoodBroker->validated_at = date("Y-m-d H:i:s");
+                $ifoodBroker->merchant_json = json_encode($jsonMerchants);
+                $ifoodBroker->save();
+                $success = true;
+            }
         }
+        return $success;
     }
 }

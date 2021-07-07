@@ -53,6 +53,8 @@ class ProductionLines extends BaseConfigurationComponent
 
             $steps = $productionLines["step"];
 
+            
+
             for($i = 0; $i < count($steps); $i++){
                 $fatherProductionLineId = null;
 
@@ -78,6 +80,7 @@ class ProductionLines extends BaseConfigurationComponent
                     "see_previous" => 0,
                     "next_on_click" => 0,
                     "can_pause" => 0,
+                    "is_active" => 1,
                 ];
                 
                 foreach($productionLines["clickable"] as $clicakble) if($clicakble == $productionLines["step"][$i]) $productionLine["clickable"] = 1;

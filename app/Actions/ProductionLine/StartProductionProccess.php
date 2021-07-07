@@ -66,7 +66,10 @@ class StartProductionProccess
     }
 
     protected function firstStep($restaurant_id){
-        return ProductionLine::where("restaurant_id", $restaurant_id)->where("is_active", 1)->where("step", 1)->firstOrFail();
+        return ProductionLine::where("restaurant_id", $restaurant_id)
+        ->where("is_active", 1)
+        ->where("step", 1)
+        ->firstOrFail();
     }
 
     protected function nextStep($restaurant_id, $current_step){

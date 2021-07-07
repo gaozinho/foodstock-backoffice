@@ -132,12 +132,23 @@ class Ifood extends Component
         $IfoodIntegration = new IfoodIntegrationDistributed();
         try{
             $IfoodIntegration->getToken($this->ifoodBroker->authorizationCode, $this->ifoodBroker->id);
-            $IfoodIntegration->getMerchants($this->ifoodBroker->id);
-            $this->ifoodBroker = IfoodBroker::where("enabled", "=", 1)->where("restaurant_id", "=", $restaurant->id)->firstOrFail();
-            $this->simpleAlert('success', 'Parabéns! Conseguimos integrar o FoodStock com o seu delivery.');
+            $jsonMerchants = $IfoodIntegration->getMerchants($this->ifoodBroker->id);
+
+
+            //TODO - O QUE ACONTECE SE RETORNA MAIS DEUM MERCHANT? TESTAR
+            if($jsonMerchants){
+                $success = $IfoodIntegration->enableMerchant($this->ifoodBroker, $jsonMerchants);
+            }
+
+            if($success){
+                $this->ifoodBroker = IfoodBroker::where("enabled", "=", 1)->where("restaurant_id", "=", $restaurant->id)->firstOrFail();
+                $this->simpleAlert('success', 'Parabéns! Conseguimos integrar o FoodStock com o seu delivery.');
+            }else{
+                $this->simpleAlert('error', 'Não é possível prosseguir. Este restaurante do ifood já está vinculado a outro usuário.');
+            }
     
         }catch(\Exception $e){
-            if($e->getCode() == 401) $this->simpleAlert('error', 'O código informado é inválido. Verifique se os códigos estão corretos e não expirados.');
+            if($e->getCode() == 401) $this->simpleAlert('error', 'O código informado é inválido. Tente reiniciar o processo e/ou verifique se os códigos estão corretos e não expirados.');
             else if($e->getCode() == 500) $this->simpleAlert('error', 'O código informado é inválido. Verifique o formato infomado. Ex: A01A-AAAA');
             else $this->simpleAlert('error', 'Ocorreu um erro desconhecido. Tente novamente mais tarde.');
         }
