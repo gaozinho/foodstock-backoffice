@@ -61,6 +61,7 @@ class ProductionLinePanel extends Component
         //$this->restaurant = Restaurant::where("user_id", "=", auth()->user()->id)->firstOrFail();
         $recoveryOrders = new RecoveryOrders();
         $this->productionLine = $recoveryOrders->getCurrentProductionLineByRoleName($this->restaurant->id, $role_name);
+
         $this->stepColors = $recoveryOrders->getProductionLineColors($this->restaurant->id);
         $this->legends = $this->getLegend($this->restaurant->id, $role_name);
         $this->loadData();
@@ -126,6 +127,23 @@ class ProductionLinePanel extends Component
         $this->loadData();
     }
 
+    public function moveForwardFromCurrentStep($order_summary_id){
+
+        $currentStep = $this->productionLine->step;
+        $forwardProductionProccess = new ForwardProductionProccess();
+        $nextProductionLineStep = $forwardProductionProccess->nextStep($this->restaurant->id, $currentStep);
+
+        if(is_object($nextProductionLineStep)){
+            $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
+            do{
+                $productionMovement = $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $this->restaurant->id);
+            }while($productionMovement->current_step_number < $nextProductionLineStep->step);
+        }
+        
+        $this->emit('moveForward');
+        $this->loadData();
+    }    
+
     public function orderDetail($order_summary_id, $production_line_id){
         $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
         
@@ -133,6 +151,7 @@ class ProductionLinePanel extends Component
         
         if($productionLine->next_on_click == 1){ //Se passa para próximo passo no clique
             (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $this->restaurant->id);
+            $this->emit('moveForward');
         }else{
             $this->emit('openOrderModal');
         }

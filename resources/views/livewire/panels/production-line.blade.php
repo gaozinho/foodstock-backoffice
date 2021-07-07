@@ -34,7 +34,9 @@
                         @foreach ($orderSummariesPreviousStep as $orderSummary)
                             @php
                                 $clickAction = "";
-                                if($productionLine->clickable == 1){
+                                if($productionLine->clickable == 1 && $productionLine->next_on_click == 1){
+                                    $clickAction = 'wire:click="moveForwardFromCurrentStep(' . $orderSummary->id . ')"';
+                                }else if($productionLine->clickable == 1){
                                     $clickAction = 'wire:click="orderDetailAndMoveForward(' . $orderSummary->id . ')"';
                                 }
                             @endphp
@@ -172,6 +174,10 @@
                 $(".loading").LoadingOverlay("hide");
                 $('#order-modal').modal();
             })
+
+            Livewire.on('moveForward', function(){
+                $(".loading").LoadingOverlay("hide");
+            })            
 
             Livewire.on('closeOrderModal', function(){
                 $('#order-modal').modal('hide');

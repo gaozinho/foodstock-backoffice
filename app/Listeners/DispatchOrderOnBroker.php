@@ -28,6 +28,7 @@ class DispatchOrderOnBroker implements ShouldQueue
     public function handle(FinishedProccess $event)
     {
         try{
+            
             //Dá conhecimento do envio ao ifood
             if(get_class($event->oneBroker) == "App\Models\IfoodBroker" && $event->oneBroker->dispatch == 1){
                 $payload = [

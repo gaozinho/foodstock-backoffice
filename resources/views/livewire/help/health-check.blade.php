@@ -5,7 +5,7 @@
             <div class="col-md-12 mb-2"><span class="h5">Alguns itens <b>precisam de sua atenção</b> para correto
                     funcionamento dos painéis e integração com as paltaformas de delivery.</span></div>
         @endif
-        <div class="col-md-12">
+        <div class="col-md-12 mb-3">
             <div class="card">
                 <div class="card-header">
                     <span class="h4">
@@ -81,6 +81,30 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <span class="h4">Próximos passos</span>
+                </div>
+                <div class="card-body">
+                    <p class="h4">Com o delivery configurado você pode: </p>
+                    <p class="my-1"><b>Acompanhar os pedidos</b> que chegarem no 
+                        <a href="{{ route('panels.delivery-panel.index') }}">
+                            <i class="fas fa-tv"></i> {{ __('Painel') }}
+                        </a>
+                    </p>
+                    <p class="my-1"><b>Configurar sua 
+                        <a href="{{ route('configuration.teams.index') }}">
+                            {{ __('equipe de trabalho') }}
+                        </a>    
+                    </b> para acessar o foodStock.
+                    </p>                    
+                </div>                
+            </div>
+        </div>
+
+
     </div>
 
 </div>

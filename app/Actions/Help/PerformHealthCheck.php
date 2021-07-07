@@ -30,7 +30,7 @@ class PerformHealthCheck
 
         $this->brokersOk = [
             "IFOOD" => IfoodBroker::where("restaurant_id", $this->restaurant->id)->where("validated", 1)->count() > 0,
-            "RAPPI" => RappiBroker::where("restaurant_id", $this->restaurant->id)->where("validated", 1)->count() > 0
+            //"RAPPI" => RappiBroker::where("restaurant_id", $this->restaurant->id)->where("validated", 1)->count() > 0
         ];
 
         $success = false;

@@ -28,6 +28,7 @@ class ForwardProductionProccess
                 $this->finishProcess($order->id);
                 return false;
             }
+            
 
             $productionLine = ProductionLine::findOrFail($productionMovement->next_step_id);
             $productionLineNextStep = $this->nextStep($order->restaurant_id, $productionLine->step);
@@ -72,7 +73,7 @@ class ForwardProductionProccess
         return ProductionLine::where("restaurant_id", $restaurant_id)->where("is_active", 1)->where("step", 1)->firstOrFail();
     }
 
-    protected function nextStep($restaurant_id, $current_step){
+    public function nextStep($restaurant_id, $current_step){
         return ProductionLine::where("restaurant_id", $restaurant_id)->where("is_active", 1)->where("step", ($current_step + 1))->first();
     }
 }
