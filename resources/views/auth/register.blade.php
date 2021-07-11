@@ -22,6 +22,14 @@
                         </div>
 
                         <div class="form-group">
+                            <x-jet-label value="{{ __('Código do convite') }}" />
+
+                            <x-jet-input class="{{ $errors->has('invitation') ? 'is-invalid' : '' }}" type="text"
+                                name="invitation" :value="old('invitation')" required autofocus autocomplete="invitation" />
+                            <x-jet-input-error for="invitation"></x-jet-input-error>
+                        </div>                        
+
+                        <div class="form-group">
                             <x-jet-label value="{{ __('Email') }}" />
 
                             <x-jet-input class="{{ $errors->has('email') ? 'is-invalid' : '' }}" type="email"
@@ -75,7 +83,8 @@
         </div>
         <div class="col-md-4">
             <div class="card">
-                <div class="card-body">No período de lançamento do foodStock você não paga nada! Seja um parceiro e ajude-nos a melhorar sempre, testantando novas funcionalidades e nos fornecendo feedbacks da interação com o sistema.
+                <div class="card-body">Estamos em fase de lançamento, por isso, só é possível realizar o cadastro com convite em mãos. 
+                    <p>Se você não tem o convite, pode solicitar no email foodstockcontato@gmail.com. Informe o nome de seu delivery e conte-nos por que deseja ajuda para gerenciá-lo.</p>
                 </div>
             </div>
         </div>  

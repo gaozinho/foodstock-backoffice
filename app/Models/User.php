@@ -30,7 +30,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'invitation',
     ];
 
     /**
@@ -43,7 +43,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
         'two_factor_recovery_codes',
         'two_factor_secret',
-        'restaurant_member'
+        'restaurant_member',
+        'invitation'
     ];
 
     /**
