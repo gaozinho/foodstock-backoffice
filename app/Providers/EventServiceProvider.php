@@ -14,6 +14,9 @@ use App\Listeners\GrantAdminToUser;
 use App\Events\FinishedProccess;
 use App\Listeners\DispatchOrderOnBroker;
 
+use App\Events\ReadyToPickup;
+use App\Listeners\ReadyOrderOnBroker;
+
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -31,6 +34,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         FinishedProccess::class => [
             DispatchOrderOnBroker::class,
+        ],
+        ReadyToPickup::class => [
+            ReadyOrderOnBroker::class,
         ],
     ];
 

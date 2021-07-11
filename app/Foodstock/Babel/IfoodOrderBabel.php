@@ -3,7 +3,13 @@
 namespace App\Foodstock\Babel;
 use App\Foodstock\Babel\OrderBabel;
 use App\Foodstock\Babel\ItemBabel;
+use App\Foodstock\Babel\PaymentBabel;
+use App\Foodstock\Babel\ScheduleBabel;
+use App\Foodstock\Babel\PaymentMethodBabel;
 use App\Foodstock\Babel\Interfaces\OrderBabelInterface;
+
+use App\Foodstock\Babel\BenefitBabel;
+use App\Foodstock\Babel\SponsorshipValueBabel;
 
 class IfoodOrderBabel extends OrderBabel implements OrderBabelInterface
 {
@@ -25,11 +31,51 @@ class IfoodOrderBabel extends OrderBabel implements OrderBabelInterface
         return $items;
     }
 
-    
+    public function payments(){
+        $payments = $this->orderJson->payments;
+        $paymentMethods = $payments->methods;
+        $paymentBabel = new PaymentBabel($payments->pending, $payments->prepaid);
+        foreach($paymentMethods as $method){
+            $paymentBabel->addMethod(new PaymentMethodBabel(
+                    isset($method->wallet) ? $method->wallet->name : null, 
+                    $method->method, 
+                    $method->prepaid, 
+                    $method->currency, 
+                    $method->type, 
+                    $method->value, 
+                    isset($method->cash) ? $method->cash->changeFor : null, 
+                    isset($method->card) ? $method->card->brand : null
+                )
+            );
+        }
+        return $paymentBabel;
+    }
+
+    public function benefits(){
+        $benefits = [];
+        if(isset($this->orderJson->benefits)){
+            foreach($this->orderJson->benefits as $benefit){
+                $benefitBabel = new BenefitBabel($benefit->targetId ?? null, $benefit->description ?? null, $benefit->value, $benefit->target);
+                foreach($benefit->sponsorshipValues as $sponsorshipValue){
+                    $benefitBabel->addSponsorshipValues(new SponsorshipValueBabel($sponsorshipValue->description ?? null, $sponsorshipValue->name, $sponsorshipValue->value));
+                }
+                $benefits[] = $benefitBabel;
+            }
+        }
+
+        return $benefits;
+    }
 
     public function brokerId(){
         return $this->orderJson->id;
-    }       
+    } 
+    
+    public function schedule(){
+        if($this->orderJson->orderTiming == "SCHEDULED"){
+            return new ScheduleBabel(date("Y-m-d H:i:s", strtotime($this->orderJson->schedule->deliveryDateTimeStart)), date("Y-m-d H:i:s", strtotime($this->orderJson->schedule->deliveryDateTimeEnd))); 
+        }
+        return false;
+    }     
 
     public function subtotal(){
         return $this->orderJson->total->subTotal;
@@ -41,11 +87,23 @@ class IfoodOrderBabel extends OrderBabel implements OrderBabelInterface
     
     public function orderAmount(){
         return $this->orderJson->total->orderAmount;
-    }        
+    }    
+    
+    public function additionalFees(){
+        return $this->orderJson->total->additionalFees;
+    }
+
+    public function benefitsTotal(){
+        return $this->orderJson->total->benefits;
+    }   
 
     public function shortOrderNumber(){
         return $this->orderJson->displayId;
     }
+
+    public function orderType(){
+        return $this->orderJson->orderType;
+    }    
 
     public function createdDate(){
         return date("Y-m-d H:i:s", strtotime($this->orderJson->createdAt));
@@ -64,6 +122,7 @@ class IfoodOrderBabel extends OrderBabel implements OrderBabelInterface
     }
 
     public function deliveryFormattedAddress(){
+        if(!isset($this->orderJson->delivery)) return "N/A";
         $addressPieces[] = $this->orderJson->delivery->deliveryAddress->formattedAddress;
         if(isset($this->orderJson->delivery->deliveryAddress->reference)) $addressPieces[] = $this->orderJson->delivery->deliveryAddress->reference;
         return implode(" :: ", $addressPieces);

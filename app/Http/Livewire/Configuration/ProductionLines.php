@@ -22,7 +22,7 @@ class ProductionLines extends BaseConfigurationComponent
     public $jsonProductionLines;
 
     public function prepareProductionLine($restaurant_id){
-        $totalMovements = ProductionLineVersion::join("production_movements", "production_movements.production_line_id", "=", "production_line_versions.id")
+        $totalMovements = ProductionLineVersion::join("production_movements", "production_movements.production_line_version_id", "=", "production_line_versions.id")
             ->where("production_line_versions.restaurant_id", $restaurant_id)
             ->where("production_line_versions.is_active", 1)
             ->count();
@@ -77,6 +77,7 @@ class ProductionLines extends BaseConfigurationComponent
                     'version' => $productionLineVersion->version, 
                     "production_line_id" => $fatherProductionLineId,
                     "clickable" => 0,
+                    "ready" => 0,
                     "see_previous" => 0,
                     "next_on_click" => 0,
                     "can_pause" => 0,
@@ -84,6 +85,7 @@ class ProductionLines extends BaseConfigurationComponent
                 ];
                 
                 foreach($productionLines["clickable"] as $clicakble) if($clicakble == $productionLines["step"][$i]) $productionLine["clickable"] = 1;
+                foreach($productionLines["ready"] as $ready) if($ready == $productionLines["step"][$i]) $productionLine["ready"] = 1;
                 foreach($productionLines["see_previous"] as $see_previous) if($see_previous == $productionLines["step"][$i]) $productionLine["see_previous"] = 1;
                 foreach($productionLines["next_on_click"] as $next_on_click) if($next_on_click == $productionLines["step"][$i]) $productionLine["next_on_click"] = 1;
                 foreach($productionLines["can_pause"] as $can_pause) if($can_pause == $productionLines["step"][$i]) $productionLine["can_pause"] = 1;

@@ -70,6 +70,7 @@ class ProductionLinePanel extends Component
     public function loadData(){
         $recoveryOrders = new RecoveryOrders();
         $this->orderSummaries = $recoveryOrders->recoveryByRoleName($this->restaurant->id, $this->role_name);
+
         $this->orderSummariesPreviousStep = $recoveryOrders->recoveryPreviousByRoleName($this->restaurant->id, $this->role_name); 
         $this->total_orders = count($this->orderSummaries) + count($this->orderSummariesPreviousStep);
     }

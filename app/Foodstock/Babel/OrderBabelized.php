@@ -29,6 +29,50 @@ class OrderBabelized extends OrderBabel implements OrderBabelInterface
         return $items;
     }
 
+    public function payments(){
+        if(!isset($this->orderJson->payments)) return null;
+        
+        $payments = $this->orderJson->payments;
+        $paymentMethods = $payments->methods;
+        $paymentBabel = new PaymentBabel($payments->pending, $payments->prepaid);
+        foreach($paymentMethods as $method){
+            $paymentBabel->addMethod(new PaymentMethodBabel(
+                    $method->wallet_name, 
+                    $method->method, 
+                    $method->prepaid, 
+                    $method->currency, 
+                    $method->type, 
+                    $method->value, 
+                    $method->cash_changeFor, 
+                    $method->card_brand
+                )
+            );
+        }
+        return $paymentBabel;
+    }
+
+    public function benefits(){
+        $benefits = [];
+        if(isset($this->orderJson->benefits)){
+            foreach($this->orderJson->benefits as $benefit){
+                $benefitBabel = new BenefitBabel($benefit->targetId ?? null, $benefit->description ?? null, $benefit->value, $benefit->target);
+                foreach($benefit->sponsorshipValues as $sponsorshipValue){
+                    $benefitBabel->addSponsorshipValues(new SponsorshipValueBabel($sponsorshipValue->description, $sponsorshipValue->name, $sponsorshipValue->value));
+                }
+                $benefits[] = $benefitBabel;
+            }
+        }
+        return $benefits;
+    }  
+
+    public function schedule(){
+        if(!isset($this->orderJson->schedule)) return false;
+        if($this->orderJson->schedule){
+            return new ScheduleBabel(date("Y-m-d H:i:s", strtotime($this->orderJson->schedule->start)), date("Y-m-d H:i:s", strtotime($this->orderJson->schedule->end))); 
+        }
+        return false;
+    }      
+
     public function brokerId(){
         return $this->orderJson->brokerId ?? null;
     }       
@@ -44,6 +88,14 @@ class OrderBabelized extends OrderBabel implements OrderBabelInterface
     public function orderAmount(){
         return $this->orderJson->orderAmount ?? null;
     }        
+
+    public function additionalFees(){
+        return $this->orderJson->additionalFees ?? null;
+    }
+
+    public function benefitsTotal(){
+        return $this->orderJson->benefitsTotal ?? null;
+    }     
 
     public function shortOrderNumber(){
         return $this->orderJson->shortOrderNumber ?? null;
@@ -63,6 +115,18 @@ class OrderBabelized extends OrderBabel implements OrderBabelInterface
 
     public function customerName(){
         return $this->orderJson->customerName ?? null;
+    }
+
+    
+    public function orderType(){
+
+        if(isset($this->orderJson->orderType)){
+            if($this->orderJson->orderType == "DELIVERY") return "Delivery";
+            else if($this->orderJson->orderType == "INDOOR") return "Na mesa";
+            elseif($this->orderJson->orderType == "TAKEOUT") return "Balcão";
+        }
+        
+        return $this->orderJson->orderType ?? null;
     }
 
     public function deliveryFormattedAddress(){

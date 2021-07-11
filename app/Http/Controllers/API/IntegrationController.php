@@ -10,6 +10,8 @@ use Validator;
 use App\Http\Resources\IfoodOrder as IfoodOrderResource;
 
 use App\Actions\ProductionLine\StartProductionProccess;
+use App\Actions\ProductionLine\CancelProductionProccess;
+
 
 class IntegrationController extends BaseController
 {
@@ -41,6 +43,27 @@ class IntegrationController extends BaseController
 
         return $this->sendResponse(new IfoodOrderResource($order), 'IfoodOrder saved successfully.');
     }
+
+    public function cancelProduction(Request $request)
+    {
+
+        $ifoodOrder = null;
+        $input = $request->all();
+   
+        $validator = Validator::make($input, [
+            'broker_id' => 'required',
+            'order_id' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+
+        $cancelProductionProccess = new CancelProductionProccess();
+        $order_id = $cancelProductionProccess->cancel($input["order_id"], $input["broker_id"]);
+
+        return $this->sendResponse(["order_id" => $order_id], 'IfoodOrder canceled successfully.');
+    }    
 
     public function checkIfCreated(Request $request)
     {

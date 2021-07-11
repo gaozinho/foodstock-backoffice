@@ -2,12 +2,12 @@
 
 namespace App\Listeners;
 
-use App\Events\FinishedProccess;
+use App\Events\ReadyToPickup;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use GuzzleHttp\Client;
 
-class DispatchOrderOnBroker implements ShouldQueue
+class ReadyOrderOnBroker implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -22,23 +22,15 @@ class DispatchOrderOnBroker implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param  FinishedProccess  $event
+     * @param  ReadyToPickup  $event
      * @return void
      */
-    public function handle(FinishedProccess $event)
+    public function handle(ReadyToPickup $event)
     {
         try{
-
+            
             //Dá conhecimento do envio ao ifood
             if(get_class($event->oneBroker) == "App\Models\IfoodBroker"){
-                
-                $action = "";
-                if($event->orderBabelized->orderType == OrderType::DELIVERY){
-                    $action = env('INTEGRATION_IFOOD_DISPATCH_URI');
-                }else{
-                    $action = env('INTEGRATION_IFOOD_READYTOPICK_URI');
-                }
-
                 $payload = [
                     'headers' => [
                         'Authorization' => 'Bearer '. env('INTEGRATION_TOKEN'),
@@ -48,7 +40,7 @@ class DispatchOrderOnBroker implements ShouldQueue
                     "form_params" => ["ifood_broker_id" => $event->oneBroker->id, "ifood_order_id" => $event->orderBabelized->brokerId]
                 ];
                 $httpClient = new Client(["verify" => false]);
-                $httpResponse = $httpClient->post($action, $payload);
+                $httpResponse = $httpClient->post(env('INTEGRATION_IFOOD_READYTOPICK_URI'), $payload);
             }
         }catch(\Exception $e){
             

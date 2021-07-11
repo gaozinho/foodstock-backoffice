@@ -9,8 +9,22 @@ class OrderBabel
     protected $orderString = null;
     protected $orderJson = null;
 
-    public $items, $subtotal, $deliveryFee, $orderAmount, $shortOrderNumber,
-        $createdDate, $ordersCountOnMerchant, $customerName, $deliveryFormattedAddress, $brokerId;
+    public $items, 
+        $subtotal, 
+        $deliveryFee, 
+        $orderAmount, 
+        $shortOrderNumber,
+        $createdDate, 
+        $ordersCountOnMerchant, 
+        $customerName, 
+        $deliveryFormattedAddress, 
+        $brokerId,
+        $orderType,
+        $benefits,
+        $additionalFees,
+        $benefitsTotal;
+
+    public $payments, $schedule;
 
     public function __construct($orderString){
         if($this->isJson($orderString)){
@@ -19,6 +33,7 @@ class OrderBabel
 
             $this->brokerId = $this->brokerId(); 
             $this->items = $this->items(); 
+            $this->payments = $this->payments(); 
             $this->subtotal = $this->subtotal(); 
             $this->deliveryFee = $this->deliveryFee(); 
             $this->orderAmount = $this->orderAmount(); 
@@ -27,6 +42,13 @@ class OrderBabel
             $this->ordersCountOnMerchant = $this->ordersCountOnMerchant(); 
             $this->customerName = $this->customerName(); 
             $this->deliveryFormattedAddress = $this->deliveryFormattedAddress(); 
+            $this->schedule = $this->schedule(); 
+            $this->orderType = $this->orderType(); 
+            $this->benefits = $this->benefits(); 
+
+            $this->additionalFees = $this->additionalFees();
+            $this->benefitsTotal = $this->benefitsTotal();
+
         }else{
             throw new \Exception("Invalid JSON string.");
         }

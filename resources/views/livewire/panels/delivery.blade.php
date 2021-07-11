@@ -1,5 +1,5 @@
 <div>
-    <div class="mb-3">
+    <div class="mb-3 full-screen">
         <div class="d-flex justify-content-between align-items-end">
             <div>
                 <h2 class="mt-3 mb-0 pb-0">Painel de delivery
@@ -7,8 +7,8 @@
                 </h2>
                 <span class="legend mt-0 pt-0">Legenda:
                     <span class="badge bg-danger p-1">Produzindo</span> 
-                    <span class="badge bg-success p-1">Pronto para retirar</span>
-                </span>                
+                    <span class="badge bg-success p-1">Pronto para despachar / balcão / mesa</span>
+                </span>
             </div>
             <div class="text-right">
                 <div class="d-flex justify-content-between align-items-end">
@@ -52,6 +52,11 @@
                     $prevStartNumber = -1;                        
                 @endphp                        
                 @foreach ($orderSummaries as $index => $orderSummary)
+
+                    @php
+                        $babelized = new App\Foodstock\Babel\OrderBabelized($orderSummary->order_json);
+                    @endphp
+
                     @php
                         $clickAction = 'wire:click="orderDetail(' . $orderSummary->id . ', ' . $orderSummary->production_line_id . ')"';
                         $curStartNumber = intval(substr($orderSummary->friendly_number, 0, 1));
@@ -67,7 +72,7 @@
                             class="order-card card mb-2 {{$lastStepProductionLine->id == $orderSummary->production_line_id ? 'bg-success' : 'bg-danger'}}">
                             <div class="card-body">
                                 <h4 class="text-white">{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</h4>
-                                <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }}</div>
+                                <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }} :: {{$babelized->orderType}}</div>
                             </div>
                         </div>
                 @endforeach

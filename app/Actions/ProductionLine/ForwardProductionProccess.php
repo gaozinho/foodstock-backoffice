@@ -12,6 +12,8 @@ use App\Actions\ProductionLine\GenerateOrderJson;
 use GuzzleHttp\Client;
 use App\Foodstock\Babel\OrderBabelized;
 use App\Events\FinishedProccess;
+use App\Events\ReadyToPickup;
+use App\Enums\OrderType;
 
 class ForwardProductionProccess
 {
@@ -19,7 +21,7 @@ class ForwardProductionProccess
         $order = null;
         try{
             $order = Order::findOrFail($orderNumber);
-            $productionMovement = ProductionMovement::where("order_id", $order->id)->orderBy('current_step_number', 'desc')->first();
+            $productionMovement = $this->getCurrentMovementByOrderId($order->id);
             $productionMovement->step_finished = 1;
             $productionMovement->finished_at = date("Y-m-d H:i:s");
             $productionMovement->save();
@@ -29,7 +31,6 @@ class ForwardProductionProccess
                 return false;
             }
             
-
             $productionLine = ProductionLine::findOrFail($productionMovement->next_step_id);
             $productionLineNextStep = $this->nextStep($order->restaurant_id, $productionLine->step);
 
@@ -55,16 +56,24 @@ class ForwardProductionProccess
         }
     }
 
+    private function getCurrentMovementByOrderId($order_id){
+        return ProductionMovement::where("order_id", $order_id)->orderBy('current_step_number', 'desc')->first();
+    }
+
     protected function finishProcess($orderId){
+
         $orderSummary = OrderSummary::where([
             'order_id' => $orderId
         ])->firstOrFail();
 
+        $babelized = new OrderBabelized($orderSummary->order_json);
+
         $orderSummary->finalized = 1;
         $orderSummary->finalized_at = date("Y-m-d H:i:s");
         $orderSummary->save();
+
         FinishedProccess::dispatch(
-            new OrderBabelized($orderSummary->order_json), 
+            $babelized, 
             IfoodBroker::where("restaurant_id", $orderSummary->restaurant_id)->firstOrFail()
         );
     }

@@ -112,6 +112,18 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+
+                                                            <div class="col-lg-6 col-md-6">
+                                                                <div class="pretty p-switch p-fill">
+                                                                    <input name="ready" type="checkbox"
+                                                                        value="{{ $productionItem->step }}"
+                                                                        class="ready"
+                                                                        {{ old('ready', optional($productionItem)->ready) == '1' ? 'checked' : '' }} />
+                                                                    <div class="state">
+                                                                        <label>Prato pronto ao final desta etapa</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>                                                            
                                                         </div>
                                                     </div>
                                                 </div>
@@ -226,6 +238,7 @@
                 production.father_step = data.getAll("father_step");
                 production.name = data.getAll("name");
                 production.next_on_click = data.getAll("next_on_click");
+                production.ready = data.getAll("ready");
                 production.role_id = data.getAll("role_id");
                 production.see_previous = data.getAll("see_previous");
                 production.step = data.getAll("step");
@@ -275,6 +288,7 @@
                     item = $(item);
 
                     item.find('.clickable').val(currentStep);
+                    item.find('.ready').val(currentStep);
                     item.find('.see_previous').val(currentStep);
                     item.find('.can_pause').val(currentStep);
                     item.find('.next_on_click').val(currentStep);

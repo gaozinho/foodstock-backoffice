@@ -101,12 +101,121 @@ Route::get('/production', function () {
 
 
 use App\Foodstock\Babel\IfoodOrderBabel;
+use App\Foodstock\Babel\OrderBabelized;
 
 Route::get('/order-babel', function () {
-   $orderBabel = new IfoodOrderBabel('');
-
-   //dd($orderBabel->toJson());
-
+   $orderBabel = new IfoodOrderBabel('{
+      "id":"5ac73671-17a5-4c54-915f-b04e32d27f09",
+      "items":[
+         {
+            "id":"811e1dcf-26fb-4d11-b956-0bd2fb0f2f6d",
+            "name":"PEDIDO DE TESTE - Sanduíche",
+            "unit":"UN",
+            "index":1,
+            "price":50,
+            "options":[
+               {
+                  "id":"f13ae4b7-d0a1-4040-b525-860ffe9efa49",
+                  "name":"Complemento 7",
+                  "unit":"UN",
+                  "index":2,
+                  "price":0,
+                  "addition":0,
+                  "quantity":1,
+                  "unitPrice":0
+               }
+            ],
+            "imageUrl":"https://static-images.ifood.com.br/image/upload/t_high/pratos/d18dd059-d9b2-4758-b97c-f8c506d80949/202106211250_G6Q0_.jpeg",
+            "quantity":1,
+            "unitPrice":50,
+            "totalPrice":50,
+            "externalCode":"c01-i001",
+            "optionsPrice":0
+         }
+      ],
+      "total":{
+         "benefits":0,
+         "subTotal":50,
+         "deliveryFee":8.9,
+         "orderAmount":58.9,
+         "additionalFees":0
+      },
+      "isTest":true,
+      "customer":{
+         "id":"22069c0b-8337-4ad7-993a-549eeb5c2acc",
+         "name":"PEDIDO DE TESTE - Wagner Gomes Gonçalves",
+         "phone":{
+            "number":"0800 200 5011",
+            "localizer":"11870462",
+            "localizerExpiration":"2021-07-09T16:15:39.061993Z"
+         },
+         "documentNumber":"05166661699",
+         "ordersCountOnMerchant":0
+      },
+      "delivery":{
+         "mode":"DEFAULT",
+         "deliveredBy":"MERCHANT",
+         "deliveryAddress":{
+            "city":"Bujari",
+            "state":"AC",
+            "country":"BR",
+            "postalCode":"00000000",
+            "streetName":"PEDIDO DE TESTE - NÃO ENTREGAR - Ramal Bujari",
+            "coordinates":{
+               "latitude":-9.822159,
+               "longitude":-67.948475
+            },
+            "neighborhood":"Bujari",
+            "streetNumber":"100",
+            "formattedAddress":"PEDIDO DE TESTE - NÃO ENTREGAR - Ramal Bujari, 100"
+         },
+         "deliveryDateTime":"2021-07-09T13:55:39.061993Z"
+      },
+      "merchant":{
+         "id":"d18dd059-d9b2-4758-b97c-f8c506d80949",
+         "name":"Teste - FoodStock"
+      },
+      "payments":{
+         "methods":[
+            {
+               "cash":{
+                  "changeFor":0
+               },
+               "type":"OFFLINE",
+               "value":58.9,
+               "method":"CASH",
+               "prepaid":false,
+               "currency":"BRL"
+            }
+         ],
+         "pending":58.9,
+         "prepaid":0
+      },
+      "createdAt":"2021-07-09T13:15:39.061993Z",
+      "displayId":"9411",
+      "orderType":"DELIVERY",
+      "benefits":[
+         {
+            "targetId":"string",
+            "sponsorshipValues":[
+               {
+                  "description":"Sponsorship information for benefits",
+                  "name":"MERCHANT",
+                  "value":5
+               }
+            ],
+            "description":"A benefit applied to the order",
+            "value":10,
+            "target":"DELIVERY_FEE"
+         }
+      ],
+      "orderTiming":"IMMEDIATE",
+      "salesChannel":"IFOOD",
+      "preparationStartDateTime":"2021-07-09T13:15:39.061993Z"
+   }');
+   $babelized = $orderBabel->toString();
+   $orderBabelized = new OrderBabelized($babelized);
+   dd($orderBabel, $orderBabelized);
 });
 
 Route::get('/integrations', function () {

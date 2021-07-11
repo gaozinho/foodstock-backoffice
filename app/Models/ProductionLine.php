@@ -40,7 +40,7 @@ class ProductionLine extends Model
     /**
      * @var array
      */
-    protected $fillable = ['role_id', 'production_line_id', 'restaurant_id', 'production_line_version_id', 'name', 'step', 'clickable', 'see_previous', 'next_on_click', 'can_pause', 'color', 'version', 'is_active', 'created_at', 'updated_at'];
+    protected $fillable = ['role_id', 'production_line_id', 'restaurant_id', 'ready', 'production_line_version_id', 'name', 'step', 'clickable', 'see_previous', 'next_on_click', 'can_pause', 'color', 'version', 'is_active', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
