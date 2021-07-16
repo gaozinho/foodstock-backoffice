@@ -1,6 +1,6 @@
 <x-jet-dropdown id="productionLineDropdown">
     <x-slot name="trigger">
-        <i class="fas fa-industry"></i> Linha de produção
+        <i class="fas fa-industry"></i> Acompanhe
     </x-slot>
     <x-slot name="content">
         @forelse($roles as $role)
@@ -15,5 +15,29 @@
             <a class="btn btn-primary btn-sm mt-1" href="{{ route('wizard.restaurant.index') }}">Configurar plataforma</a>
         </div>       
         @endforelse
+
+        @role('admin')
+            <hr class="dropdown-divider">
+
+            @if(auth()->user()->menagesRestaurants())
+
+
+                <x-jet-dropdown-link href="{{ route('panels.delivery-panel.index') }}" :active="request()->routeIs('panels.delivery-panel.index')">
+                    <i class="fas fa-tv"></i> {{ __('Painel') }}
+                </x-jet-dropdown-link>
+
+                <x-jet-dropdown-link href="{{ route('orders.keyboard.index') }}" :active="request()->routeIs('orders.keyboard.index')">
+                    <i class="fas fa-search"></i> {{ __('Localizador') }}
+                </x-jet-dropdown-link>     
+
+                <x-jet-dropdown-link href="{{ route('welcome') }}" :active="request()->routeIs('info')">
+                    <i class="fas fa-exclamation-circle"></i> {{ __('Informações') }}
+                </x-jet-dropdown-link>                        
+              
+
+            @endif
+
+        @endrole
+        
     </x-slot>
 </x-jet-dropdown>

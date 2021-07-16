@@ -18,9 +18,15 @@
                 <livewire:menu.roles />
 
                 @role('admin')
+                    @if(auth()->user()->menagesRestaurants())
+                        <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                            <i class="fas fa-chart-line"></i> Gerencie
+                        </x-jet-nav-link>                        
+                    @endif
+
                     <x-jet-dropdown id="teamManagementDropdown">
                         <x-slot name="trigger">
-                            <i class="fas fa-motorcycle"></i> Seu delivery
+                            <i class="fas fa-motorcycle"></i> Configure
                         </x-slot>
 
                         <x-slot name="content">
@@ -56,19 +62,7 @@
                         </x-slot>
                     </x-jet-dropdown>
 
-                    @if(auth()->user()->menagesRestaurants())
-                        <x-jet-nav-link href="{{ route('panels.delivery-panel.index') }}" :active="request()->routeIs('panels.delivery-panel.index')">
-                            <i class="fas fa-tv"></i> {{ __('Painel') }}
-                        </x-jet-nav-link>
 
-                        <x-jet-nav-link href="{{ route('orders.keyboard.index') }}" :active="request()->routeIs('orders.keyboard.index')">
-                            <i class="fas fa-search"></i> {{ __('Localizador') }}
-                        </x-jet-nav-link>
-
-                        <x-jet-nav-link href="{{ route('welcome') }}" :active="request()->routeIs('info')">
-                            <i class="fas fa-exclamation-circle"></i>
-                        </x-jet-nav-link>                        
-                    @endif
 
                 @endrole
             </ul>
