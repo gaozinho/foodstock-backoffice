@@ -11,6 +11,7 @@ class HealthCheck extends Component
     public $deliveryOk;
     public $integrationOk;
     public $proccessOk;
+    public $merchantAvailable;
     public $brokersOk = [];
     public $everythingOk;
 
@@ -20,8 +21,9 @@ class HealthCheck extends Component
         $this->integrationOk = $performHealthCheck->integrationOk();
         $this->proccessOk = $performHealthCheck->proccessOk();
         $this->brokersOk = $performHealthCheck->brokersOk;
+        $this->merchantAvailable = $performHealthCheck->merchantAvailable();
 
-        $this->everythingOk = $this->deliveryOk && $this->integrationOk && $this->proccessOk;
+        $this->everythingOk = $this->deliveryOk && $this->integrationOk && $this->proccessOk && $this->merchantAvailable;
     }
 
     public function render()

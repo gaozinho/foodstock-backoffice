@@ -13,7 +13,7 @@ use App\Models\FederatedSale;
 
 class CancelProductionProccess
 {
-    public function cancel($order_id, $broker_id){
+    public function cancel($order_id, $broker_id, $order_json, $event_json){
         $order = null;
         try{
 
@@ -22,6 +22,7 @@ class CancelProductionProccess
                 ->where("broker_id", $broker_id)
                 ->firstOrFail();
             $orderSummary->canceled = 1;
+            $orderSummary->canceled_json = $event_json;
             $orderSummary->save();
 
             //TODO - Tirar valor do relatório

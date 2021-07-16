@@ -8,6 +8,7 @@
                 <span class="legend mt-0 pt-0">Legenda:
                     <span class="badge bg-danger p-1">Produzindo</span> 
                     <span class="badge bg-success p-1">Pronto para despachar / balcão / mesa</span>
+                    <span class="badge" style="color: #fff; background-color: #ff8e09">Cancelado</span> 
                 </span>
             </div>
             <div class="text-right">
@@ -60,6 +61,14 @@
                     @php
                         $clickAction = 'wire:click="orderDetail(' . $orderSummary->id . ', ' . $orderSummary->production_line_id . ')"';
                         $curStartNumber = intval(substr($orderSummary->friendly_number, 0, 1));
+                        $cardColor = "";
+                        $orderNumber = str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT);
+
+                        if($orderSummary->canceled == 1){
+                            $cardColor = 'style="background-color: #ff8e09 !important"';
+                            $orderNumber = '<del>' . $orderNumber . '</del>';
+                        }
+
                         if($curStartNumber != $prevStartNumber){
                             if($prevStartNumber >= 0) echo '</div>';
                             $prevStartNumber = $curStartNumber;
@@ -69,9 +78,9 @@
                     @endphp
                         <div {!!$clickAction!!}
                             onClick='$(".loading").LoadingOverlay("show")'
-                            class="order-card card mb-2 {{$lastStepProductionLine->id == $orderSummary->production_line_id ? 'bg-success' : 'bg-danger'}}">
+                            class="order-card card mb-2 {{$lastStepProductionLine->id == $orderSummary->production_line_id ? 'bg-success' : 'bg-danger'}}" {!!$cardColor!!}>
                             <div class="card-body">
-                                <h4 class="text-white">{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</h4>
+                                <h4 class="text-white">{!! $orderNumber !!}</h4>
                                 <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }} :: {{$babelized->orderType}}</div>
                             </div>
                         </div>

@@ -119,13 +119,34 @@ class IfoodIntegrationDistributed extends IfoodIntegration
             $httpResponse = $this->httpClient->get($this->broker->merchantsApi, $this->requestOptions);
             $jsonMerchants = $this->parseMerchantsResponse($httpResponse->getBody()->getContents());
 
-            
             return $jsonMerchants;
         }catch(\Exception $exception){
             if(env('APP_DEBUG')) throw $exception;
             return false;
         }        
     }
+
+    public function merchantAvailable($restaurant_id){
+        try{
+            $ifoodBroker = IfoodBroker::where("restaurant_id", $restaurant_id)->firstOrFail();
+
+            if($this->tokenIsExpired(strtotime($ifoodBroker->expiresIn))){
+                $this->refreshToken($ifoodBroker->id);
+            }
+            
+            $this->requestOptions["headers"]["Authorization"] = "Bearer " . $ifoodBroker->accessToken;
+            $httpResponse = $this->httpClient->get($this->broker->merchantApi . $ifoodBroker->merchant_id . "/status", $this->requestOptions);
+            $jsonMerchants = $this->parseMerchantsResponse($httpResponse->getBody()->getContents());
+
+            foreach($jsonMerchants as $available){
+                return $available->available;
+            }
+
+        }catch(\Exception $exception){
+            if(env('APP_DEBUG')) throw $exception;
+            return false;
+        }        
+    }    
 
     public function enableMerchant($ifoodBroker, $jsonMerchants){
         $success = false;

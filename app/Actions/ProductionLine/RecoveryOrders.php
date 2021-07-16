@@ -29,7 +29,7 @@ class RecoveryOrders
             ->where("order_summaries.finalized", 0)
             ->where("production_movements.step_finished", 0)
             ->whereIn("production_movements.production_line_id", $currentProductionLines->pluck("id"))
-            ->orderBy("order_summaries.friendly_number")
+            ->orderBy("order_summaries.created_at")
             ->select(['order_summaries.*', 'production_movements.production_line_id', 'production_movements.current_step_number', 'production_movements.paused'])
             ->get();
     }
@@ -61,7 +61,7 @@ class RecoveryOrders
                     ->where("production_movements.step_finished", 0)
                     ->where("production_movements.production_line_id", $previousProductionLine->id)
                     ->select(['order_summaries.*', 'production_movements.production_line_id', 'production_movements.current_step_number'])
-                    ->orderBy("order_summaries.friendly_number")
+                    ->orderBy("order_summaries.created_at")
                     ->get();
 
             }catch(\Exception $e){

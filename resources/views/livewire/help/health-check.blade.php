@@ -3,9 +3,10 @@
     <div class="row">
         @if (!$everythingOk)
             <div class="col-md-12 mb-2"><span class="h5">Alguns itens <b>precisam de sua atenção</b> para correto
-                    funcionamento dos painéis e integração com as paltaformas de delivery.</span></div>
+                    funcionamento dos painéis e integração com as paltaformas de delivery.</span>
+            </div>
         @endif
-        <div class="col-md-12 mb-3">
+        <div class="col-md-8 mb-3">
             <div class="card">
                 <div class="card-header">
                     <span class="h4">
@@ -75,14 +76,29 @@
                                     <h4 class="step-title">Processo de produção</h4>
                                 </a>
                             </div>
-                        </div>
 
+                            <div class="step {{ $merchantAvailable ? 'completed' : '' }}">
+                                <a href="{{route('wizard.production-line.index')}}" style="text-decoration: none">
+                                    <div class="step-icon-wrap">
+                                        <div class="step-icon">
+                                            @if ($merchantAvailable)
+                                                <i class="fas fa-lg fa-check text-success"></i>
+                                            @else
+                                                <i class="fas fa-lg fa-times text-danger"></i>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <h4 class="step-title">Loja ativa</h4>
+                                </a>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-12">
+        <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
                     <span class="h4">Próximos passos</span>

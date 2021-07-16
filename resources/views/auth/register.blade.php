@@ -84,7 +84,7 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body">Estamos em fase de lançamento, por isso, só é possível realizar o cadastro com convite em mãos. 
-                    <p>Se você não tem o convite, pode solicitar no email foodstockcontato@gmail.com. Informe o nome de seu delivery e conte-nos por que deseja ajuda para gerenciá-lo.</p>
+                    <p>Se você não tem o convite, pode solicitar no email foodstock.contato@gmail.com. Informe o nome de seu delivery e conte-nos por que deseja ajuda para gerenciá-lo.</p>
                 </div>
             </div>
         </div>  

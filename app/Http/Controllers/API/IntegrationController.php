@@ -38,10 +38,15 @@ class IntegrationController extends BaseController
             $input
         );
 
-        $startProductionProccess = new StartProductionProccess();
-        $productionMovement = $startProductionProccess->start($order->id);
+        try{
+            $startProductionProccess = new StartProductionProccess();
+            $productionMovement = $startProductionProccess->start($order->id);
+            return $this->sendResponse(new IfoodOrderResource($order), 'IfoodOrder saved successfully.');
+        }catch(\Exception $e){
+            return $this->sendResponse(["success" => false, "order_id" => $order_id], 'Cant save IfoodOrder.');
+        }
 
-        return $this->sendResponse(new IfoodOrderResource($order), 'IfoodOrder saved successfully.');
+        
     }
 
     public function cancelProduction(Request $request)
@@ -53,16 +58,21 @@ class IntegrationController extends BaseController
         $validator = Validator::make($input, [
             'broker_id' => 'required',
             'order_id' => 'required',
+            'event_json' => 'required',
+            'order_json' => 'required',
         ]);
 
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
         }
 
-        $cancelProductionProccess = new CancelProductionProccess();
-        $order_id = $cancelProductionProccess->cancel($input["order_id"], $input["broker_id"]);
-
-        return $this->sendResponse(["order_id" => $order_id], 'IfoodOrder canceled successfully.');
+        try{
+            $cancelProductionProccess = new CancelProductionProccess();
+            $order_id = $cancelProductionProccess->cancel($input["order_id"], $input["broker_id"], $input["order_json"], $input["event_json"]);
+            return $this->sendResponse(["order_id" => $order_id], 'IfoodOrder canceled successfully.');
+        }catch(\Exception $e){
+            return $this->sendResponse(["success" => false, "order_id" => $order_id], 'Cant cancel IfoodOrder.');
+        }
     }    
 
     public function checkIfCreated(Request $request)

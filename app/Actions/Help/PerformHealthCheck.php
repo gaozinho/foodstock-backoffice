@@ -6,6 +6,7 @@ use App\Models\IfoodBroker;
 use App\Models\RappiBroker;
 use App\Models\ProductionLine;
 use App\Actions\ProductionLine\RecoverUserRestaurant;
+use App\Integrations\IfoodIntegrationDistributed;
 
 class PerformHealthCheck
 {
@@ -43,4 +44,9 @@ class PerformHealthCheck
     public function proccessOk(){
         return ProductionLine::where("restaurant_id", $this->restaurant->id)->count() > 0;
     }
+
+    public function merchantAvailable(){
+        $ifoodIntegrationDistributed = new IfoodIntegrationDistributed(); 
+        return $ifoodIntegrationDistributed->merchantAvailable($this->restaurant->id);
+    }    
 }
