@@ -213,6 +213,12 @@
                                     @endforeach
                                     </ul>
                                 </div>
+                                @if($orderSummaryDetail->canceled_json != "")
+                                <div class="col-md-12 small">
+                                    <b>CANCELADO</b><br />
+                                    <small>{{$orderSummaryDetail->canceled_json}}</small>
+                                </div>     
+                                @endif                           
                             </div>
                 
                         </div>
