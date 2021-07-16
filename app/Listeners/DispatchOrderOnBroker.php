@@ -6,6 +6,7 @@ use App\Events\FinishedProccess;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use GuzzleHttp\Client;
+use App\Enums\OrderType;
 
 class DispatchOrderOnBroker implements ShouldQueue
 {
