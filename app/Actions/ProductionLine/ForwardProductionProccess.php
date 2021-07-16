@@ -26,6 +26,12 @@ class ForwardProductionProccess
             $productionMovement->finished_at = date("Y-m-d H:i:s");
             $productionMovement->save();
 
+            $currentProductionLine = ProductionLine::findOrFail($productionMovement->production_line_id);
+
+            if($currentProductionLine->ready == 1){ //Avisa que prato está pronto
+                $this->ready($order->id);
+            }
+
             if(intval($productionMovement->next_step_id) == 0){ //Finaliza processo caso não exista próximo passo
                 $this->finishProcess($order->id);
                 return false;
@@ -59,6 +65,24 @@ class ForwardProductionProccess
     private function getCurrentMovementByOrderId($order_id){
         return ProductionMovement::where("order_id", $order_id)->orderBy('current_step_number', 'desc')->first();
     }
+
+    protected function ready($orderId){
+
+        $orderSummary = OrderSummary::where([
+            'order_id' => $orderId
+        ])->firstOrFail();
+
+        $babelized = new OrderBabelized($orderSummary->order_json);
+
+        //$orderSummary->finalized = 1;
+        //$orderSummary->finalized_at = date("Y-m-d H:i:s");
+        //$orderSummary->save();
+
+        ReadyToPickup::dispatch(
+            $babelized, 
+            IfoodBroker::where("restaurant_id", $orderSummary->restaurant_id)->firstOrFail()
+        );
+    }    
 
     protected function finishProcess($orderId){
 

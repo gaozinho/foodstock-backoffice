@@ -34,7 +34,8 @@ class DispatchOrderOnBroker implements ShouldQueue
             if(get_class($event->oneBroker) == "App\Models\IfoodBroker"){
                 
                 $action = "";
-                if($event->orderBabelized->orderType == OrderType::DELIVERY){
+                
+                if(strtoupper($event->orderBabelized->orderType) == strtoupper(OrderType::DELIVERY)){
                     $action = env('INTEGRATION_IFOOD_DISPATCH_URI');
                 }else{
                     $action = env('INTEGRATION_IFOOD_READYTOPICK_URI');
