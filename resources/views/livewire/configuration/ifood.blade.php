@@ -210,8 +210,7 @@
                                                     name="acknowledgment" type="checkbox" value="1"
                                                     {{ old('acknowledgment', optional($ifoodBroker)->acknowledgment) == '1' ? 'checked' : '' }} />
                                                 <div class="state">
-                                                    <label>Avisar o {{ $ifood->name }} a cada pedido
-                                                        recebido.</label>
+                                                    <label>Aceitar automaticamente pedidos do {{ $ifood->name }}.</label>
                                                 </div>
                                             </div>
                                         </div>
