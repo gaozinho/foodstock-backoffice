@@ -15,6 +15,8 @@ class HealthCheck extends Component
     public $brokersOk = [];
     public $everythingOk;
 
+    public $availableReason;
+
     public function mount(){
         $performHealthCheck = new PerformHealthCheck();
         $this->deliveryOk = $performHealthCheck->deliveryOk();
@@ -22,6 +24,8 @@ class HealthCheck extends Component
         $this->proccessOk = $performHealthCheck->proccessOk();
         $this->brokersOk = $performHealthCheck->brokersOk;
         $this->merchantAvailable = $performHealthCheck->merchantAvailable();
+
+        $this->availableReason = $performHealthCheck->availableData->message->title . " - " . $performHealthCheck->availableData->message->subtitle;
 
         $this->everythingOk = $this->deliveryOk && $this->integrationOk && $this->proccessOk && $this->merchantAvailable;
     }

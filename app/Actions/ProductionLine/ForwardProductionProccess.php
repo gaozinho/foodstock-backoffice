@@ -26,11 +26,12 @@ class ForwardProductionProccess
             $productionMovement->finished_at = date("Y-m-d H:i:s");
             $productionMovement->save();
 
+            /*
             $currentProductionLine = ProductionLine::findOrFail($productionMovement->production_line_id);
-
             if($currentProductionLine->ready == 1){ //Avisa que prato está pronto
-                $this->ready($order->id);
+                //$this->ready($order->id); Retiradoa pedido do ifood
             }
+            */
 
             if(intval($productionMovement->next_step_id) == 0){ //Finaliza processo caso não exista próximo passo
                 $this->finishProcess($order->id);
@@ -67,7 +68,7 @@ class ForwardProductionProccess
     }
 
     protected function ready($orderId){
-
+        
         $orderSummary = OrderSummary::where([
             'order_id' => $orderId
         ])->firstOrFail();

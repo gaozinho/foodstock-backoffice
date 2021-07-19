@@ -138,8 +138,8 @@ class IfoodIntegrationDistributed extends IfoodIntegration
             $httpResponse = $this->httpClient->get($this->broker->merchantApi . $ifoodBroker->merchant_id . "/status", $this->requestOptions);
             $jsonMerchants = $this->parseMerchantsResponse($httpResponse->getBody()->getContents());
 
-            foreach($jsonMerchants as $available){
-                return $available->available;
+            foreach($jsonMerchants as $jsonMerchant){
+                return $jsonMerchant;
             }
 
         }catch(\Exception $exception){

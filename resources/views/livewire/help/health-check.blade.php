@@ -89,6 +89,9 @@
                                         </div>
                                     </div>
                                     <h4 class="step-title">Loja ativa</h4>
+                                    @if(!$merchantAvailable)
+                                        <small>{{$availableReason}}</small>
+                                    @endif
                                 </a>
                             </div>
 

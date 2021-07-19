@@ -58,7 +58,7 @@
                                             @if($babelized->schedule)
                                             <div class="text-white">
                                                 <i class="fas fa-lg fa-clock"></i>
-                                                <span>{{date("H:i", strtotime($babelized->schedule->start))}} ~ {{date("H:i", strtotime($babelized->schedule->end))}}</span>
+                                                <span>{{date("d/m H:i", strtotime($babelized->schedule->start))}} ~ {{date("d/m H:i", strtotime($babelized->schedule->end))}}</span>
                                             </div>
                                             @endif  
                                             
@@ -108,7 +108,7 @@
                                                 @if($babelized->schedule)
                                                 <div>
                                                     <i class="fas fa-lg fa-clock"></i>
-                                                    <span>{{date("H:i", strtotime($babelized->schedule->start))}} ~ {{date("H:i", strtotime($babelized->schedule->end))}}</span>
+                                                    <span>{{date("d/m H:i", strtotime($babelized->schedule->start))}} ~ {{date("d/m H:i", strtotime($babelized->schedule->end))}}</span>
                                                 </div>
                                                 @endif       
                                                 @if($orderSummary->canceled == 1)
@@ -134,7 +134,7 @@
                                                 @if($babelized->schedule)
                                                 <div>
                                                     <i class="fas fa-lg fa-clock"></i>
-                                                    <span>{{date("H:i", strtotime($babelized->schedule->start))}} ~ {{date("H:i", strtotime($babelized->schedule->end))}}</span>
+                                                    <span>{{date("d/m H:i", strtotime($babelized->schedule->start))}} ~ {{date("d/m H:i", strtotime($babelized->schedule->end))}}</span>
                                                 </div>
                                                 @endif
                                                 @if($orderSummary->canceled == 1)

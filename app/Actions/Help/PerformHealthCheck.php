@@ -15,6 +15,7 @@ class PerformHealthCheck
     private $menagesRestaurants;
     private $restaurant;
     public $brokersOk = [];
+    public $availableData;
 
     public function __construct()
     {
@@ -47,6 +48,7 @@ class PerformHealthCheck
 
     public function merchantAvailable(){
         $ifoodIntegrationDistributed = new IfoodIntegrationDistributed(); 
-        return $ifoodIntegrationDistributed->merchantAvailable($this->restaurant->id);
+        $this->availableData = $ifoodIntegrationDistributed->merchantAvailable($this->restaurant->id);
+        return $this->availableData->available;
     }    
 }
