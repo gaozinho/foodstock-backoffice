@@ -13,6 +13,8 @@ use App\Actions\ProductionLine\ForwardProductionProccess;
 use App\Actions\ProductionLine\PauseProductionProccess;
 use App\Actions\ProductionLine\RecoverUserRestaurant;
 
+use App\Events\CancellationRequested;
+
 use App\Foodstock\Babel\OrderBabelized;
 
 class ProductionLinePanel extends Component
@@ -116,7 +118,6 @@ class ProductionLinePanel extends Component
             ->select(['order_summaries.*', 'production_movements.paused'])
             ->orderBy("production_movements.id", "desc")
             ->firstOrFail();
-
         $orderSummary->orderBabelized = new OrderBabelized($orderSummary->order_json);
         return $orderSummary;
     }
@@ -126,6 +127,16 @@ class ProductionLinePanel extends Component
         (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $this->restaurant->id);
         $this->emit('openOrderModal');
         $this->loadData();
+    }
+
+    public function cancellationRequest($order_summary_id){
+        $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
+        CancellationRequested::dispatch(
+            $this->orderSummaryDetail->orderBabelized, 
+            IfoodBroker::where("restaurant_id", $this->orderSummaryDetail->restaurant_id)->firstOrFail(),
+            "Reason",
+            501
+        );
     }
 
     public function moveForwardFromCurrentStep($order_summary_id){

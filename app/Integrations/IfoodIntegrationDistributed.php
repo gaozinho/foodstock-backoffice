@@ -113,6 +113,7 @@ class IfoodIntegrationDistributed extends IfoodIntegration
 
             if($this->tokenIsExpired(strtotime($ifoodBroker->expiresIn))){
                 $this->refreshToken($brokerId);
+                $ifoodBroker = IfoodBroker::findOrFail($brokerId);
             }
             
             $this->requestOptions["headers"]["Authorization"] = "Bearer " . $ifoodBroker->accessToken;
@@ -132,6 +133,7 @@ class IfoodIntegrationDistributed extends IfoodIntegration
 
             if($this->tokenIsExpired(strtotime($ifoodBroker->expiresIn))){
                 $this->refreshToken($ifoodBroker->id);
+                $ifoodBroker = IfoodBroker::where("restaurant_id", $restaurant_id)->firstOrFail();
             }
             
             $this->requestOptions["headers"]["Authorization"] = "Bearer " . $ifoodBroker->accessToken;

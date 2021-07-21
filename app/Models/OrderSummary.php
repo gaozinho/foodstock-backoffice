@@ -66,4 +66,9 @@ class OrderSummary extends Model
     {
         return $this->hasMany('App\Models\ProductionMovement');
     }
+
+    public function cancellationReasons()
+    {
+        return $this->hasMany('App\Models\CancellationReason');
+    }    
 }

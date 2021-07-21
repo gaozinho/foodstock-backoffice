@@ -59,7 +59,9 @@ class IntegrationController extends BaseController
             'broker_id' => 'required',
             'order_id' => 'required',
             'event_json' => 'required',
-            'order_json' => 'required',
+            'reason' => 'required',
+            'code' => 'required',
+            'origin' => 'required',
         ]);
 
         if($validator->fails()){
@@ -68,10 +70,11 @@ class IntegrationController extends BaseController
 
         try{
             $cancelProductionProccess = new CancelProductionProccess();
-            $order_id = $cancelProductionProccess->cancel($input["order_id"], $input["broker_id"], $input["order_json"], $input["event_json"]);
-            return $this->sendResponse(["order_id" => $order_id], 'IfoodOrder canceled successfully.');
+            $order_id = $cancelProductionProccess->cancel($input["order_id"], $input["broker_id"], $input["event_json"], $input["reason"], $input["code"], $input["origin"]);
+            return $this->sendResponse(["order_id" => $input["order_id"]], 'IfoodOrder canceled successfully.');
         }catch(\Exception $e){
-            return $this->sendResponse(["success" => false, "order_id" => $order_id], 'Cant cancel IfoodOrder.');
+            if(env("APP_DEBUG")) throw $e;
+            return $this->sendResponse(["success" => false, "order_id" => $input["order_id"]], 'Cant cancel IfoodOrder.');
         }
     }    
 

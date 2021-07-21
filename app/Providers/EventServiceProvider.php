@@ -17,6 +17,10 @@ use App\Listeners\DispatchOrderOnBroker;
 use App\Events\ReadyToPickup;
 use App\Listeners\ReadyOrderOnBroker;
 
+
+use App\Events\CancellationRequested;
+use App\Listeners\CancellationRequest;
+
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -37,6 +41,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         ReadyToPickup::class => [
             ReadyOrderOnBroker::class,
+        ],
+        CancellationRequested::class => [
+            CancellationRequest::class,
         ],
     ];
 
