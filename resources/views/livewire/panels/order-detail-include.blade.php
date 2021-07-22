@@ -62,12 +62,13 @@
     @elseif (isset($productionLine))
     <div class="row">
         <div class="col-6">
+            <button type="button" data-dismiss="modal" class="mt-2 btn btn-secondary mr-1">Fechar <i class="fas fa-times"></i></button>
             @if ($productionLine->can_pause && $orderSummaryDetail->paused != 1)
                 <button type="button" name="pause" value="pause" wire:click="pause({{ $orderSummaryDetail->id }})" class="mt-2 btn btn-warning">
                     <i wire:loading wire:target="pause" class="fas fa-cog fa-spin"></i> Pausar <i class="fas fa-pause"></i>
                 </button>
             @endif
-             <button type="button" data-dismiss="modal" class="mt-2 btn btn-secondary">Fechar <i class="fas fa-times"></i></button>
+            
         </div>
         <div class="col text-right">
             <button type="button" name="nextStep" value="nextStep" wire:click="nextStep({{ $orderSummaryDetail->id }})" class="mt-2 btn btn-lg btn-success text-uppercase">

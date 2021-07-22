@@ -6,14 +6,13 @@ use Livewire\Component;
 use App\Models\User;
 use App\Models\Restaurant;
 use App\Models\Role;
+use App\Models\IfoodBroker;
 use App\Models\ProductionLine;
 use App\Models\OrderSummary;
 use App\Actions\ProductionLine\RecoveryOrders;
 use App\Actions\ProductionLine\ForwardProductionProccess;
 use App\Actions\ProductionLine\PauseProductionProccess;
 use App\Actions\ProductionLine\RecoverUserRestaurant;
-
-use App\Events\CancellationRequested;
 
 use App\Foodstock\Babel\OrderBabelized;
 
@@ -33,6 +32,7 @@ class ProductionLinePanel extends Component
     public $recoveryOrders;
     public $role_name;
     public $total_orders = 0;
+    public $cancellation_code = "501";
 
     public $orderBabelized;
 
@@ -72,7 +72,6 @@ class ProductionLinePanel extends Component
     public function loadData(){
         $recoveryOrders = new RecoveryOrders();
         $this->orderSummaries = $recoveryOrders->recoveryByRoleName($this->restaurant->id, $this->role_name);
-
         $this->orderSummariesPreviousStep = $recoveryOrders->recoveryPreviousByRoleName($this->restaurant->id, $this->role_name); 
         $this->total_orders = count($this->orderSummaries) + count($this->orderSummariesPreviousStep);
     }
@@ -127,16 +126,6 @@ class ProductionLinePanel extends Component
         (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $this->restaurant->id);
         $this->emit('openOrderModal');
         $this->loadData();
-    }
-
-    public function cancellationRequest($order_summary_id){
-        $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
-        CancellationRequested::dispatch(
-            $this->orderSummaryDetail->orderBabelized, 
-            IfoodBroker::where("restaurant_id", $this->orderSummaryDetail->restaurant_id)->firstOrFail(),
-            "Reason",
-            501
-        );
     }
 
     public function moveForwardFromCurrentStep($order_summary_id){

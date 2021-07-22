@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\ReadyToPickup;
+use App\Events\CancellationRequested;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use GuzzleHttp\Client;

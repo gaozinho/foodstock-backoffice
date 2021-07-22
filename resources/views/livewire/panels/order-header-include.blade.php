@@ -22,7 +22,14 @@
             </div>     
         </div>
         @endforeach
+    @else
+        @if(intval($orderSummaryDetail->id) > 0) 
+        <livewire:panels.cancellation key="{{ now() }}" :orderSummaryId="$orderSummaryDetail->id" />
+        @endif    
     @endif
+    
+
+
 </div>
 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
     <span aria-hidden="true">&times;</span>

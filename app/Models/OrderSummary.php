@@ -33,7 +33,7 @@ class OrderSummary extends Model
     /**
      * @var array
      */
-    protected $fillable = ['restaurant_id', 'broker_id', 'order_id', 'canceled', 'friendly_number', 'order_json', 'finalized', 'created_at', 'updated_at', 'started_at', 'finalized_at'];
+    protected $fillable = ['restaurant_id', 'cancellation_requested', 'broker_id', 'order_id', 'canceled', 'friendly_number', 'order_json', 'finalized', 'created_at', 'updated_at', 'started_at', 'finalized_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
