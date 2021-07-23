@@ -174,7 +174,7 @@
         function reloadPage(){
             return setInterval(() => { 
                 Livewire.emit('loadData');
-             }, 60000);
+             }, 30000);
         }
 
         $(document).ready(function() {
@@ -201,6 +201,7 @@
             Livewire.on('closeOrderModal', function(){
                 $('#order-modal').modal('hide');
                 $('.modal-backdrop').remove();
+                reloadDataInterval = reloadPage();
             })       
         });
     </script>

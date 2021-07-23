@@ -102,6 +102,11 @@ class IfoodOrderBabel extends OrderBabel implements OrderBabelInterface
     }
 
     public function orderType(){
+
+        if(isset($this->orderJson->indoor) && isset($this->orderJson->indoor->table)){
+            return $this->orderJson->orderType . " (MESA: " . $this->orderJson->indoor->table . ")";
+        }
+
         return $this->orderJson->orderType;
     }    
 
