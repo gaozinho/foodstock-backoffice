@@ -1,59 +1,43 @@
 <div class="modal fade order-modal" id="order-modal" tabindex="-1" role="dialog" aria-labelledby="order-modal"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                       @include('livewire.panels.order-header-include')
                 </div>
                 <div class="modal-body">
-                    @if(isset($orderSummaryDetail->orderBabelized->benefits) && count($orderSummaryDetail->orderBabelized->benefits) > 0)
-                    <div class="alert alert-info py-1 px-3">
-                        @foreach($orderSummaryDetail->orderBabelized->benefits as $benefit)
-                            <div class="row">
-                                <div class="col-md-12 small">
-                                    Subsídio: {{$benefit->target}} :: @money($benefit->value)
-                                    @if($benefit->description != null)<br /><small>{{$benefit->description}}</small> @endif
-                                </div>
-                                <div class="col-md-12 small">
-                                    <ul class="mb-0">
-                                    @foreach($benefit->sponsorshipValues as $sponsorshipValue)
-                                        <li>
-                                            {{$sponsorshipValue->name}} :: @money($sponsorshipValue->value)
-                                            @if($sponsorshipValue->description != null) <br /><small>{{$sponsorshipValue->description}}</small> @endif
-                                        </li>
-                                    @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-                        @endforeach
-            
-                    </div>
-                @endif
-                    @if(isset($orderSummaryDetail->orderBabelized->payments))
-                        <div class="alert alert-info py-1 px-3">
-                            <div class="row">
-                                <div class="col-md-12 small">
-                                    Valor a receber: @money($orderSummaryDetail->orderBabelized->payments->pending) :: 
-                                    Valor pago antecipadamente: @money($orderSummaryDetail->orderBabelized->payments->prepaid)
-                                </div>
-                                <div class="col-md-12 small">
-                                    <ul class="mb-0">
-                                    @foreach($orderSummaryDetail->orderBabelized->payments->methods as $method)
-                                        <li>
-                                            @money($method->value) pago em {{$method->method}}
-                                            @if($method->card_brand != null) bandeira {{$method->card_brand ?? 'n/a'}} @endif
-                                            @if(intval($method->cash_changeFor) > 0) - Levar troco para: @money($method->cash_changeFor) @endif
-                                            @if($method->wallet_name != null) - Wallet: {{$method->wallet_name ?? 'n/a'}} @endif
-                                        </li>
-                                    @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                    
-                    
                     @include('livewire.panels.order-detail-include')
+                </div>
+                <div class="modal-footer justify-content-between">
+                    
+                    @if($orderSummaryDetail->canceled == 1)
+
+                        <div>
+                            <button type="button" data-dismiss="modal" class="mt-2 btn btn-secondary">Fechar <i class="fas fa-times"></i></button>
+                        </div>
+                        <div>
+                            <button type="button" name="nextStep" value="nextStep" wire:click="nextStep({{ $orderSummaryDetail->id }})" class="mt-2 btn btn-lg btn-danger text-uppercase">
+                                <i wire:loading wire:target="nextStep" class="fas fa-cog fa-spin"></i> Tirar do painel <i class="fas fa-trash-alt"></i></button>
+                        </div>
+
+                    @elseif (isset($productionLine))
+
+                        <div>
+                            <button type="button" data-dismiss="modal" class="mt-2 btn btn-secondary mr-1">Fechar <i class="fas fa-times"></i></button>
+                            @if ($productionLine->can_pause && $orderSummaryDetail->paused != 1)
+                                <button type="button" name="pause" value="pause" wire:click="pause({{ $orderSummaryDetail->id }})" class="mt-2 btn btn-warning">
+                                    <i wire:loading wire:target="pause" class="fas fa-cog fa-spin"></i> Pausar <i class="fas fa-pause"></i>
+                                </button>
+                            @endif
+                            
+                        </div>
+                        <div>
+                            <button type="button" name="nextStep" value="nextStep" wire:click="nextStep({{ $orderSummaryDetail->id }})" class="mt-2 btn btn-lg btn-success text-uppercase">
+                                <i wire:loading wire:target="nextStep" class="fas fa-cog fa-spin"></i> {{ $productionLine->name }} OK <i class="fas fa-step-forward"></i></button>
+                        </div>
+
+                    @endif                    
+
                 </div>
             </div>
         </div>

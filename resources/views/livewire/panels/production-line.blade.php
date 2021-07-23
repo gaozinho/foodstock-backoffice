@@ -1,26 +1,30 @@
 <div>
-    <div>
-        <h2 class="mt-3 mb-0 pb-0">{{ $productionLine->name }} 
-            <span class="badge badge-secondary">{{ $total_orders }}</span> 
-        </h2>
-        <span class="legend mt-0 pt-0">Legenda:
-            @foreach ($legends as $legend)
-                @php
-                    $startText = "";
-                    if($legend['order'] == "previous") $startText = "Passou na ";
-                    else if($legend['order'] == "current") $startText = "Aguardando ";
-                @endphp
-                <span class="badge" style="color: #fff; background-color: {{$legend['color']}}">{{$startText}}{{$legend['name']}}</span> 
-            @endforeach
-            @if($productionLine->can_pause)
-                <span class="badge" style="color: #fff; background-color: rgb(165, 162, 0)">Pausado</span> 
-            @endif
-            <span class="badge" style="color: #fff; background-color: #ff8e09">Cancelado</span> 
-            
+    <div class="row justify-content-between align-items-center">
+        <div class="col">
+            <h2 class="mt-3 mb-0 pb-0">{{ $productionLine->name }} 
+                <span class="badge badge-secondary">{{ $total_orders }}</span> 
+            </h2>
+        </div>
+        <div class="col-auto">
+            <span class="legend mt-0 pt-0">Legenda:
+                @foreach ($legends as $legend)
+                    @php
+                        $startText = "";
+                        if($legend['order'] == "previous") $startText = "Passou na ";
+                        else if($legend['order'] == "current") $startText = "Aguardando ";
+                    @endphp
+                    <span class="badge" style="color: #fff; background-color: {{$legend['color']}}">{{$startText}}{{$legend['name']}}</span> 
+                @endforeach
+                @if($productionLine->can_pause)
+                    <span class="badge" style="color: #fff; background-color: rgb(165, 162, 0)">Pausado</span> 
+                @endif
+                <span class="badge" style="color: #fff; background-color: #ff8e09">Cancelado</span> 
+                
 
-            <span class="badge"><i class="fas fa-lg fa-clock"></i> Pedido agendado</span> 
-            
-        </span>
+                <span class="badge"><i class="fas fa-lg fa-clock"></i> Pedido agendado</span> 
+                
+            </span>
+        </div>
     </div>
     <div class="row mt-3">
         <div class="col">

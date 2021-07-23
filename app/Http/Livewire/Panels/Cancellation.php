@@ -13,10 +13,25 @@ use App\Models\IfoodBroker;
 class Cancellation extends Component
 {
     public $orderSummaryId;
-    public $cancellation_code;
+    public $cancellation_code = "501";
     public $orderSummaryDetail;
     public $restaurant;
     public $cancellation_requested = 0;
+
+    public $ifoodCodes = [
+        "501" => "PROBLEMAS DE SISTEMA",
+        "502" => "PEDIDO EM DUPLICIDADE",
+        "503" => "ITEM INDISPONÍVEL",
+        "504" => "RESTAURANTE SEM MOTOBOY",
+        "505" => "CARDÁPIO DESATUALIZADO",
+        "505" => "PEDIDO FORA DA ÁREA DE ENTREGA",
+        "507" => "CLIENTE GOLPISTA / TROTE",
+        "508" => "FORA DO HORÁRIO DO DELIVERY",
+        "509" => "DIFICULDADES INTERNAS DO RESTAURANTE",
+        "511" => "ÁREA DE RISCO",
+        "512" => "RESTAURANTE ABRIRÁ MAIS TARDE",
+        "513" => "RESTAURANTE FECHOU MAIS CEDO",
+    ];
 
     public function render()
     {
@@ -39,7 +54,7 @@ class Cancellation extends Component
         CancellationRequested::dispatch(
             $this->orderSummaryDetail->orderBabelized, 
             IfoodBroker::where("restaurant_id", $this->orderSummaryDetail->restaurant_id)->firstOrFail(),
-            "Reason",
+            $this->ifoodCodes[$this->cancellation_code],
             $this->cancellation_code
         );
 
