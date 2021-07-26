@@ -28,11 +28,11 @@
     </div>
     <div class="row mt-3">
         <div class="col">
-            <div class="card loading">
-                <div class="card-body">
+            <div class="loading">
+                <div>
 
                     @if($total_orders == 0)
-                        <div class="text-center">
+                        <div class="text-center mt-5">
                             <img src="{{ asset('images/ico-logo.png') }}" class="mt-2 mb-2">
                                 <h3>Nenhum item pendente.</h3>
                         </div>
@@ -52,37 +52,10 @@
                                     $clickAction = 'wire:click="orderDetailAndMoveForward(' . $orderSummary->id . ')"';
                                 }
                             @endphp
-                            <div class="mb-2 text-center col-xl-3 col-lg-3 col-md-4 col-6">
-                                <div {!!$clickAction!!}
-                                    onClick='$(".loading").LoadingOverlay("show")'
-                                    class="order-card card {{ $productionLine->color == '' ? 'bg-secondary' : '' }}"
-                                    {!! $productionLine->color != '' ? 'style="background-color: ' . $stepColors[$orderSummary->current_step_number] . '"' : '' !!}>
-                                    <div class="card-body">
-                                        <div>
-                                            @if($babelized->schedule)
-                                            <div class="text-white">
-                                                <i class="fas fa-lg fa-clock"></i>
-                                                <span>{{date("d/m H:i", strtotime($babelized->schedule->start))}} ~ {{date("H:i", strtotime($babelized->schedule->end))}}</span>
-                                            </div>
-                                            @endif  
-                                            
-                                            @if($orderSummary->canceled == 1)
-                                            <h4 class="text-white">CANCELADO</h4>
-                                            @endif
-                                            <h4 class="text-white">{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</h4>
-                                            <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }} :: {{$babelized->orderType}} :: {{\Carbon\Carbon::parse($orderSummary->created_at)->diffForhumans()}}</div>
-                                        </div>
-
-                                        <div>
-                                            @foreach($babelized->items as $item)
-                                                <p class="my-0 text-white">{{$item->quantity}} :: {{$item->name}}</p>
-                                            @endforeach
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
+                            
+                            @include('livewire.panels.card-include')    
                         @endforeach
+
                         @foreach ($orderSummaries as $orderSummary)
                             @php
                                 $clickAction = "";
@@ -98,64 +71,9 @@
                             @endphp
                             @php
                                 $babelized = new App\Foodstock\Babel\OrderBabelized($orderSummary->order_json);
-                            @endphp
-
-                            @if($productionLine->clickable == 1)
-                                <div class="mb-2 text-center col-xl-3 col-lg-3 col-md-4 col-6">
-                                    <div wire:click="orderDetail({{$orderSummary->id}}, {{$orderSummary->production_line_id}})"
-                                        onClick='$(".loading").LoadingOverlay("show")' 
-                                        class="order-card card {{ $productionLine->color == '' ? 'bg-secondary' : '' }}"
-                                        {!! $cardColor !!}
-                                        >
-                                        <div class="card-body">
-                                            <div>
-                                                @if($babelized->schedule)
-                                                <div>
-                                                    <i class="fas fa-lg fa-clock"></i>
-                                                    <span>{{date("d/m H:i", strtotime($babelized->schedule->start))}} ~ {{date("H:i", strtotime($babelized->schedule->end))}}</span>
-                                                </div>
-                                                @endif       
-                                                @if($orderSummary->canceled == 1)
-                                                <h4 class="text-white">CANCELADO</h4>
-                                                @endif                                                                                     
-                                                <h4 class="text-white">{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</h4>
-                                                <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }} :: {{$babelized->orderType}} :: {{\Carbon\Carbon::parse($orderSummary->created_at)->diffForhumans()}}</div>
-                                            </div>
-                                            <div>
-                                                @foreach($babelized->items as $item)
-                                                    <p class="my-0 text-white">{{$item->quantity}} :: {{$item->name}}</p>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @else
-                                <div class="mb-2 text-center col-xl-3 col-lg-3 col-md-4 col-6">
-                                    <div class="card {{ $productionLine->color == '' ? 'bg-secondary' : '' }}" {!! $cardColor !!}>
-                                        <div class="card-body text-white">
-                                            <div>
-                                                @if($babelized->schedule)
-                                                <div>
-                                                    <i class="fas fa-lg fa-clock"></i>
-                                                    <span>{{date("d/m H:i", strtotime($babelized->schedule->start))}} ~ {{date("H:i", strtotime($babelized->schedule->end))}}</span>
-                                                </div>
-                                                @endif
-                                                @if($orderSummary->canceled == 1)
-                                                <h4 class="text-white">CANCELADO</h4>
-                                                @endif                                                
-                                                <span class="h4">{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</span><br />
-                                                <small><span class="text-white">{{ $orderSummary->broker->name }} :: {{$babelized->orderType}} :: {{\Carbon\Carbon::parse($orderSummary->created_at)->diffForhumans()}}</small></span>
-                                            </div>
-                                            <div>
-                                            @foreach($babelized->items as $item)
-                                                <p class="my-0">{{$item->quantity}} :: {{$item->name}}</p>
-                                            @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
+                            @endphp                            
                             
+                            @include('livewire.panels.card-include')
                         @endforeach
                     </div>
                 </div>

@@ -2,7 +2,7 @@
     <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet" type="text/css">
 
     <div class="full-screen mb-3">
-        <h2 class="mt-3 mb-0 pb-0">Painel de controle</h2>
+        <h2 class="mt-3 mb-0 pb-0"><i class="fas fa-chart-line"></i> Painel de controle</h2>
     </div>
 
     @role('admin')

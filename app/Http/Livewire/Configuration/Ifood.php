@@ -45,7 +45,8 @@ class Ifood extends Component
         try{
             //MVP 1 - Um ifoodBrokere por usuário
             $restaurant = $this->userRestaurant();
-            $this->ifoodBroker = IfoodBroker::where("enabled", "=", 1)->where("restaurant_id", "=", $restaurant->id)->firstOrNew();
+            $this->ifoodBroker = IfoodBroker::where("restaurant_id", "=", $restaurant->id)
+                ->firstOrNew();
         }catch(\Exception $exception){
             if(env('APP_DEBUG')) throw $exception;
             session()->flash('error', 'Antes de configurar os brokers, é necessário configurar seu delivery.');

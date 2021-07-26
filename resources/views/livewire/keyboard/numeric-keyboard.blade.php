@@ -1,6 +1,6 @@
 <div>
     <div class="full-screen mb-3">
-        <h2 class="mt-3 mb-0 pb-0">Encontre um pedido</h2>
+        <h2 class="mt-3 mb-0 pb-0"><i class="fas fa-search"></i> Encontre um pedido</h2>
         <p class="my-0">Digite o número do pedido para localizá-lo na linha de produção.</p>
     </div>
 

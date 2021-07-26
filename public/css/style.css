@@ -1,3 +1,305 @@
 .order-card{
-    cursor: pointer
+    cursor: pointer;
+}
+
+
+.card-painel {
+    border: 0;
+    box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+    -moz-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+    -ms-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+}
+.card-painel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #ffffff;
+    background-clip: border-box;
+    border: 1px solid #e6e4e9;
+    border-radius: 8px;
+}
+
+
+.card-header:first-child {
+    border-radius: calc(8px - 1px) calc(8px - 1px) 0 0;
+}
+
+.order-card .order-card-title-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #edf1fc;
+  width: 5rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-primary .order-card-date-day {
+  color: #4e73e5;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-primary .order-card-date-month {
+  color: #4e73e5;
+  line-height: 1;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #fcfcfd;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-secondary .order-card-date-day {
+  color: #dde1e9;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-secondary .order-card-date-month {
+  color: #dde1e9;
+  line-height: 1;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-success {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #e8faf8;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-success .order-card-date-day {
+  color: #17d1bd;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-success .order-card-date-month {
+  color: #17d1bd;
+  line-height: 1;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #ebf7ff;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-info .order-card-date-day {
+  color: #36afff;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-info .order-card-date-month {
+  color: #36afff;
+  line-height: 1;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-warning {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: floralwhite;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-warning .order-card-date-day {
+  color: #FFC868;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-warning .order-card-date-month {
+  color: #FFC868;
+  line-height: 1;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-danger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #feeeef;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-danger .order-card-date-day {
+  color: #F95062;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-danger .order-card-date-month {
+  color: #F95062;
+  line-height: 1;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-light {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #fefeff;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-light .order-card-date-day {
+  color: #f7f9fa;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-light .order-card-date-month {
+  color: #f7f9fa;
+  line-height: 1;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-dark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #ebedee;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-dark .order-card-date-day {
+  color: #394856;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-dark .order-card-date-month {
+  color: #394856;
+  line-height: 1;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-base {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #f0fafb;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-base .order-card-date-day {
+  color: #68CBD7;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.order-card .order-card-title-wrapper .order-card-date-base .order-card-date-month {
+  color: #68CBD7;
+  line-height: 1;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.order-card .order-card-title-wrapper .order-card-meeting-info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1rem;
+}
+
+.order-card .order-card-title-wrapper .order-card-meeting-info .order-card-pro-title {
+  color: #3c4142;
+  font-size: 14px;
+}
+
+.order-card .order-card-title-wrapper .order-card-meeting-info .order-card-meeting-time {
+  color: #B1BAC5;
+  font-size: 13px;
+}
+
+.order-card .order-card-meeting-points {
+  font-weight: 400;
+  font-size: 13px;
+  margin-top: .5rem;
+  list-style: none;
+  margin-left: -40px;
+}
+
+.order-card .order-card-meeting-points .order-card-meeting-item:before {
+  content: attr(seq) ". ";
+  
+}
+
+.order-card .order-card-meeting-points .order-card-meeting-item {
+  display: list-item;
+  color: #727686;
+  
+}
+
+.order-card .order-card-meeting-points .order-card-meeting-item span {
+  margin-left: 0;
+}
+
+.order-card .order-card-meeting-action {
+  text-align: right;
+}
+
+.order-card .order-card-meeting-action a {
+  text-transform: uppercase;
 }

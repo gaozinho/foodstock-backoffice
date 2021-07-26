@@ -2,7 +2,7 @@
     <div class="mb-3 full-screen">
         <div class="d-flex justify-content-between align-items-end">
             <div>
-                <h2 class="mt-3 mb-0 pb-0">Painel de delivery
+                <h2 class="mt-3 mb-0 pb-0"><i class="fas fa-tv"></i> Painel de delivery
                     <span class="badge badge-secondary">{{ $total_orders }}</span>
                 </h2>
                 <span class="legend mt-0 pt-0">Legenda:

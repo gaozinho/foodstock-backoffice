@@ -2,7 +2,7 @@
     <div class="mb-3 mt-3 mb-5">
         <div class="d-flex justify-content-between align-items-start">
             <div>
-                <span class="mt-3 mb-0 pb-0 h1">Bem-vindo!</span>
+                <span class="mt-3 mb-0 pb-0 h1"><i class="fas fa-exclamation-circle"></i> Bem-vindo!</span>
                 <div>
                     <p>Preparamos um breve tutorial para você configurar a plataforma. Tire um tempo para passar pelos pontos abaixo.</p>
                 </div>                
