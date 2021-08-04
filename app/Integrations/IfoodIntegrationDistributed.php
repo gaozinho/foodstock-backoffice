@@ -3,6 +3,7 @@ namespace App\Integrations;
 
 use App\Models\IfoodBroker;
 use App\Integrations\IfoodIntegration;
+use GuzzleHttp\Exception\ClientException;
 
 class IfoodIntegrationDistributed extends IfoodIntegration
 {
@@ -95,16 +96,22 @@ class IfoodIntegrationDistributed extends IfoodIntegration
         $ifoodBroker = IfoodBroker::findOrFail($brokerId);
         $this->credentials["grantType"] = "refresh_token";
         $this->credentials["refreshToken"] = $ifoodBroker->refreshToken;
-        $httpResponse = $this->httpClient->post($this->broker->authenticationApi, ["form_params" => $this->credentials]);
-        $responseToken = $this->parseTokenResponse($httpResponse->getBody()->getContents());  
-        if($responseToken){
-            $ifoodBroker->accessToken = $responseToken->accessToken;
-            $ifoodBroker->refreshToken = $responseToken->refreshToken;
-            $ifoodBroker->expiresIn = $this->defineExpirationTime($responseToken->expiresIn);
-            $ifoodBroker->save();
-        }else{
-            throw new \Exception("Não foi possível renovar o token do ifood."); 
-        }       
+
+        try{
+            $httpResponse = $this->httpClient->post($this->broker->authenticationApi, ["form_params" => $this->credentials]);
+            $responseToken = $this->parseTokenResponse($httpResponse->getBody()->getContents());  
+            if($responseToken){
+                $ifoodBroker->accessToken = $responseToken->accessToken;
+                $ifoodBroker->refreshToken = $responseToken->refreshToken;
+                $ifoodBroker->expiresIn = $this->defineExpirationTime($responseToken->expiresIn);
+                $ifoodBroker->save();
+            }else{
+                throw new \Exception("Não foi possível conectar ao ifood. Reconfigure sua loja."); 
+            }     
+        }catch(ClientException $e){
+            throw new \Exception("Não foi possível conectar ao ifood. Reconfigure sua loja."); 
+        }
+  
     }
 
     public function getMerchants($brokerId, $enableOnSuccess = true){
@@ -128,6 +135,7 @@ class IfoodIntegrationDistributed extends IfoodIntegration
     }
 
     public function merchantAvailable($restaurant_id){
+        $ifoodBroker = null;
         try{
             $ifoodBroker = IfoodBroker::where("restaurant_id", $restaurant_id)->firstOrFail();
 
@@ -145,6 +153,7 @@ class IfoodIntegrationDistributed extends IfoodIntegration
             }
 
         }catch(\Exception $exception){
+
             if(env('APP_DEBUG')) throw $exception;
             return false;
         }        

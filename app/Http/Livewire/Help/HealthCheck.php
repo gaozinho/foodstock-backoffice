@@ -12,8 +12,10 @@ class HealthCheck extends Component
     public $integrationOk;
     public $proccessOk;
     public $merchantAvailable;
+    public $merchantsAvailable = [];
     public $brokersOk = [];
     public $everythingOk;
+    public $merchantsInfo;
 
     public $availableReason;
 
@@ -23,11 +25,10 @@ class HealthCheck extends Component
         $this->integrationOk = $performHealthCheck->integrationOk();
         $this->proccessOk = $performHealthCheck->proccessOk();
         $this->brokersOk = $performHealthCheck->brokersOk;
-        $this->merchantAvailable = $performHealthCheck->merchantAvailable();
 
-        $this->availableReason = $performHealthCheck->availableData->message->title . " - " . $performHealthCheck->availableData->message->subtitle;
+        $this->merchantsInfo = $performHealthCheck->merchantsAvailable();
 
-        $this->everythingOk = $this->deliveryOk && $this->integrationOk && $this->proccessOk && $this->merchantAvailable;
+        $this->everythingOk = $this->deliveryOk && $this->integrationOk && $this->proccessOk;
     }
 
     public function render()

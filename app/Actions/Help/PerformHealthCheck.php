@@ -15,7 +15,8 @@ class PerformHealthCheck
     private $menagesRestaurants;
     private $restaurant;
     public $brokersOk = [];
-    public $availableData;
+    public $merchantsOk = [];
+    public $availableData, $availableReason;
 
     public function __construct()
     {
@@ -46,9 +47,24 @@ class PerformHealthCheck
         return ProductionLine::where("restaurant_id", $this->restaurant->id)->count() > 0;
     }
 
-    public function merchantAvailable(){
-        $ifoodIntegrationDistributed = new IfoodIntegrationDistributed(); 
-        $this->availableData = $ifoodIntegrationDistributed->merchantAvailable($this->restaurant->id);
-        return $this->availableData->available;
+    public function merchantsAvailable(){
+        $merchantsInfo = [];
+        try{
+            $ifoodIntegrationDistributed = new IfoodIntegrationDistributed(); 
+            $this->availableData = $ifoodIntegrationDistributed->merchantAvailable($this->restaurant->id);
+            $this->availableReason = $this->availableData->message->title . " - " . $this->availableData->message->subtitle;
+            
+            $merchantsInfo["IFOOD"] = [
+                "available" => $this->availableData->available, 
+                "reason" => $this->availableData->message->title . ($this->availableData->message->subtitle ?? " - " . $this->availableData->message->subtitle)
+            ];
+            
+        }catch(\Exception $e){
+            $merchantsInfo["IFOOD"] = [
+                "available" => false, 
+                "reason" => $e->getMessage()
+            ];
+        }
+        return $merchantsInfo;
     }    
 }

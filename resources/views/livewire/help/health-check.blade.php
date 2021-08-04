@@ -77,21 +77,25 @@
                                 </a>
                             </div>
 
-                            <div class="step {{ $merchantAvailable ? 'completed' : '' }}">
-                                <a href="{{route('wizard.production-line.index')}}" style="text-decoration: none">
+                            <div class="step completed">
+                                <a href="{{route('wizard.broker.index')}}" style="text-decoration: none">
                                     <div class="step-icon-wrap">
                                         <div class="step-icon">
-                                            @if ($merchantAvailable)
-                                                <i class="fas fa-lg fa-check text-success"></i>
-                                            @else
-                                                <i class="fas fa-lg fa-times text-danger"></i>
-                                            @endif
+                                            <i class="fas fa-lg fa-info text-info"></i>
                                         </div>
                                     </div>
                                     <h4 class="step-title">Loja ativa</h4>
-                                    @if(!$merchantAvailable)
-                                        <small>{{$availableReason}}</small>
-                                    @endif
+                                    @foreach($merchantsInfo as $key => $info)
+                                    <small style="line-height: 1.0;">
+                                        @if ($info["available"])
+                                            <i class="fas fa-lg fa-check text-success"></i>
+                                        @else
+                                            <i class="fas fa-lg fa-times text-danger"></i>
+                                        @endif
+
+                                        {{ $key }} ({{$info["reason"]}})</small>
+
+                                    @endforeach
                                 </a>
                             </div>
 

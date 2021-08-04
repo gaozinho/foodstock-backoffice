@@ -14,13 +14,11 @@ Route::get('/email/verify', function () {
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
    $request->fulfill();
-
    return redirect('/home');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {
    $request->user()->sendEmailVerificationNotification();
-
    return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
@@ -30,6 +28,10 @@ use App\Http\Livewire\Configuration\{
 
 use App\Http\Livewire\Panels\{
    ProductionLinePanel, DeliveryPanel
+};
+
+use App\Http\Livewire\Products\{
+   Products
 };
 
 use App\Http\Livewire\Deliveryman\DeliverymanPanel;
@@ -51,13 +53,13 @@ Route::group(['middleware' => ['role:admin', 'verified']], function (){
    Route::get('/configuration/brokers', Brokers::class)->name('configuration.broker.index')->middleware('auth');
    Route::get('/configuration/production-lines', ProductionLines::class)->name('configuration.production-line.index')->middleware('auth');
    Route::get('/configuration/teams', Teams::class)->name('configuration.teams.index')->middleware('auth');
+
+   Route::get('/products', Products::class)->name('products.index')->middleware('auth');
 });
 
 Route::get('/panel/production-line/{role_name}', ProductionLinePanel::class)->name('panels.production-line-panel.index')->middleware('auth');
 Route::get('/panel/delivery', DeliveryPanel::class)->name('panels.delivery-panel.index')->middleware('auth');
-
 Route::get('/panel/deliveryman/{restaurant_id}', DeliverymanPanel::class)->name('panels.public-delivery-panel.index');
-
 Route::get('/order/keyboard', NumericKeyboard::class)->name('orders.keyboard.index')->middleware('auth');
 
 

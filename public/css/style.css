@@ -2,6 +2,9 @@
     cursor: pointer;
 }
 
+.bg-monitor{
+  background-color: #a8d8b2;
+}
 
 .card-painel {
     border: 0;
