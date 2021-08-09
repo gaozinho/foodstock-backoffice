@@ -58,6 +58,10 @@
                                 <x-jet-dropdown-link href="{{ route('configuration.teams.index') }}">
                                     {{ __('Equipe de trabalho') }}
                                 </x-jet-dropdown-link>
+
+                                <x-jet-dropdown-link href="{{ route('products.index') }}">
+                                    {{ __('Produtos comercializados') }}
+                                </x-jet-dropdown-link>
                             @endif
                         </x-slot>
                     </x-jet-dropdown>
@@ -65,6 +69,13 @@
 
 
                 @endrole
+
+                @if(auth()->user()->menagesRestaurants())
+                    <x-jet-nav-link href="{{ route('welcome') }}" :active="request()->routeIs('welcome')">
+                        <i class="fas fa-question-circle"></i> Ajuda
+                    </x-jet-nav-link>                        
+                @endif
+
             </ul>
             <ul class="navbar-nav ml-auto align-items-baseline">
                 @auth

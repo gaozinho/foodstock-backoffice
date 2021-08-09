@@ -3,7 +3,15 @@
 }
 
 .bg-monitor{
-  background-color: #a8d8b2;
+  background-color: #ecf3fc;
+}
+
+.bg-monitor-warning{
+  background-color: #fdffd0;
+}
+
+.bg-monitor-danger{
+  background-color: #ffd0d0;
 }
 
 .card-painel {

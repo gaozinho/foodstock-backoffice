@@ -35,4 +35,8 @@ class BaseConfigurationComponent extends Component
     public function isWizard(){
         return $this->wizard;
     }
+
+    protected function addToQuerystring($values){
+        $this->queryString = array_merge($this->queryString, $values);
+    }
 }

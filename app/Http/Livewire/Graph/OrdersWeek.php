@@ -30,15 +30,14 @@ class OrdersWeek extends Component
             ->orderBy("date")
             ->get()
             ->reduce(function ($lineChartModel, $data) use ($weekMap){
-                $date = Carbon::createFromFormat('Y-m-d', $data->date)->dayOfWeek;
-                $total = $data->total;
-                return $lineChartModel->addSeriesPoint("Semana atual", $weekMap[$date], $total);
-            }, LivewireCharts::lineChartModel()
-                ->setTitle('Semana atual X Semana anterior')
-                ->multiLine()
-                //->setSmoothCurve()
-                ->setAnimated(true)
-        );
+                    $date = Carbon::createFromFormat('Y-m-d', $data->date)->dayOfWeek;
+                    return $lineChartModel->addSeriesPoint("Semana atual", $weekMap[$date], $data->total);
+                }, LivewireCharts::lineChartModel()
+                    ->setTitle('Semana atual X Semana anterior')
+                    ->multiLine()
+                    //->setSmoothCurve()
+                    ->setAnimated(true)
+            );
 
         FederatedDayOrder::where("restaurant_id", $restaurant->id)
             ->whereBetween("date", [Carbon::now()->subDays(13)->toDateString(), Carbon::now()->subDays(7)->toDateString()])
@@ -46,8 +45,7 @@ class OrdersWeek extends Component
             ->get()
             ->reduce(function ($previousWeek, $data) use ($lineChartModel, $weekMap){
                 $date = Carbon::createFromFormat('Y-m-d', $data->date)->dayOfWeek;
-                $total = $data->total;
-                return $lineChartModel->addSeriesPoint("Semana anterior", $weekMap[$date], $total);
+                return $lineChartModel->addSeriesPoint("Semana anterior", $weekMap[$date], $data->total);
             }
         );
 

@@ -7,7 +7,7 @@
             </div>
         @endif
         <div class="col-md-8 mb-3">
-            <div class="card">
+            <div class="card card-painel">
                 <div class="card-header">
                     <span class="h4">
                         @if ($everythingOk)
@@ -106,10 +106,7 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <span class="h4">Próximos passos</span>
-                </div>
+            <div class="card card-painel">
                 <div class="card-body">
                     <p class="h4">Com o delivery configurado você pode: </p>
                     <p class="my-1"><b>Acompanhar os pedidos</b> que chegarem no 
@@ -122,6 +119,12 @@
                             {{ __('equipe de trabalho') }}
                         </a>    
                     </b> para acessar o foodStock.
+                    </p> 
+                    <p class="my-1">Cadastrar <b>
+                            <a href="{{ route('products.index') }}">
+                                {{ __('produtos que você comercializa') }}
+                            </a>    
+                        </b>.
                     </p>                    
                 </div>                
             </div>

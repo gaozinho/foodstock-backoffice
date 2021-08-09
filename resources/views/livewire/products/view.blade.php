@@ -6,102 +6,183 @@
 
 
 
-    <div class="row">
-        <div class="col-lg-8 col-md-8 margin-tb">
 
-            <div class="card">
-                <div class="card-body">
 
-                    @if (!$saveMode)
+    @if (!$saveMode)
+
+        <div class="row">
+            <div class="col-lg-8 col-md-12 margin-tb">
+
+                <div>
+                    @if (session()->has('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    @if (session()->has('error'))
+                        <div class="alert alert-error">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+
                         <div class="row mb-3">
                             <div class="col-lg-12 col-sm-12">
                                 <div class="row justify-content-between">
-                                    <div class="col-md-6 align-self-end">
+                                    <div class="col-md-6 align-self-end mb-2">
 
                                         <!-- <button wire:click="report()" id="btn-exportar" type="button"
-                                            class="btn btn-primary btn-sm"><i
-                                                class="fas fa-file-excel fa-lg"></i></button> -->
+                                                        class="btn btn-primary btn-sm"><i
+                                                            class="fas fa-file-excel fa-lg"></i></button> -->
 
                                         <input wire:model='keyWord' type="text" class="form-control form-control-sm"
                                             name="busca" id="busca" placeholder="Pesquisar">
 
                                     </div>
-                                    <div class="col-auto">
-                                        <a wire:click="create" class="btn btn-success btn-lg"><i
-                                                class="fas fa-plus"></i>
-                                            Criar novo produto</a>
+                                    <div class="col-auto mb-2">
+                                        <a wire:click="create" class="btn btn-success btn-lg">
+                                            <i class="fas fa-plus"></i>
+                                            <i wire:loading wire:target="create" class="fas fa-cog fa-spin"></i>
+                                            Criar novo produto
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    @else
-                        <div class="row mb-3">
-                            <div class="col-lg-12 col-sm-12">
-                                <div class="form-row">
-                                    <div class="col-auto">
-                                        <button wire:click="cancel()" name="cancelar" value="ok" type="button"
-                                            class="btn btn-primary text-uppercase"><i class="fas fa-arrow-left"></i>
-                                            Voltar</button>
-                                    </div>
+                        <div class="form-group">
+                            <div class="pretty p-switch p-fill">
+                                <input wire:model='monitor_stock' name="monitor_stock" type="checkbox" value="1"
+                                    {{ old('enabled', $monitor_stock == 1) ? 'checked' : '' }} />
+                                <div class="state">
+                                    <label>Monitorando estoque</label>
                                 </div>
                             </div>
-                        </div>
-                    @endif
+
+                            <div class="pretty p-switch p-fill">
+                                <input wire:model='stock_alert' name="stock_alert" type="checkbox" value="1"
+                                    {{ old('enabled', $stock_alert == 1) ? 'checked' : '' }} />
+                                <div class="state">
+                                    <label>Abaixo do mínimo</label>
+                                </div>
+                            </div>
+
+                            <div class="pretty p-switch p-fill">
+                                <input wire:model='stock_zero' name="stock_zero" type="checkbox" value="1"
+                                    {{ old('enabled', $stock_zero == 1) ? 'checked' : '' }} />
+                                <div class="state">
+                                    <label>Sem estoque</label>
+                                </div>
+                            </div>
+
+                            <div class="pretty p-switch p-fill">
+                                <input wire:model='enabled' name="enabled" type="checkbox" value="1"
+                                    {{ old('enabled', $enabled == 1) ? 'checked' : '' }} />
+                                <div class="state">
+                                    <label>Produtos inativos</label>
+                                </div>
+                            </div>
+                        </div>   
+                        @if(count($products) == 0)
+                            <div class="text-center mt-5">
+                                <img src="{{ asset('images/ico-logo.png') }}" class="mt-2 mb-2">
+                                    <h3>Nenhum produto.</h3>
+                            </div>
+                        @else
 
 
+                                                                                               
 
-                    @if ($saveMode)
-                        @include('livewire.products.edit')
-                    @else
+
                         <table class="table table-hover table-bordered pagination-products">
                             <thead class="thead">
                                 <tr>
+                                    <th colspan="5">
+                                        <span class="legend mt-0 pt-0">Legenda:
+                                            <span class="badge bg-monitor">Monitorando estoque</span> 
+                                            <span class="badge bg-monitor-warning">Monitorado: abaixo do mínimo</span> 
+                                            <span class="badge bg-monitor-danger">Monitorado: sem estoque</span> 
+                                        </span>
+                                    </th>
+                                </tr>
+                                <tr>
                                     <td>#</td>
                                     <th>
-										<div class="row justify-content-between">
-											<div class="col-6">
-												<a class="sort-column" href="javascript:;" wire:click="sort('name')">Produto</a> 
-												{!!$sort == "name" && $direction == "ASC" ? '<i class="fas fa-caret-up"></i>' : ""!!}
-												{!!$sort == "name" && $direction == "DESC" ? '<i class="fas fa-caret-down"></i>' : ""!!}
-											</div>
-											<div class="col-auto">
-												<span style="cursor: pointer" wire:click="sort('monitor_stock')" class="sort-column badge badge-{!!$sort == 'monitor_stock' && $direction == 'ASC' ? 'secondary' : 'success'!!}">
-													Monitorado estoque
-													{!!$sort == "monitor_stock" && $direction == "ASC" ? '<i class="fas fa-caret-up"></i>' : ""!!}
-													{!!$sort == "monitor_stock" && $direction == "DESC" ? '<i class="fas fa-caret-down"></i>' : ""!!}
-												</span>
-											</div>
-										</div>
-									</th>
-									<th>Preço</th>
-									<th>Estoque</th>
+                                        <div class="row justify-content-between">
+                                            <div class="col-6">
+                                                <a class="sort-column" href="javascript:;"
+                                                    wire:click="sort('name')">Produto</a>
+                                                {!! $sort == 'name' && $direction == 'ASC' ? '<i class="fas fa-caret-up"></i>' : '' !!}
+                                                {!! $sort == 'name' && $direction == 'DESC' ? '<i class="fas fa-caret-down"></i>' : '' !!}
+                                            </div>
+                                            <div class="col-auto">
+                                                <span style="cursor: pointer" wire:click="sort('monitor_stock')"
+                                                    class="sort-column badge badge-{!! $sort == 'monitor_stock' && $direction == 'ASC' ? 'secondary' : 'success' !!}">
+                                                    <i class="fas fa-eye"></i> Monitorando estoque
+                                                    {!! $sort == 'monitor_stock' && $direction == 'ASC' ? '<i class="fas fa-caret-up"></i>' : '' !!}
+                                                    {!! $sort == 'monitor_stock' && $direction == 'DESC' ? '<i class="fas fa-caret-down"></i>' : '' !!}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th>Preço</th>
+                                    <th>Estoque</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($products as $row)
-                                    <tr class="{{$row->monitor_stock ? 'bg-monitor' : '' }}">
-                                        <td width="1%">{{ $loop->iteration + ($products->currentPage() - 1) * $pageSize }}</td>
-                                        <td>{{ $row->name }}
-											@if($row->monitor_stock)
-												<i class="fas fa-eye">
-											@endif
 
-										</td>
-										<td width="1%" nowrap class="text-right">
-											<small>@money($row->unit_price)</small>
-										</td>
+                                    @php
+                                        $classMonitor = "";
+                                        if($row->monitor_stock == 1 && $row->current_stock > 0 && $row->current_stock < $row->minimun_stock){
+                                            $classMonitor = "bg-monitor-warning";
+                                        }else if($row->monitor_stock == 1 && $row->current_stock <= 0){
+                                            $classMonitor = "bg-monitor-danger";
+                                        }else if($row->monitor_stock == 1){
+                                            $classMonitor = "bg-monitor";
+                                        }
+                                    @endphp
+
+                                    <tr class="{{ $classMonitor }}">
+                                        <td width="1%">
+                                            {{ $loop->iteration + ($products->currentPage() - 1) * $pageSize }}</td>
+                                        <td>
+                                            <a href="javascripf:;" data-toggle="modal" data-target="#updateModal" class="text-dark" wire:click="edit({{ $row->id }})">
+                                                @if ($row->enabled)
+                                                    {{ $row->name }}
+                                                @else
+                                                    <del>{{ $row->name }}</del>
+                                                @endif
+
+                                                @if ($row->monitor_stock)
+                                                    <i class="fas fa-eye"></i>
+                                                @endif
+                                                
+                                                @if(!empty($row->external_code))
+                                                    <br /><span class="text-muted"><small>{{ strtoupper($row->external_code) }}</small></span>
+                                                @endif
+                                            </a>
+                                        </td>
                                         <td width="1%" nowrap class="text-right">
-											{{ $row->current_stock }}
-										</td>
-                                        <td width="1%" nowrap>
-                                            <a data-toggle="modal" data-target="#updateModal"
-                                                class="btn btn-sm btn-primary" wire:click="edit({{ $row->id }})"><i
-                                                    class="fa fa-edit"></i></a>
-                                            <a class="btn btn-danger btn-sm"
-                                                onclick="confirm('Confirm Delete Product id {{ $row->id }}? \nDeleted Products cannot be recovered!')||event.stopImmediatePropagation()"
-                                                wire:click="destroy({{ $row->id }})"><i
-                                                    class="fa fa-trash"></i></a>
+                                            <small>@money($row->unit_price)</small>
+                                        </td>
+                                        <td width="1%" nowrap class="text-right" style="line-height: 0.9">
+                                            <small>Atual: {{ $row->current_stock }}<br/>Min: {{ $row->minimun_stock }}</small>
+                                        </td>
+                                        <td width="1%" nowrap class="text-right">
+                                            <a href="javascripf:;" title="Editar" data-toggle="modal" data-target="#updateModal"
+                                                class="text-primary" wire:click="edit({{ $row->id }})">
+                                                <i wire:loading wire:target="edit({{ $row->id }})" class="fas fa-cog fa-spin"></i>
+                                                <i class="fa fa-edit"></i>
+                                            </a>&nbsp;
+                                            <a href="javascripf:;" class="text-danger"
+                                                wire:click="confirmDestroy({{ $row->id }})">
+                                                <i wire:loading wire:target="confirmDestroy({{ $row->id }})" class="fas fa-cog fa-spin"></i>
+                                                <i class="fa fa-trash"></i>
+                                            </a>
                                         </td>
                                 @endforeach
                             </tbody>
@@ -116,48 +197,61 @@
                                 });
                             });
                         </script>
+                        @endif
 
-                    @endif
+
+                    </div>
                 </div>
             </div>
+            <div class="col-lg-4 col-md-12 margin-tb">
+                <div class="card">
+                    <div class="card-body">
+                        <h5>
+                            Como gerenciar seus produtos
+                        </h5>
 
-        </div>
-        <div class="col-lg-4 col-md-4 margin-tb">
-            <div class="card">
-                <div class="card-body">
-                    <h5>
-                        Cadastre seu delivery
-                    </h5>
-
-                    <p>
-                        O cadastro é simples:
-                    </p>
-                    <p>
-                        Informe o "nome fantasia" do seu delivery. Usaremos este nome em nosso aplicativo para
-                        identificar sua marca.
-                    </p>
-                    <p>
-                        O endereço, e-mail e telefone são importantes para entrarmos em contato para novidades e avisos
-                        em geral. Não utilizaremos estes dados para mais nada além disto.
-                    </p>
-                    <p>
-                        Se possível informe o CNPJ e site para conhecermos um pouco mais sobre seu delivery.
-                    </p>
+                        <p>
+                            Para uma integração de sucesso com os <i>marketplaces</i> o segredo é manter os "códigos externos" (ou "SKU" ou "códigos PDV") cadastrados corretamente no foodStock.
+                        </p>
+                        <p>
+                            <b>Os códigos externos fazem a ligação entre a venda no <i>marketplace</i> e o estoque no foodStock.</b>
+                        </p>
+                        <p>
+                            Funciona assim: todo o produto deve ter um código único em todas as plataformas, por exemplo, o estrogonofe tem o código "EST012" no iFood e na Rappi. Assim, quando ocorre uma venda eu uma destas plataformas, se no foodStoque também existe o código "EST012" saberemos que o estrogonofe foi vendido e retiraremos a quantidade vendida do estoque.
+                        </p>
+                        <p>
+                            Para manter a simplicidade, caso você não queira cadastrar todos os produtos um a um, nós cadastraremos para você a cada venda realizada, caso o produto (e o seu código externo) ainda não exista em nossa base. Mas recomendamos que você cadastre os produtos e os respectivos estoques.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    @else
+        <div class="row mb-3">
+            <div class="col-lg-12 col-sm-12">
+                <div class="form-row">
+                    <div class="col-auto">
+                        <button wire:click="cancel()" name="cancelar" value="ok" type="button"
+                            class="btn btn-primary text-uppercase"><i class="fas fa-arrow-left"></i>
+                            <i wire:loading wire:target="cancel" class="fas fa-cog fa-spin"></i> 
+                            Voltar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @include('livewire.products.edit')
+
+    @endif
 </div>
 
 
 <script>
     $(document).ready(function() {
 
-		$('.sort-column').on('click', function (e) {
-			$(".pagination-products").LoadingOverlay("show");
-		});
-
-		
+        $('.sort-column').on('click', function(e) {
+            $(".pagination-products").LoadingOverlay("show");
+        });
 
         Livewire.on('paginationLoaded', function() {
             $(".pagination-products").LoadingOverlay("hide");
@@ -165,7 +259,7 @@
 
         Livewire.on('tableUpdating', function() {
             $(".pagination-products").LoadingOverlay("show");
-        })		
+        })
     });
 </script>
 
@@ -179,13 +273,7 @@
     })
 </script>
 
-<!-- Datepicker -->
-<script src="{{ asset('node_modules/moment/moment.min.js') }}"></script>
-<script src="{{ asset('node_modules/moment/locales.min.js') }}"></script>
-<script src="{{ asset('node_modules/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-<link rel="stylesheet"
-    href="{{ asset('node_modules/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}" />
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
 
 <!-- Editor visual textarea -->
 <script src="{{ asset('node_modules/tinymce/tinymce.min.js') }}"></script>
@@ -193,6 +281,6 @@
 <!-- Máscaras nos campos -->
 <script src="{{ asset('node_modules/cleave.js/cleave.min.js') }}"></script>
 
-
+<!-- Loading -->
 <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js">
 </script>

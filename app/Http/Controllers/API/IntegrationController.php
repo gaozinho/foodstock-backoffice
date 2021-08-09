@@ -43,7 +43,8 @@ class IntegrationController extends BaseController
             $productionMovement = $startProductionProccess->start($order->id);
             return $this->sendResponse(new IfoodOrderResource($order), 'IfoodOrder saved successfully.');
         }catch(\Exception $e){
-            return $this->sendResponse(["success" => false, "order_id" => $order_id], 'Cant save IfoodOrder.');
+            dd($e);
+            return $this->sendResponse(["success" => false, "order_id" => $order->id], 'Cant save IfoodOrder.');
         }
 
         

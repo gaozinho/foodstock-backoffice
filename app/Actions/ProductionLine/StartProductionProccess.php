@@ -8,6 +8,7 @@ use App\Models\ProductionMovement;
 use App\Models\ProductionLine;
 use App\Models\ProductionLineVersion;
 use App\Actions\ProductionLine\GenerateOrderJson;
+use App\Actions\Product\ProcessOrderProducts;
 
 use App\Models\FederatedSale;
 
@@ -51,7 +52,12 @@ class StartProductionProccess
                     'production_line_version_id' => $productionLineVersion->id
             ]);
 
+            // Criar/tratar produtos e estoque
+            (new ProcessOrderProducts())->process($orderSummary, $generateOrderJson->babelizedOrder());
+
+
             try{
+                //Relatórios
                 FederatedSale::create(array_merge(["restaurant_id" => $order->restaurant_id, "broker_id" => $order->broker_id], (array) $orderJson));
             }catch(\Exception $e){
 

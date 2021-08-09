@@ -23,17 +23,12 @@
 
 
                 <x-jet-dropdown-link href="{{ route('panels.delivery-panel.index') }}" :active="request()->routeIs('panels.delivery-panel.index')">
-                    <i class="fas fa-tv"></i> {{ __('Painel') }}
+                    <i class="fas fa-tv"></i> {{ __('Painel de delivery') }}
                 </x-jet-dropdown-link>
 
                 <x-jet-dropdown-link href="{{ route('orders.keyboard.index') }}" :active="request()->routeIs('orders.keyboard.index')">
-                    <i class="fas fa-search"></i> {{ __('Localizador') }}
+                    <i class="fas fa-search"></i> {{ __('Encontre um pedido') }}
                 </x-jet-dropdown-link>     
-
-                <x-jet-dropdown-link href="{{ route('welcome') }}" :active="request()->routeIs('info')">
-                    <i class="fas fa-exclamation-circle"></i> {{ __('Informações') }}
-                </x-jet-dropdown-link>                        
-              
 
             @endif
 

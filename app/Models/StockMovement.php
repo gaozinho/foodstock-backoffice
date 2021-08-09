@@ -32,7 +32,7 @@ class StockMovement extends Model
     /**
      * @var array
      */
-    protected $fillable = ['product_id', 'restaurant_id', 'user_id', 'broker_id', 'name', 'unit_price', 'movement_type', 'quantity', 'created_at', 'updated_at', 'unit'];
+    protected $fillable = ['product_id', 'restaurant_id', 'order_summary_id', 'user_id', 'broker_id', 'name', 'unit_price', 'movement_type', 'quantity', 'created_at', 'updated_at', 'unit'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

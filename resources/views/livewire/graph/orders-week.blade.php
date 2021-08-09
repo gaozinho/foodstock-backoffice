@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card card-painel">
     <div class="card-header">
         <div class="row justify-content-between">
             <div class="col"><span class="h4">Pedidos por dia</span></div>
@@ -7,12 +7,13 @@
         </div>
     </div>
     <div class="card-body">
-        <div style="height: 16rem;">
-            <livewire:livewire-line-chart
-                            key="{{ $lineChartModel->reactiveKey() }}"
-                            :line-chart-model="$lineChartModel"
-                        />
-        </div>
+        @if($lineChartModel->data->count() > 0)
+            <div style="height: 16rem;">
+                <livewire:livewire-line-chart key="{{ $lineChartModel->reactiveKey() }}" :line-chart-model="$lineChartModel" />
+            </div>
+        @else
+            Ainda não existem dados de pedidos para esta exibição.
+        @endif
     </div>
 </div>
 @push('scripts')
@@ -20,8 +21,11 @@
     <script>
         function reloadPage(){
             return setInterval(() => { 
-                Livewire.emit('render_orders');
-                }, 300000);
+                if (document.hasFocus()){
+                    Livewire.emit('render_orders');
+                }
+            }, 300000);
+            
         }
 
         $(document).ready(function() {

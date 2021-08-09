@@ -1,7 +1,8 @@
 <div>
-    <div class="card">
+    <div class="card card-painel">
         <div class="card-header">
-            <span class="h4">Linha de produção</span> <small>(tempo real)</small>
+            <span class="h4">Linha de produção</span><br />
+            <small>Acompanhe a quantidade de pedidos em cada etapa do processo em tempo real.</small>
         </div>
         <div class="card-body">
             <div class="row">
@@ -27,17 +28,17 @@
     </div>
 </div>
 @push('scripts')
-
     <script>
         function reloadPage(){
             return setInterval(() => { 
-                Livewire.emit('render_dash');
-                }, 180000);
+                if (document.hasFocus()){
+                    Livewire.emit('render_dash');
+                }
+            }, 180000);
         }
 
         $(document).ready(function() {
             reloadPage();
         });
-
     </script>
 @endpush    

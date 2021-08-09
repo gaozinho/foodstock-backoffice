@@ -6,7 +6,7 @@
     </div>
 
     @role('admin')
-    <livewire:help.health-check />
+        <livewire:help.health-check />
     @endrole
 
     <div class="row">
@@ -15,13 +15,13 @@
         </div>
     </div>
     @role('admin')
-    <div class="row mt-3">
-        <div class="col-md-6 mb-3">
-            <livewire:graph.orders-week />
+        <div class="row mt-3">
+            <div class="col-md-6 mb-3">
+                <livewire:graph.orders-week />
+            </div>
+            <div class="col-md-6 mb-3">
+                <livewire:graph.sales-week />
+            </div>
         </div>
-        <div class="col-md-6 mb-3">
-            <livewire:graph.sales-week />
-        </div>
-    </div>
     @endrole
 </div>
