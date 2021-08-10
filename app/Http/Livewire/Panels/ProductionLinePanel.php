@@ -33,6 +33,7 @@ class ProductionLinePanel extends Component
     public $role_name;
     public $total_orders = 0;
     public $cancellation_code = "501";
+    public $orderInfo = false;
 
     public $orderBabelized;
 
@@ -178,6 +179,10 @@ class ProductionLinePanel extends Component
     {
         $viewName = 'livewire.panels.production-line';
         return view($viewName, []);
+    }
+
+    public function showInfo(){
+        $this->orderInfo = true;
     }
 
 }

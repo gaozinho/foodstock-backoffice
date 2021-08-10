@@ -12,7 +12,7 @@
 
                 <div class="card-body">
                     <div class="mb-3 small text-muted">
-                        {!! __('Bem-vindo ao foodStock! <br><br>Antes e começar, por favor, clique no link abaixo para receber um e-mail com código de verificação. Acesse seu e-mail e clique no código.') !!}
+                        {!! __('Bem-vindo ao foodStock! <br><br>Seu cadastro foi realizado com sucesso! Você recebeu um email de validação. Acesse sua caixa postal e siga as orientações. <br />Caso não tenha recebido o e-mail, clique no link abaixo que reenviaremos a validação.') !!}
                     </div>
 
                     @if (session('status') == 'verification-link-sent')

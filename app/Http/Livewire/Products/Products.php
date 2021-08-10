@@ -134,6 +134,7 @@ class Products extends BaseConfigurationComponent
 
     public function save($continue)
     {
+
 		if(intval($this->product->id) > 0){
 			$this->update($continue);
 		}else{
@@ -326,5 +327,12 @@ class Products extends BaseConfigurationComponent
 
     public function updatedStockZero($value){
         $this->emit('paginationLoaded');
-    }  
+    }
+
+    
+    protected function prepareForValidation($attributes)
+    {
+        $attributes["product"]->unit_price = floatval(str_replace(',', '.', $attributes["product"]->unit_price));
+        return $attributes;
+    }    
 }

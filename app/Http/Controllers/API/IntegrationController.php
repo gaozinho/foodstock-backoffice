@@ -39,15 +39,31 @@ class IntegrationController extends BaseController
         );
 
         try{
-            $startProductionProccess = new StartProductionProccess();
-            $productionMovement = $startProductionProccess->start($order->id);
+            $this->startOneOrder($order);
             return $this->sendResponse(new IfoodOrderResource($order), 'IfoodOrder saved successfully.');
         }catch(\Exception $e){
-            dd($e);
             return $this->sendResponse(["success" => false, "order_id" => $order->id], 'Cant save IfoodOrder.');
+        }        
+    }
+
+    public function restartProduction(Request $request){
+        $orders = [];
+        $input = $request->all();
+        if(isset($input["restaurant_id"])){
+            $orders = Order::where("restaurant_id", $input["restaurant_id"])->get();
+        }else if(isset($input["order_id"])){
+            $orders = Order::where("id", $input["order_id"])->get();
         }
 
-        
+        foreach($orders as $order){
+            $this->startOneOrder($order);
+        }
+        return $orders->pluck("order_id", "id");
+    }
+
+    private function startOneOrder($order){
+        $startProductionProccess = new StartProductionProccess();
+        $productionMovement = $startProductionProccess->start($order->id);
     }
 
     public function cancelProduction(Request $request)

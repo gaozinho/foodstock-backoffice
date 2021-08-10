@@ -16,11 +16,13 @@
                         elseif($productionMovement->role_id == 5) $icon = "utensils";
                     @endphp
                 <div class="col-md-3">
-                    <div class="card-counter primary" style="background-color: {{$productionMovement->color}}">
-                        <i class="fa fa-{{$icon}}"></i>
-                        <span class="count-numbers">{{$productionMovement->total}}</span>
-                        <span class="count-name">{{$productionMovement->name}}</span>
-                    </div>
+                    <a href="{{ route('panels.production-line-panel.index', ['role_name' => $productionMovement->role]) }}">
+                        <div class="card-counter primary" style="background-color: {{$productionMovement->color}}">
+                            <i class="fa fa-{{$icon}}"></i>
+                            <span class="count-numbers">{{$productionMovement->total}}</span>
+                            <span class="count-name">{{$productionMovement->name}}</span>
+                        </div>
+                    </a>
                 </div>
                 @endforeach
             </div>

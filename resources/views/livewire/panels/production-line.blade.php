@@ -73,7 +73,7 @@
                                 $babelized = new App\Foodstock\Babel\OrderBabelized($orderSummary->order_json);
                             @endphp                            
                             
-                            @include('livewire.panels.card-include')
+                            @include('livewire.panels.card-include', ["cardColor" => $cardColor])
                         @endforeach
                     </div>
                 </div>

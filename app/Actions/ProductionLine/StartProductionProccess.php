@@ -52,9 +52,12 @@ class StartProductionProccess
                     'production_line_version_id' => $productionLineVersion->id
             ]);
 
-            // Criar/tratar produtos e estoque
-            (new ProcessOrderProducts())->process($orderSummary, $generateOrderJson->babelizedOrder());
+            // Criar/tratar produtos e estoqu
+            try{
+                (new ProcessOrderProducts())->process($orderSummary, $generateOrderJson->babelizedOrder());
+            }catch(\Exception $e){
 
+            }
 
             try{
                 //Relatórios

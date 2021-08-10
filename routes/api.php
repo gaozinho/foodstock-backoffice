@@ -13,6 +13,7 @@ Route::post('login', [RegisterController::class, 'login']);
 Route::middleware('auth:api')->group( function () {
     Route::post('logout', [RegisterController::class, 'logout']);
     Route::post('order/start-production', [IntegrationController::class, 'startProduction']);
+    Route::post('order/restart-production', [IntegrationController::class, 'restartProduction']);
     Route::post('order/cancel-production', [IntegrationController::class, 'cancelProduction']);
     Route::get('order/check/{order_id}', [IntegrationController::class, 'checkIfCreated']);
 });

@@ -66,8 +66,8 @@
                             </div>
                             <div class="col-xs-12 col-sm-4 col-md-4">
                                 <div class="form-group">
-                                    <strong>Preço</strong>
-                                    {!! Form::text('unit_price', $product->unit_price, ['wire:model.defer' => 'product.unit_price', 'class' => 'form-control unit_price text-right', 'onClick'=>"this.select();"]) !!}
+                                    <strong>Preço</strong> 
+                                    {!! Form::text('unit_price', str_replace('.', ',', $product->unit_price ), ['wire:model.defer' => 'product.unit_price', 'class' => 'form-control unit_price text-right', 'onClick'=>"this.select();"]) !!}
                                 </div>
                             </div>
                         </div>
@@ -76,11 +76,13 @@
                             <script>
                                 $(document).ready(function() {
                                     //Máscaras dos inputs
+                                    /*
                                     new Cleave('.unit_price', {
                                         numeral: true,
                                         numeralDecimalMark: ',',
                                         delimiter: '.'
                                     });
+                                    */
 
                                 });
                             </script>
@@ -194,7 +196,7 @@
                         
                         <div class="form-group">
                             <strong>Este produto leva a produção para a</strong>
-                            {!! Form::select('initial_step', $productionLines, $product->initial_step, ['wire:model.defer' => 'product.initial_step', 'class' => 'form-control mb-2']) !!}
+                            {!! Form::select('initial_step', ["" => "Escolha"] + $productionLines, $product->initial_step, ['wire:model.defer' => 'product.initial_step', 'class' => 'form-control mb-2']) !!}
                         </div>                        
         
                         <div class="mb-5">

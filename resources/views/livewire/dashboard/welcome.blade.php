@@ -1,13 +1,13 @@
 <div>
     <div class="mb-3 mt-3 mb-5">
-        <div class="d-flex justify-content-between align-items-start">
-            <div>
+        <div class="row d-flex justify-content-between align-items-start">
+            <div class="col-md-7 col-xs-12">
                 <span class="mt-3 mb-0 pb-0 h1"><i class="fas fa-exclamation-circle"></i> Bem-vindo!</span>
                 <div>
                     <p>Preparamos um breve tutorial para você configurar a plataforma. Tire um tempo para passar pelos pontos abaixo.</p>
                 </div>                
             </div>
-            <div><a class="btn btn-lg btn-danger" href="{{route('wizard.restaurant.index')}}"><i class="fas fa-check"></i> CONFIGURAR AGORA</a></div>
+            <div class="mb-2 col-md-5 col-xs-12 text-right"><a class="btn btn-lg btn-danger" href="{{route('wizard.restaurant.index')}}"><i class="fas fa-cog"></i> QUERO CONFIGURAR MEU DELIVERY AGORA</a></div>
         </div>
 
 

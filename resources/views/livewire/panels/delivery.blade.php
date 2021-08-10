@@ -1,13 +1,13 @@
-<div>
-    <div class="mb-3 full-screen">
+<div class="my-3 mx-3">
+    <div class="full-screen">
         <div class="d-flex justify-content-between align-items-end">
             <div>
                 <h2 class="mt-3 mb-0 pb-0"><i class="fas fa-tv"></i> Painel de delivery
                     <span class="badge badge-secondary">{{ $total_orders }}</span>
                 </h2>
                 <span class="legend mt-0 pt-0">Legenda:
-                    <span class="badge bg-danger p-1">Produzindo</span> 
-                    <span class="badge bg-success p-1">Pronto para despachar / balcão / mesa</span>
+                    <span class="badge bg-danger p-1 text-light">Produzindo</span> 
+                    <span class="badge bg-success p-1 text-light">Pronto para despachar / balcão / mesa</span>
                     <span class="badge" style="color: #fff; background-color: #ff8e09">Cancelado</span> 
                 </span>
             </div>
@@ -40,8 +40,8 @@
     </div>
         
     @endif
-    <div class="card loading">
-        <div class="card-body">
+    <div class="loading my-3 mx-3">
+        <div>
             @if($total_orders == 0)
             <div class="text-center">
                 <img src="{{ asset('images/ico-logo.png') }}" class="mt-2 mb-2">
@@ -60,9 +60,10 @@
 
                     @php
                         $clickAction = 'wire:click="orderDetail(' . $orderSummary->id . ', ' . $orderSummary->production_line_id . ')"';
-                        $curStartNumber = intval(substr($orderSummary->friendly_number, 0, 1));
+                        
                         $cardColor = "";
                         $orderNumber = str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT);
+                        $curStartNumber = substr($orderNumber, 0, 1);
 
                         if($orderSummary->canceled == 1){
                             $cardColor = 'style="background-color: #ff8e09 !important"';
@@ -73,7 +74,7 @@
                             if($prevStartNumber >= 0) echo '</div>';
                             $prevStartNumber = $curStartNumber;
                             //Abre coluna
-                            if($index < count($orderSummaries)) echo '<div class="text-center col">';
+                            if($index < count($orderSummaries)) echo '<div class="text-center col px-1">';
                         }
                     @endphp
                         <div {!!$clickAction!!}
