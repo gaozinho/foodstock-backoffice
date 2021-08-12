@@ -4,6 +4,8 @@
             <h2 class="mt-3 mb-0 pb-0">{{ $productionLine->name }} 
                 <span class="badge badge-secondary">{{ $total_orders }}</span> 
             </h2>
+
+            
         </div>
         <div class="col-auto">
             <span class="legend mt-0 pt-0">Legenda:
@@ -22,6 +24,8 @@
                 
 
                 <span class="badge"><i class="fas fa-lg fa-clock"></i> Pedido agendado</span> 
+
+                <span class="badge"><a style="text-decoration: none" href="javascript:;" wire:click="confirmFinishOrders"><i wire:loading wire:target="confirmFinishOrders" class="fas fa-cog fa-spin"></i> Finalizar todos os pedidos</a></span> 
                 
             </span>
         </div>
@@ -121,6 +125,10 @@
                 $('.modal-backdrop').remove();
                 reloadDataInterval = reloadPage();
             })       
+
+            Livewire.on('loadingData', function(){
+                $(".loading").LoadingOverlay("show")
+            })
         });
     </script>
 

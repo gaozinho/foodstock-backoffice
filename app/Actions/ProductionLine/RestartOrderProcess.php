@@ -2,8 +2,6 @@
 
 namespace App\Actions\ProductionLine;
 
-use App\Models\OrderSummary;
-//use App\Models\Role;
 use App\Models\ProductionLine;
 use App\Models\ProductionLineVersion;
 use Illuminate\Support\Facades\DB;
@@ -176,10 +174,10 @@ class RestartOrderProcess
         if($lista == null || !is_array($lista) ) $lista = [0];
 
         // Apagar outros
-        $nrd = DB::delete('DELETE FROM production_movements pm 
-            WHERE pm.id NOT IN (' . implode(",", $lista) . ') AND pm.production_line_version_id = ' . $currentProductionLineVersion->id .' 
+        $nrd = DB::delete('DELETE FROM production_movements 
+            WHERE id NOT IN (' . implode(",", $lista) . ') AND production_line_version_id = ' . $currentProductionLineVersion->id .' 
             AND (
-                SELECT os.finalized FROM order_summaries os WHERE os.id = pm.order_summary_id
+                SELECT order_summaries.finalized FROM order_summaries WHERE order_summaries.id = production_movements.order_summary_id
             ) = 0');
 
         // 3 - Muda a versão da linha de produção

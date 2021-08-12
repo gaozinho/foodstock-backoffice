@@ -13,13 +13,14 @@ use App\Actions\ProductionLine\RecoveryOrders;
 use App\Actions\ProductionLine\ForwardProductionProccess;
 use App\Actions\ProductionLine\PauseProductionProccess;
 use App\Actions\ProductionLine\RecoverUserRestaurant;
+use App\Actions\ProductionLine\FinishOrder;
 
 use App\Foodstock\Babel\OrderBabelized;
 
 class ProductionLinePanel extends Component
 {
 
-    protected $listeners = ['loadData'];
+    protected $listeners = ['loadData', 'finishOrders'];
 
     public $orderSummaries;
     public $orderSummariesPreviousStep;
@@ -33,7 +34,7 @@ class ProductionLinePanel extends Component
     public $role_name;
     public $total_orders = 0;
     public $cancellation_code = "501";
-    public $orderInfo = false;
+    //public $orderInfo = false;
 
     public $orderBabelized;
 
@@ -122,6 +123,37 @@ class ProductionLinePanel extends Component
         return $orderSummary;
     }
 
+    public function finishOrders(){
+        //$this->emit('loadingData');
+        $restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
+        $finishOrder = new FinishOrder();
+        $finishOrder->finish($restaurant->id, auth()->user()->id);
+        $this->loadData();
+        $this->alert("success", "Todos os pedidos foram finalizados com sucesso.", [
+            'position' =>  'top-end', 
+            'timer' =>  5000,  
+            'toast' =>  true, 
+            'text' =>  '', 
+            'confirmButtonText' =>  'Ok', 
+            'cancelButtonText' =>  'Cancel', 
+            'showCancelButton' =>  false, 
+            'showConfirmButton' =>  false, 
+        ]);        
+    }
+
+    public function confirmFinishOrders()
+    {
+        $this->confirm('Deseja finalizar todos os pedidos?', [
+            'toast' => false,
+            'position' => 'center',
+            'text' => 'Esta operação não pode ser desfeita.',
+            'showConfirmButton' => true,
+            'cancelButtonText' => 'Não',
+            'confirmButtonText' => 'Sim',
+            'onConfirmed' => 'finishOrders'
+        ]);
+    }    
+
     public function orderDetailAndMoveForward($order_summary_id){
         $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
         (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $this->restaurant->id);
@@ -182,7 +214,7 @@ class ProductionLinePanel extends Component
     }
 
     public function showInfo(){
-        $this->orderInfo = true;
+        //$this->orderInfo = true;
     }
 
 }

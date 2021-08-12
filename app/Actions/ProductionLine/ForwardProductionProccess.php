@@ -22,6 +22,7 @@ class ForwardProductionProccess
         try{
             $order = Order::findOrFail($orderNumber);
             $productionMovement = $this->getCurrentMovementByOrderId($order->id);
+            if(!is_object($productionMovement)) return false;
             $productionMovement->step_finished = 1;
             $productionMovement->finished_at = date("Y-m-d H:i:s");
             $productionMovement->save();
@@ -56,6 +57,8 @@ class ForwardProductionProccess
                     'production_line_version_id' => $productionMovement->production_line_version_id,
                     'user_id' => $user_id
             ]);
+
+            return true;
         }catch(\Exception $e){
             if(env('APP_DEBUG')) throw $e;
             $mensagem = 'Não foi possível avançar o processo do pedido %d. Mais detalhes: %s';
