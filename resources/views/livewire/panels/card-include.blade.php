@@ -1,9 +1,12 @@
+
 <div class="mb-2 col-xl-3 col-lg-3 col-md-4 col-6">
     <div class="card-painel card-margin" 
-        @if($productionLine->clickable == 1)
+        @if($clickAction != "")
+            {!! $clickAction !!} 
+        @elseif($productionLine->clickable == 1)
             wire:click="orderDetail({{$orderSummary->id}}, {{$orderSummary->production_line_id}})"
-            onClick='$(".loading").LoadingOverlay("show")'
         @endif
+        onClick='$(".loading").LoadingOverlay("show")'
     >
 
         <div class="card-body">

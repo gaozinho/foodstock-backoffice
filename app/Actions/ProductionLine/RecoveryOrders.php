@@ -21,6 +21,18 @@ class RecoveryOrders
             ->get();
     }
 
+    public function countAlive($restaurant_id){
+        return OrderSummary::where("order_summaries.restaurant_id", $restaurant_id)
+            ->where("order_summaries.finalized", 0)
+            ->count() > 0;
+    }    
+
+    public function alive($restaurant_id){
+        return OrderSummary::where("order_summaries.restaurant_id", $restaurant_id)
+            ->where("order_summaries.finalized", 0)
+            ->get();
+    }    
+
     public function recoveryByRoleName($restaurant_id, $role_name){
         $currentProductionLines = $this->findCurrentProductionLinesByRoleName($restaurant_id, $role_name);
 

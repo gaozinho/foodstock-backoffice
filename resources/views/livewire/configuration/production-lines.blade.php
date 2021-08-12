@@ -15,10 +15,8 @@
                                     <i class="fa fa-plus"></i> Etapa
                                 </button>
 
-                                <button wire:click="createDefaultProductionLine" type="button"
-                                    name="createDefaultProductionLine" value="ok" class="btn btn-secondary"><i
-                                        wire:loading wire:target="createDefaultProductionLine"
-                                        class="fas fa-cog fa-spin"></i>
+                                <button onclick="defaultProcess()" type="button" name="createDefaultProductionLine"
+                                    value="ok" class="btn btn-secondary">
                                     Restaurar padrão</button>
                             </div>
                         </div>
@@ -123,7 +121,7 @@
                                                                         <label>Prato pronto ao final desta etapa</label>
                                                                     </div>
                                                                 </div>
-                                                            </div>                                                            
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -153,7 +151,7 @@
                             @if ($wizard)
                                 <div class="row mb-2">
                                     <div class="col-lg-12 col-md-12 text-right">
-                                        <button type="submit"
+                                        <button type="button" onclick="saveProcess()"
                                             class="btn btn-success pr-4 pl-4 text-dark font-weight-bold text-uppercase"
                                             id="bt_salvar">
                                             <i style="display: none" class="fas fa-cog fa-spin loading"></i>
@@ -164,9 +162,10 @@
                             @else
                                 <div class="row mb-2">
                                     <div class="col-lg-12 col-md-12 text-right">
-                                        <button type="submit" class="btn btn-success" id="bt_salvar">
+                                        <button type="button" onclick="saveProcess()" class="btn btn-success btn-lg"
+                                            id="bt_salvar">
                                             <i style="display: none" class="fas fa-cog fa-spin loading"></i>
-                                            <i class="fa fa-save"></i> Salvar
+                                            <i class="fa fa-save"></i> Salvar nova versão
                                         </button>
                                     </div>
                                 </div>
@@ -180,38 +179,86 @@
             <div class="col-lg-4 col-md-12 margin-tb">
                 <div class="card">
                     <div class="card-body">
+                        <h4>
+                            Configure seu processo de produção
+                        </h4>
+
+                        <p>
+                            O processo é dividido em etapas. Cada etapa tem um item no menu "Acompanhe".
+                        </p>
+                        <p>
+                            Funciona assim: projetamos o foodStock para trabalhar com painéis e cada etapa é um painel.
+                            Por exemplo: o painel da cozinha recebe os pedidos novos e, assim que o pedido é preparado,
+                            o cozinheiro deve passar o pedido para a próxima etapa. Esta é a lógica básica até o último
+                            passo, que, por padrão é a "expedição" (que você pode customizar).
+                        </p>
+                        <p>
+                            Crie quantas etapas achar necessário, reordene-as ou retire-as.
+                        </p>
                         <h5>
-                            Cadastre seu restaurante
+                            Explicando as opções
                         </h5>
 
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        </p>
-                        <p>
-                            Phasellus nisl massa, commodo nec viverra a, facilisis eu orci. Suspendisse potenti.
-                            Vestibulum
-                            et ex imperdiet, fermentum ante eu, faucibus risus. Proin leo tortor, venenatis eget quam
-                            egestas, consequat faucibus est.
-                        </p>
-                        <p>
-                            Suspendisse mattis gravida efficitur. Aliquam erat volutpat. Vestibulum maximus porttitor
-                            nulla,
-                            at maximus est auctor eu. Vestibulum viverra vel ligula in tincidunt. Integer tristique
-                            tellus
-                            quam, ac mollis quam pretium id. Aenean nec eros in ligula iaculis luctus. Nulla finibus,
-                            elit
-                            ac pulvinar mattis, enim libero tincidunt tellus, at accumsan elit risus nec urna.
-                        </p>
-
+                        <small>
+                            <ul>
+                                <li>Clicável: indica que o cartão do pedido pode ser clicado no painel. Ao clicar
+                                    aparecerá detalhes do pedido e a ação de enviar para o próximo passo.</li>
+                                <li>Incluir pedidos da etapa anterior: coloca os cartões da etapa imediatamente anterior
+                                    no painel corrente. </li>
+                                <li>Próxima etapa ao clicar: quando se clica no cartão, não será aberta a janela de
+                                    detalhes. O cartão passará imediatemente para a próxima etapa. Útil em processos
+                                    onde não há necessecidade de se visualizar detalhe do pedido.</li>
+                                <li>Etapa pode ser "pausada": coloca o cartão em pausa na etapa corrente, até que alguém
+                                    retorne e envie o cartão para a próxima etapa.</li>
+                                <li>Prato pronto ao final desta etapa: em alguns casos você quer informar ao market
+                                    place (iFood, Rappi etc) que o prato está pronto. Esta opção pode não funcionar em
+                                    todos market places.</li>
+                            </ul>
+                        </small>
                     </div>
                 </div>
             </div>
 
         </div>
 
-</div>
-</div>
-</form>
+
+        <div class="modal fade" tabindex="-1" role="dialog" id="confirm-modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Atenção!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Você está prestes a atualizar seu processo e existe(m) {{ $countAlive }} pedido(s) em
+                            andamento em seu delivery.<br><br>
+                            <b>Remomendamos que os pedidos sejam concluidos em seu delivery antes de alterar o
+                                processo</b>.
+                            <br><br>Ao confirmar o novo processo
+                            <b>os pedidos voltarão ao início</b> do processo. <br><br>Deseja prosseguir?
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+
+
+                        <button style="display: none" type="button" class="btn btn-danger btn-sm bt-first-step"
+                            onclick="confirmFirstStep()"><i style="display: none"
+                                class="fas fa-cog fa-spin loading"></i> <i class="fas fa-fast-backward"></i> Sim!
+                            Colocar pedidos no início do processo</button>
+                        <button style="display: none" type="button" class="btn btn-danger btn-sm bt-default"
+                            onclick="confirmDefault()"><i style="display: none" class="fas fa-cog fa-spin loading"></i>
+                            <i class="fas fa-fast-backward"></i> Sim! Colocar pedidos no início do processo</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Não! Cancelar
+                            (recomendado)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </form>
 </div>
 
 @push('scripts')
@@ -225,28 +272,58 @@
             });
         });
 
+        //JSON COM PROCESSO DE PRODUÇÃO
+
+        function parseFormJson() {
+            const data = new FormData($("#form_production_line")[0]);
+            const production = Object.fromEntries(data.entries());
+            production.color = data.getAll("color");
+            production.clickable = data.getAll("clickable");
+            production.father_step = data.getAll("father_step");
+            production.name = data.getAll("name");
+            production.next_on_click = data.getAll("next_on_click");
+            production.ready = data.getAll("ready");
+            production.role_id = data.getAll("role_id");
+            production.see_previous = data.getAll("see_previous");
+            production.step = data.getAll("step");
+            production.can_pause = data.getAll("can_pause");
+            return production;
+        }
+
+        function confirmFirstStep() {
+            $(".loading").show();
+
+            Livewire.emit('confirmFirstStep', JSON.stringify(parseFormJson()));
+        }
+
+        function confirmDefault() {
+            $(".loading").show();
+            Livewire.emit('confirmDefault');
+        }
+
+        function defaultProcess() {
+            $(".loading").hide();
+            @if ($this->countAlive > 0)
+                $('#confirm-modal').modal();
+                $(".bt-first-step").hide();
+                $(".bt-default").show();
+            @else
+                confirmDefault();
+            @endif
+        }
+
+        function saveProcess() {
+            $(".loading").hide();
+            @if ($this->countAlive > 0)
+                $('#confirm-modal').modal();
+                $(".bt-first-step").show();
+                $(".bt-default").hide();
+            @else
+                confirmFirstStep();
+            @endif
+        }
 
         $(document).ready(function() {
-            $("#form_production_line").submit(function(event) {
-                event.preventDefault();
-                $(".loading").show();
-                const data = new FormData(event.target);
-                const production = Object.fromEntries(data.entries());
-
-                production.color = data.getAll("color");
-                production.clickable = data.getAll("clickable");
-                production.father_step = data.getAll("father_step");
-                production.name = data.getAll("name");
-                production.next_on_click = data.getAll("next_on_click");
-                production.ready = data.getAll("ready");
-                production.role_id = data.getAll("role_id");
-                production.see_previous = data.getAll("see_previous");
-                production.step = data.getAll("step");
-                production.can_pause = data.getAll("can_pause");
-
-                Livewire.emit('productionUpdated', JSON.stringify(production));
-            });
-
 
             var optionsDragDrop = {
                 update: function(event, ui) {
@@ -395,7 +472,6 @@
                 reorderSteps();
             });
         });
-
     </script>
 
     <script src="{{ asset('js/spectrum/spectrum.js') }}" type="text/javascript" charset="utf-8"></script>
@@ -410,7 +486,7 @@
 
         Livewire.on('reloadColors', optionsSpectrum => {
             $(".color").spectrum(optionsSpectrum);
+            $('#confirm-modal').modal('hide');
         })
-
     </script>
 @endpush
