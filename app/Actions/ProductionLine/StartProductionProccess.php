@@ -14,6 +14,7 @@ use App\Models\FederatedSale;
 
 class StartProductionProccess
 {
+
     public function start($order_id){
         $order = null;
         try{
@@ -52,7 +53,7 @@ class StartProductionProccess
                     'production_line_version_id' => $productionLineVersion->id
             ]);
 
-            // Criar/tratar produtos e estoqu
+            // Criar/tratar produtos e estoque
             try{
                 (new ProcessOrderProducts())->process($orderSummary, $generateOrderJson->babelizedOrder());
             }catch(\Exception $e){

@@ -24,9 +24,9 @@
                 
 
                 <span class="badge"><i class="fas fa-lg fa-clock"></i> Pedido agendado</span> 
-
+                @role('admin')
                 <span class="badge"><a style="text-decoration: none" href="javascript:;" wire:click="confirmFinishOrders"><i wire:loading wire:target="confirmFinishOrders" class="fas fa-cog fa-spin"></i> Finalizar todos os pedidos</a></span> 
-                
+                @endrole
             </span>
         </div>
     </div>

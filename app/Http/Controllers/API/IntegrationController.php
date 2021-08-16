@@ -11,6 +11,8 @@ use App\Http\Resources\IfoodOrder as IfoodOrderResource;
 
 use App\Actions\ProductionLine\StartProductionProccess;
 use App\Actions\ProductionLine\CancelProductionProccess;
+use App\Models\FederatedSale;
+use App\Actions\ProductionLine\GenerateOrderJson;
 
 
 class IntegrationController extends BaseController
@@ -59,6 +61,42 @@ class IntegrationController extends BaseController
             $this->startOneOrder($order);
         }
         return $orders->pluck("order_id", "id");
+    }
+
+    public function reprocessSales(Request $request){
+        $input = $request->all();
+        
+        $ordersReturn = [
+            "total" => 0,
+            "success" => [],
+            "error" => [],
+        ];
+        if(isset($input["restaurant_id"]) && isset($input["created_at"])){
+            
+            $orders = Order::where("restaurant_id", $input["restaurant_id"])
+                ->whereRaw("DATE(created_at) = '" . $input["created_at"] . "'")
+                ->get();
+
+            $ordersReturn["total"] = count($orders);
+
+            foreach($orders as $order){
+                
+                $generateOrderJson = new GenerateOrderJson($order);
+                $orderJson = $generateOrderJson->generate();
+
+                try{
+                    FederatedSale::create(array_merge([
+                        "restaurant_id" => $order->restaurant_id, 
+                        "broker_id" => $order->broker_id], (array) $orderJson));
+                    $ordersReturn["success"][] = $order->id;
+                }catch(\Exception $e){
+                    $ordersReturn["error"][] = ["message" => $e->getMessage(), "order" => $order->id];
+                }
+
+            }
+            
+            return $ordersReturn;
+        }
     }
 
     private function startOneOrder($order){

@@ -63,14 +63,18 @@ class ProductionLines extends BaseConfigurationComponent
 
     }
 
-    public function confirmDefault(){
+    public function confirmDefault($message = true){
         try{
+            
             $restaurant = $this->userRestaurant();
-            $newProductionLineVersion = (new RestartOrderProcess())->restartDefault($restaurant->id);
+            $restartOrderProcess = new RestartOrderProcess();
+
+            $newProductionLineVersion = $restartOrderProcess->createProductionLineVersion($restaurant->id);
+            $restartOrderProcess->createDefaultProductionLine($newProductionLineVersion);
 
             $this->productionLines();
             $this->emit('reloadColors');
-            $this->simpleAlert('success', 'Processo restaurado com sucesso.');
+            if($message) $this->simpleAlert('success', 'Processo restaurado com sucesso.');
 
         }catch(\Exception $exception){
             $this->simpleAlert('error', 'Não conseguimos processar sua requisição.');
@@ -85,7 +89,7 @@ class ProductionLines extends BaseConfigurationComponent
         $this->wizardStep = 3;
 
         $this->productionLines();
-        if($this->productionLines->isEmpty()) $this->createDefaultProductionLine(false);
+        if($this->productionLines->isEmpty()) $this->confirmDefault(false);
 
         $this->countAlive = (new RecoveryOrders())->countAlive($this->userRestaurant()->id);
 

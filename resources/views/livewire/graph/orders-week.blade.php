@@ -19,17 +19,17 @@
 @push('scripts')
 
     <script>
-        function reloadPage(){
+        function reloadPageOrdersWeek(){
             return setInterval(() => { 
-                if (document.hasFocus()){
+                //if (document.hasFocus()){
                     Livewire.emit('render_orders');
-                }
-            }, 300000);
+                //}
+            }, 60000);
             
         }
 
         $(document).ready(function() {
-            reloadPage();
+            reloadPageOrdersWeek();
         });
 
     </script>

@@ -31,16 +31,16 @@
 </div>
 @push('scripts')
     <script>
-        function reloadPage(){
+        function reloadPageDash(){
             return setInterval(() => { 
-                if (document.hasFocus()){
+                //if (document.hasFocus()){
                     Livewire.emit('render_dash');
-                }
-            }, 180000);
+                //}
+            }, 60000);
         }
 
         $(document).ready(function() {
-            reloadPage();
+            reloadPageDash();
         });
     </script>
 @endpush    

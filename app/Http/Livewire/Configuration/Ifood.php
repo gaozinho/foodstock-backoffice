@@ -135,8 +135,11 @@ class Ifood extends Component
             $IfoodIntegration->getToken($this->ifoodBroker->authorizationCode, $this->ifoodBroker->id);
             $jsonMerchants = $IfoodIntegration->getMerchants($this->ifoodBroker->id);
 
+            //dd($jsonMerchants);
+
 
             //TODO - O QUE ACONTECE SE RETORNA MAIS DEUM MERCHANT? TESTAR
+            //Perguntar para usuário qual merchant, caso venha mais de dois
             if($jsonMerchants){
                 $success = $IfoodIntegration->enableMerchant($this->ifoodBroker, $jsonMerchants);
             }

@@ -160,11 +160,11 @@ class IfoodIntegrationDistributed extends IfoodIntegration
     }    
 
     public function enableMerchant($ifoodBroker, $jsonMerchants){
-        $success = false;
         foreach($jsonMerchants as $jsonMerchant){
-            $usedMerchants = IfoodBroker::where("merchant_id", $jsonMerchant->id )
-                ->where("id", "<>", $ifoodBroker->id)
-                ->count();
+            //Verifica se este merchant já está sendo usado
+            $usedMerchants = IfoodBroker::where("merchant_id", $jsonMerchant->id)->count();
+
+            //Caso não esteja sendo usado, faz o cadastro
             if($usedMerchants == 0){
                 $ifoodBroker->merchant_id = $jsonMerchant->id;
                 $ifoodBroker->name = $jsonMerchant->name;
@@ -173,9 +173,9 @@ class IfoodIntegrationDistributed extends IfoodIntegration
                 $ifoodBroker->validated_at = date("Y-m-d H:i:s");
                 $ifoodBroker->merchant_json = json_encode($jsonMerchants);
                 $ifoodBroker->save();
-                $success = true;
+                return true;
             }
         }
-        return $success;
+        return false;
     }
 }

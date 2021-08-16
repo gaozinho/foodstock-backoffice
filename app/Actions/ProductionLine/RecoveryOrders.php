@@ -24,7 +24,7 @@ class RecoveryOrders
     public function countAlive($restaurant_id){
         return OrderSummary::where("order_summaries.restaurant_id", $restaurant_id)
             ->where("order_summaries.finalized", 0)
-            ->count() > 0;
+            ->count();
     }    
 
     public function alive($restaurant_id){

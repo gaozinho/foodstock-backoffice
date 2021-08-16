@@ -303,21 +303,23 @@
 
         function defaultProcess() {
             $(".loading").hide();
-            @if ($this->countAlive > 0)
+            @if ($countAlive > 0)
                 $('#confirm-modal').modal();
                 $(".bt-first-step").hide();
                 $(".bt-default").show();
+                $("#confirm-modal").appendTo("body");
             @else
                 confirmDefault();
             @endif
         }
 
         function saveProcess() {
-            $(".loading").hide();
-            @if ($this->countAlive > 0)
+            //$(".loading").hide();
+            @if ($countAlive > 0)
                 $('#confirm-modal').modal();
                 $(".bt-first-step").show();
                 $(".bt-default").hide();
+                $("#confirm-modal").appendTo("body");
             @else
                 confirmFirstStep();
             @endif

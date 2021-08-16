@@ -22,16 +22,16 @@
 @push('scripts')
 
     <script>
-        function reloadPage(){
+        function reloadPageWeekBlade(){
             return setInterval(() => { 
-                if (document.hasFocus()){
+                //if (document.hasFocus()){
                     Livewire.emit('render_sales');
-                }
-            }, 300000);
+                //}
+            }, 60000);
         }
 
         $(document).ready(function() {
-            reloadPage();
+            reloadPageWeekBlade();
         });
 
     </script>
