@@ -78,7 +78,7 @@ Route::get('/production', function () {
     $startProductionProccess = new StartProductionProccess();
     //$forwardProductionProccess = new ForwardProductionProccess();
 
-    $productionMovement = $startProductionProccess->start(113688);
+    $productionMovement = $startProductionProccess->start(114822);
 
     dd($productionMovement);
 

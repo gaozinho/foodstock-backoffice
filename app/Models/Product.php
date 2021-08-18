@@ -85,4 +85,18 @@ class Product extends Model
     {
         return $this->hasMany('App\Models\StockMovement');
     }
+
+    public function productionLine()
+    {
+        return \App\Models\ProductionLine::where("restaurant_id", $this->restaurant_id)
+            ->where("step", $this->initial_step)
+            ->where("is_active", 1)
+            ->first();
+    }
+    
+    public function productionLineName()
+    {
+        $item = $this->productionLine();
+        return is_object($item) ? $item->name : "";
+    }    
 }

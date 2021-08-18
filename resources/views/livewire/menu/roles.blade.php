@@ -6,7 +6,7 @@
         @forelse($roles as $role)
             @hasanyrole($role->name . '|admin')
                 <x-jet-dropdown-link href="{{ route('panels.production-line-panel.index', ['role_name' => $role->name]) }}">
-                    {{ __($role->description) }}
+                    {{ __($role->productionLineNameByRole()->name) }}
                 </x-jet-dropdown-link>
             @endhasanyrole
         @empty

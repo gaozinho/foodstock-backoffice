@@ -11,6 +11,7 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Auth\Notifications\VerifyEmail;
+use App\Actions\ProductionLine\RecoverUserRestaurant;
 
 use Spatie\Permission\Traits\HasRoles;
 
@@ -77,6 +78,16 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function menagesRestaurants(){
         return $this->adminRestaurants()->count() > 0;
+    }
+
+    public function recoverUserRestaurant(){
+        try{
+            $recoverUserRestaurant = new RecoverUserRestaurant();
+            return $recoverUserRestaurant->recover($this->id);
+        }catch(\Exception $e){
+            return null;
+        }
+
     }
 
 }

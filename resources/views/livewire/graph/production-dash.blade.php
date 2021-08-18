@@ -6,6 +6,11 @@
         </div>
         <div class="card-body">
             <div class="row">
+                @if(count($productionMovements) == 0)
+                <div class="col-md-3">
+                    Não há pedidos em sua linha de produção neste momento.
+                </div>                
+                @endif
                 @foreach($productionMovements as $productionMovement)
                     @php
                         $icon = "";

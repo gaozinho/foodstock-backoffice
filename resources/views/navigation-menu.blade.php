@@ -1,7 +1,10 @@
+@php
+    $restaurant = auth()->user()->recoverUserRestaurant();
+@endphp
 <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom sticky-top full-screen">
     <div class="container">
         <a class="navbar-brand mr-4" href="{{route('dashboard')}}">
-            <img src="{{ asset('images/logo.png') }}" style="height: 30px">
+            <img src="{{ asset('images/logo.png') }}" style="height: 30px"> 
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
             <span class="navbar-toggler-icon"></span>
@@ -71,7 +74,7 @@
                 @endrole
 
                 @if(auth()->user()->menagesRestaurants())
-                    <x-jet-nav-link href="{{ route('welcome') }}" :active="request()->routeIs('welcome')">
+                    <x-jet-nav-link href="{{ route('welcome') }}" :active="request()->routeIs('welc')">
                         <i class="fas fa-question-circle"></i> Ajuda
                     </x-jet-nav-link>                        
                 @endif
@@ -84,7 +87,11 @@
                             @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
                                 <img class="rounded-circle" width="32" height="32" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
                             @else
-                            <i class="fas fa-user"></i> {{ Auth::user()->name }}
+                            <i class="fas fa-user"></i>
+                                @if(is_object($restaurant))
+                                    {{$restaurant->name}}
+                                @endif                            
+                             
                             @endif
                         </x-slot>
 
@@ -116,3 +123,14 @@
         </div>
     </div>
 </nav>
+<div class="bg-white border-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col my-1">
+                @if(is_object($restaurant))
+                    <span class="h5">{{$restaurant->name}}</span>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>

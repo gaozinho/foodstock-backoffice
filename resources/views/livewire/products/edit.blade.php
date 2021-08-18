@@ -172,7 +172,7 @@
                             </div>
                             <i wire:loading wire:target="product.monitor_stock" class="fas fa-cog fa-spin"></i>
                             
-                            <div>
+                            <div class="ml-3">
                                 <div style="line-height: 1" class="mb-2"><small class="text-muted">Monitore aqueles produtos que são críticos no seu processo de produção. No painel você receberá alertas caso o seu produto esteja perto de esgotar.</small></div>
                                 @if(optional($product)->monitor_stock == 1)
                                 <div class="row">
@@ -196,14 +196,14 @@
                         
                         <div class="form-group">
                             <strong>Este produto leva a produção para a</strong>
-                            {!! Form::select('initial_step', ["" => "Escolha"] + $productionLines, $product->initial_step, ['wire:model.defer' => 'product.initial_step', 'class' => 'form-control mb-2']) !!}
+                            {!! Form::select('initial_step', ["" => "Escolha", "0" => "Não interfere nas etapas de produção"] + $productionLines, $product->initial_step, ['wire:model.defer' => 'product.initial_step', 'class' => 'form-control mb-2']) !!}
                         </div>                        
         
-                        <div class="mb-5">
+                        <div class="mb-5 ml-3">
                             <small class="text-muted">
-                                <p class="mb-1">Ao receber um pedido com este produto, onde ele deverá inicia seu processo de produção?</p>
-                                <p class="mb-1">Um prato que você mantém pronto, por exemplo, o estrogonofe. Ele não deveria passar pela <i>cozinha</i>, pois já está pronto. Talvez deva iniciar diretamente na fase de <i>entrega</i>.</p>
-                                <p class="mb-1">Um omelete, por exemplo, geralmente é feito na hora, então faz sentido enviar o pedido para o painel da <i>cozinha</i>.</p>
+                                <p class="mb-1">Ao receber um pedido com este produto, onde ele deverá iniciar seu processo de produção?</p>
+                                <p class="mb-1">Um prato que você mantém pronto, por exemplo, o estrogonofe. Ele não deveria passar pela <i>cozinha</i>, pois já está pronto. Talvez deva <b>iniciar diretamente na fase de <i>entrega</i></b>.</p>
+                                <p class="mb-1">Um omelete, por exemplo, geralmente é feito na hora, então faz sentido enviar o pedido para a <b>etapa da <i>{{$productionLines[array_keys($productionLines)[0]]}}</i></b>.</p>
                                 <p class="mb-1">Um refrigerante não precisa ser produzido, então deveria iniciar no passo de <b>{{end($productionLines)}}</b></p>
                             </small>
                         </div>

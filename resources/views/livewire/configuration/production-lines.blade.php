@@ -8,15 +8,17 @@
             <div class="col-lg-8 col-md-12 margin-tb">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-2">
+                        <div class="row justify-content-between mb-2">
 
-                            <div class="col-lg-12 col-md-12 text-right">
+                            <div class="col-6">
                                 <button type="button" class="btn btn-primary" id="bt_add_item">
-                                    <i class="fa fa-plus"></i> Etapa
+                                    <i class="fa fa-plus"></i> Adicionar etapa
                                 </button>
+                            </div>
+                            <div class="col-6 text-right">
 
                                 <button onclick="defaultProcess()" type="button" name="createDefaultProductionLine"
-                                    value="ok" class="btn btn-secondary">
+                                    value="ok" class="btn btn-link">
                                     Restaurar padrão</button>
                             </div>
                         </div>
@@ -41,27 +43,31 @@
                                                     value="{{ $productionItem->color }}" />
                                             </li>
                                             <li class="col list-group-item">
-                                                <div class="row justify-content-between mb-2">
-                                                    <div class="col-md-10">
+                                                <div class="row mb-2">
+                                                    <div class="col-md-12">
                                                         <div class="form-row">
+                                                        <!--
                                                             <div class="col">
-                                                                {!! Form::select('role_id', $roles, $productionItem->role_id, ['class' => 'form-control form-control-sm']) !!}
+                                                                 Form::select('role_id', $roles, $productionItem->role_id, ['class' => 'form-control form-control-sm'])
+                                                            </div>
+                                                        -->
+                                                            <div class="col-10">
+                                                                {!! Form::text('name', $productionItem->name, ['placeholder' => 'Nome da etapa', 'class' => 'form-control form-control-sm']) !!}
                                                             </div>
                                                             <div class="col">
-                                                                {!! Form::text('name', $productionItem->name, ['placeholder' => 'Nome personalizado', 'class' => 'form-control form-control-sm']) !!}
-                                                            </div>
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-danger text-right bt_trash_item">
+                                                                    <i class="fa fa-lg fa-trash"></i>
+                                                                </button>
+                                                            </div>                                                            
                                                         </div>
                                                     </div>
-                                                    <div class="col text-right">
-                                                        <button type="button"
-                                                            class="btn btn-sm btn-danger text-right bt_trash_item">
-                                                            <i class="fa fa-lg fa-trash"></i>
-                                                        </button>
-                                                    </div>
+   
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="row">
+                                                        <!--
                                                             <div class="col-md-auto">
                                                                 <div class="pretty p-switch p-fill">
                                                                     <input name="clickable" class="clickable"
@@ -73,6 +79,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        -->
 
                                                             <div class="col-lg-6 col-md-6">
                                                                 <div class="pretty p-switch p-fill">
@@ -201,8 +208,8 @@
 
                         <small>
                             <ul>
-                                <li>Clicável: indica que o cartão do pedido pode ser clicado no painel. Ao clicar
-                                    aparecerá detalhes do pedido e a ação de enviar para o próximo passo.</li>
+                                <!--<li>Clicável: indica que o cartão do pedido pode ser clicado no painel. Ao clicar
+                                    aparecerá detalhes do pedido e a ação de enviar para o próximo passo.</li>-->
                                 <li>Incluir pedidos da etapa anterior: coloca os cartões da etapa imediatamente anterior
                                     no painel corrente. </li>
                                 <li>Próxima etapa ao clicar: quando se clica no cartão, não será aberta a janela de
@@ -401,6 +408,8 @@
 
                 }
 
+                if($(".an_item").length <= 5) $("#bt_add_item").show();
+
             }
 
             function isFirstItem(item) {
@@ -462,16 +471,26 @@
 
             //Adiciona etapa
             $("#bt_add_item").click(function() {
-                var item = $(".an_item").first().clone();
-                item.find('input[name="name"]').val("");
-                item.find('input[type="checkbox"]').prop("checked", false);
-                item.find('.sp-replacer').remove();
-                item.find('.color').spectrum(optionsDragDrop);
-                item.find(".bt_trash_item").on("click", actionTrash);
-                item.find(".indent_item").on("click", indentItem);
-                item.appendTo("#items_list").hide().fadeIn("slow");
 
-                reorderSteps();
+                if($(".an_item").length < 5){
+                    $(this).show();
+                    var item = $(".an_item").first().clone();
+                    item.find('input[name="name"]').val("");
+                    item.find('input[type="checkbox"]').prop("checked", false);
+                    item.find('.sp-replacer').remove();
+                    item.find('.color').spectrum(optionsDragDrop);
+                    item.find(".bt_trash_item").on("click", actionTrash);
+                    item.find(".indent_item").on("click", indentItem);
+                    item.appendTo("#items_list").hide().fadeIn("slow");
+
+                    reorderSteps();
+                }else{
+                    
+                }
+
+                if($(".an_item").length == 5) $(this).hide();
+                
+
             });
         });
     </script>

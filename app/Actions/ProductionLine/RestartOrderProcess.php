@@ -56,7 +56,7 @@ class RestartOrderProcess
                 'production_line_version_id' => $productionLineVersion->id, 
                 'production_line_id' => null, 
                 'restaurant_id' => $productionLineVersion->restaurant_id, 
-                'name' => Role::find(ProductionLineType::Cozinha)->name, 
+                'name' => Role::find(ProductionLineType::Cozinha)->description, 
                 'step' => 1, 
                 'clickable' => true, 
                 'see_previous' => false, 
@@ -74,7 +74,7 @@ class RestartOrderProcess
                 'production_line_version_id' => $productionLineVersion->id, 
                 'production_line_id' => null, 
                 'restaurant_id' => $productionLineVersion->restaurant_id, 
-                'name' => Role::find(ProductionLineType::Montagem)->name, 
+                'name' => Role::find(ProductionLineType::Montagem)->description, 
                 'step' => 2, 
                 'clickable' => true, 
                 'see_previous' => false, 
@@ -93,7 +93,7 @@ class RestartOrderProcess
                 'production_line_version_id' => $productionLineVersion->id, 
                 'production_line_id' => $productionLine->id, 
                 'restaurant_id' => $productionLineVersion->restaurant_id, 
-                'name' => Role::find(ProductionLineType::Montagem)->name, 
+                'name' => Role::find(ProductionLineType::Montagem)->description, 
                 'step' => 3, 
                 'clickable' => true, 
                 'see_previous' => true, 
@@ -112,7 +112,7 @@ class RestartOrderProcess
                 'production_line_version_id' => $productionLineVersion->id, 
                 'production_line_id' => null, 
                 'restaurant_id' => $productionLineVersion->restaurant_id, 
-                'name' => Role::find(ProductionLineType::Selagem)->name, 
+                'name' => Role::find(ProductionLineType::Selagem)->description, 
                 'step' => 3, 
                 'clickable' => true, 
                 'see_previous' => false, 
@@ -130,7 +130,7 @@ class RestartOrderProcess
                 'production_line_version_id' => $productionLineVersion->id, 
                 'production_line_id' => null, 
                 'restaurant_id' => $productionLineVersion->restaurant_id, 
-                'name' => Role::find(ProductionLineType::Expedicao)->name, 
+                'name' => Role::find(ProductionLineType::Expedicao)->description, 
                 'step' => 4, 
                 'clickable' => true, 
                 'see_previous' => false, 
@@ -210,7 +210,7 @@ class RestartOrderProcess
 
         $steps = $productionLines["step"];
 
-        for($i = 0; $i < count($steps); $i++){
+        for($i = 0; $i < count($steps) && $i < 5; $i++){
             $fatherProductionLineId = null;
 
             //Etapa pai
@@ -222,11 +222,15 @@ class RestartOrderProcess
 
             }
 
+            $role = Role::where("name", "step" . $productionLines["step"][$i])
+                ->where("guard_name", "production-line")
+                ->first();
+
             $productionLine = [
                 "step" => $productionLines["step"][$i],
                 "color" => $productionLines["color"][$i],
-                "role_id" => intval($productionLines["role_id"][$i]),
-                "name" => $productionLines["name"][$i] == "" ? null : $productionLines["name"][$i],
+                "role_id" => $role->id, //intval($productionLines["role_id"][$i]),
+                "name" => $productionLines["name"][$i] == "" ? ("Etapa produtiva " . $productionLines["step"][$i]) : $productionLines["name"][$i],
                 "restaurant_id" => $productionLineVersion->restaurant_id,
                 'production_line_version_id' => $productionLineVersion->id, 
                 'version' => $productionLineVersion->version, 

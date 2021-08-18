@@ -52,4 +52,12 @@ class Role extends Model
     {
         return $this->belongsToMany('App\Models\Permission', 'role_has_permissions');
     }
+
+    public function productionLineNameByRole(){
+        $restaurant = (new \App\Actions\ProductionLine\RecoverUserRestaurant())->recover(auth()->user()->id);
+        return \App\Models\ProductionLine::where("restaurant_id", $restaurant->id)
+        ->where("step", str_replace("step", "", $this->name))
+        ->where("is_active", 1)
+        ->first();
+    }
 }

@@ -8,6 +8,15 @@
                 ({{\Carbon\Carbon::parse($orderSummaryDetail->created_at)->diffForhumans()}})</small>
 
                 
+                @if($orderSummaryDetail->orderBabelized->schedule)
+                <small>
+                    <i class="fas fa-lg fa-clock text-danger"></i> AGENDADO  
+                    <span class="bg-warning">
+                        <small>{{date("d/m H:i", strtotime($orderSummaryDetail->orderBabelized->schedule->start))}} ~ {{date("H:i", strtotime($orderSummaryDetail->orderBabelized->schedule->end))}}</small>
+                    </span>
+                </small>
+                @endif                
+                
             </span>
         </h4>
 

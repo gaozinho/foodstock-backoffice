@@ -52,7 +52,7 @@
         @endif
 
         <!-- Page Content -->
-        <main id="main-container" class="container">
+        <main id="main-container" class="container mb-4">
             {{ $slot }}
         </main>
     </body>

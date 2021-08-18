@@ -265,7 +265,7 @@
                     </div>
                     <div class="col-md-6 mb-5 ftco-animate">
                         <h3 class="h5 mb-4">Onde consigo suporte?</h3>
-                        <p>Trabalhamos no email contato@foodstock.com.br. Envie-nos suas dúvidas e sugestões.</p>
+                        <p>Trabalhamos no email contato.foodstock@gmail.com. Envie-nos suas dúvidas e sugestões.</p>
                     </div>
                 </div>
             </div>

@@ -20,7 +20,7 @@ use App\Foodstock\Babel\OrderBabelized;
 class ProductionLinePanel extends Component
 {
 
-    protected $listeners = ['loadData', 'finishOrders'];
+    protected $listeners = ['loadData', 'finishOrders', 'cancelOperation'];
 
     public $orderSummaries;
     public $orderSummariesPreviousStep;
@@ -129,6 +129,7 @@ class ProductionLinePanel extends Component
         $finishOrder = new FinishOrder();
         $finishOrder->finish($restaurant->id, auth()->user()->id);
         $this->loadData();
+        $this->emit('moveForward');
         $this->alert("success", "Todos os pedidos foram finalizados com sucesso.", [
             'position' =>  'top-end', 
             'timer' =>  5000,  
@@ -141,6 +142,11 @@ class ProductionLinePanel extends Component
         ]);        
     }
 
+    public function cancelOperation(){
+        $this->loadData();
+        $this->emit('moveForward');
+    }
+
     public function confirmFinishOrders()
     {
         $this->confirm('Deseja finalizar todos os pedidos?', [
@@ -150,7 +156,8 @@ class ProductionLinePanel extends Component
             'showConfirmButton' => true,
             'cancelButtonText' => 'Não',
             'confirmButtonText' => 'Sim',
-            'onConfirmed' => 'finishOrders'
+            'onConfirmed' => 'finishOrders',
+            'onCancelled' => 'cancelOperation'
         ]);
     }    
 

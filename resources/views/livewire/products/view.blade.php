@@ -161,9 +161,14 @@
                                                     <i class="fas fa-eye"></i>
                                                 @endif
                                                 
+                                                <br />
                                                 @if(!empty($row->external_code))
-                                                    <br /><span class="text-muted"><small>{{ strtoupper($row->external_code) }}</small></span>
+                                                    <span class="text-muted"><small>Código externo: <b>{{ strtoupper($row->external_code) }}</b></small></span>
                                                 @endif
+
+                                                <span class="text-muted"><small> Leva produção para: <b>{!!$row->initial_step == 0 ? "indeterminado" : '<span class="text-success">' . $row->initial_step . ' ' . $row->productionLineName() . '</span>'!!}</b></small></span>
+
+
                                             </a>
                                         </td>
                                         <td width="1%" nowrap class="text-right">
@@ -172,6 +177,7 @@
                                         <td width="1%" nowrap class="text-right" style="line-height: 0.9">
                                             <small>Atual: {{ $row->current_stock }}<br/>Min: {{ $row->minimun_stock }}</small>
                                         </td>
+
                                         <td width="1%" nowrap class="text-right">
                                             <a href="javascripf:;" title="Editar" data-toggle="modal" data-target="#updateModal"
                                                 class="text-primary" wire:click="edit({{ $row->id }})">

@@ -50,7 +50,7 @@ class Products extends BaseConfigurationComponent
         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         'product.serving' => 'max:20|nullable',
         'product.enabled' => 'required|boolean',
-        'product.initial_step' => 'required|numeric|min:1',
+        'product.initial_step' => 'required|numeric|min:0',
     ];
 
     protected $messages = [
@@ -83,8 +83,8 @@ class Products extends BaseConfigurationComponent
         $this->emit('paginationLoaded');
 
         $products = Product::where("restaurant_id", $this->restaurant->id)
-            ->where("deleted", 0)
-            ->where("parent_id", null);
+            ->where("deleted", 0);
+            //->where("parent_id", null)
 
         if(!empty($this->keyWord)){
             $products->where(function($query) use ($keyWord){
@@ -113,7 +113,7 @@ class Products extends BaseConfigurationComponent
             $products->orderBy($this->sort, !empty($this->direction) ? $this->direction : "ASC");
         }else{
             $products->orderBy("name", "ASC");
-        }
+        }      
 
         return view('livewire.products.view', [
             'products' => $products->paginate($this->pageSize),

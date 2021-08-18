@@ -45,6 +45,7 @@ class ProcessOrderProducts
                 $product = Product::where("name", $item->name)->where("restaurant_id", $orderSummary->restaurant_id)->firstOrFail();
                 //Criar um external code
                 $product->external_code = $this->generateExternalCode($product->id);
+                $product->current_stock = $product->current_stock - intval($item->quantity);
                 $product->enabled = 1;
                 $product->deleted = 0;
                 $product->parent_id = $parent_id;
@@ -56,7 +57,7 @@ class ProcessOrderProducts
                     'name' => $item->name, 
                     'description' => null, 
                     'minimun_stock' => 0, 
-                    'current_stock' => 0, 
+                    'current_stock' => 0 - intval($item->quantity), 
                     'monitor_stock' => 0, 
                     'unit' => null, 
                     'ean' => null, 
@@ -64,7 +65,7 @@ class ProcessOrderProducts
                     'index' => null, 
                     'enabled' => 1, 
                     'deleted' => 0, 
-                    'initial_step' => 1,
+                    'initial_step' => 0,
                     'parent_id' => $parent_id
                 ]);
                 $product->external_code = $this->generateExternalCode($product->id);

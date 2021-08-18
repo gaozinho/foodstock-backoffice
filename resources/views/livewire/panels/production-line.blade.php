@@ -25,7 +25,7 @@
 
                 <span class="badge"><i class="fas fa-lg fa-clock"></i> Pedido agendado</span> 
                 @role('admin')
-                <span class="badge"><a style="text-decoration: none" href="javascript:;" wire:click="confirmFinishOrders"><i wire:loading wire:target="confirmFinishOrders" class="fas fa-cog fa-spin"></i> Finalizar todos os pedidos</a></span> 
+                <span class="badge"><a onclick='$(".loading").LoadingOverlay("show", {zIndex : 1050})' style="text-decoration: none" href="javascript:;" wire:click="confirmFinishOrders"><i wire:loading wire:target="confirmFinishOrders" class="fas fa-cog fa-spin"></i> Finalizar todos os pedidos</a></span> 
                 @endrole
             </span>
         </div>
@@ -36,9 +36,10 @@
                 <div>
 
                     @if($total_orders == 0)
+                        <hr />
                         <div class="text-center mt-5">
                             <img src="{{ asset('images/ico-logo.png') }}" class="mt-2 mb-2">
-                                <h3>Nenhum item pendente.</h3>
+                                <h3>Nenhum pedido nesta etapa.</h3>
                         </div>
                     @endif
 
