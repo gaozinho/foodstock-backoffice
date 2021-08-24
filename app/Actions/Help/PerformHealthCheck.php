@@ -21,7 +21,10 @@ class PerformHealthCheck
     public function __construct()
     {
         $this->user = auth()->user();
-        $this->restaurant =  (new RecoverUserRestaurant())->recoverOrNew($this->user->id);
+        //(new RecoverUserRestaurant())->recoverAllIds($this->user->id);
+//dd((new RecoverUserRestaurant())->recoverAllIds($this->user->id));
+
+        //$this->restaurant =  (new RecoverUserRestaurant())->recoverOrNew($this->user->id);
     }
 
     public function deliveryOk(){
@@ -31,10 +34,14 @@ class PerformHealthCheck
     public function integrationOk(){
         if(!$this->deliveryOk()) return false;
 
-        $this->brokersOk = [
-            "IFOOD" => IfoodBroker::where("restaurant_id", $this->restaurant->id)->where("validated", 1)->count() > 0,
-            //"RAPPI" => RappiBroker::where("restaurant_id", $this->restaurant->id)->where("validated", 1)->count() > 0
-        ];
+        $restaurants = (new RecoverUserRestaurant())->recoverAll(auth()->user()->id);
+
+        foreach($restaurants as $restaurant){
+            $this->brokersOk[$restaurant->name] = [
+                "IFOOD" => IfoodBroker::where("restaurant_id", $restaurant->id)->where("validated", 1)->count() > 0,
+                //"RAPPI" => RappiBroker::where("restaurant_id", $this->restaurant->id)->where("validated", 1)->count() > 0
+            ];
+        }
 
         $success = false;
 
@@ -44,27 +51,35 @@ class PerformHealthCheck
     }
 
     public function proccessOk(){
-        return ProductionLine::where("restaurant_id", $this->restaurant->id)->count() > 0;
+        return ProductionLine::where("user_id", auth()->user()->id)->count() > 0;
     }
 
     public function merchantsAvailable(){
         $merchantsInfo = [];
         try{
             $ifoodIntegrationDistributed = new IfoodIntegrationDistributed(); 
-            $this->availableData = $ifoodIntegrationDistributed->merchantAvailable($this->restaurant->id);
-            $this->availableReason = $this->availableData->message->title . " - " . $this->availableData->message->subtitle;
-            
-            $merchantsInfo["IFOOD"] = [
-                "available" => $this->availableData->available, 
-                "reason" => $this->availableData->message->title . ($this->availableData->message->subtitle ?? " - " . $this->availableData->message->subtitle)
-            ];
-            
+
+            $restaurants = (new RecoverUserRestaurant())->recoverAll(auth()->user()->id);
+
+            foreach($restaurants as $restaurant){
+                $availableData = $ifoodIntegrationDistributed->merchantAvailable($restaurant->id);
+
+                $availableReason = $availableData->message->title . " - " . $availableData->message->subtitle;
+    
+                $merchantsInfo["IFOOD"][$restaurant->name] = [
+                    "available" => $availableData->available, 
+                    "reason" => $availableData->message->title . (isset($availableData->message->subtitle) && !empty($availableData->message->subtitle) ? " - " . $availableData->message->subtitle : "")
+                ];
+            }
+
         }catch(\Exception $e){
-            $merchantsInfo["IFOOD"] = [
+
+            $merchantsInfo["IFOOD"][""] = [
                 "available" => false, 
                 "reason" => $e->getMessage()
             ];
         }
+
         return $merchantsInfo;
     }    
 }

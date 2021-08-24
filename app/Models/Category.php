@@ -27,7 +27,7 @@ class Category extends Model
     /**
      * @var array
      */
-    protected $fillable = ['restaurant_id', 'name', 'external_code', 'enabled', 'created_at', 'updated_at'];
+    protected $fillable = ['restaurant_id', 'user_id', 'name', 'external_code', 'enabled', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

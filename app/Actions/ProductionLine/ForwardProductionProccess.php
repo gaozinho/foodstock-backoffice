@@ -106,11 +106,11 @@ class ForwardProductionProccess
         );
     }
 
-    protected function firstStep($restaurant_id){
-        return ProductionLine::where("restaurant_id", $restaurant_id)->where("is_active", 1)->where("step", 1)->firstOrFail();
+    protected function firstStep($user_id){
+        return ProductionLine::where("user_id", $user_id)->where("is_active", 1)->where("step", 1)->firstOrFail();
     }
 
-    public function nextStep($restaurant_id, $current_step){
-        return ProductionLine::where("restaurant_id", $restaurant_id)->where("is_active", 1)->where("step", ($current_step + 1))->first();
+    public function nextStep($user_id, $current_step){
+        return ProductionLine::where("user_id", $user_id)->where("is_active", 1)->where("step", ($current_step + 1))->first();
     }
 }

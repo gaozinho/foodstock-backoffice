@@ -47,7 +47,7 @@ class IfoodIntegration
 
     protected function defineExpirationTime($ttl)
     {
-        return date("Y-m-d H:i:s", time() + ($ttl - 60));
+        return date("Y-m-d H:i:s", time() + ($ttl / 2));
     }    
 
 }

@@ -21,7 +21,6 @@ class Brokers extends BaseConfigurationComponent
     {
 
         try{
-            $restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
             $this->brokers = Broker::where("enabled", 1)->get();
             $viewName = 'livewire.configuration.brokers';
             if($this->isWizard()) $viewName = 'livewire.configuration.wizard';

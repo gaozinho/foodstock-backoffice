@@ -8,9 +8,9 @@ use App\Actions\ProductionLine\ForwardProductionProccess;
 
 class FinishOrder
 {
-    public function finish($restaurant_id, $user_id){
+    public function finish($restaurant_ids, $user_id){
         $forwardProductionProccess = new ForwardProductionProccess();
-        $ordersSummaries = OrderSummary::where("restaurant_id", $restaurant_id)
+        $ordersSummaries = OrderSummary::whereIn("restaurant_id", $restaurant_ids)
             ->where("finalized", 0)->get();
 
         foreach($ordersSummaries as $orderSummary){

@@ -71,11 +71,11 @@ class IntegrationController extends BaseController
             "success" => [],
             "error" => [],
         ];
-        if(isset($input["restaurant_id"]) && isset($input["created_at"])){
+        if(isset($input["restaurant_id"])){
             
-            $orders = Order::where("restaurant_id", $input["restaurant_id"])
-                ->whereRaw("DATE(created_at) = '" . $input["created_at"] . "'")
-                ->get();
+            $orders = Order::where("restaurant_id", $input["restaurant_id"]);
+            if(isset($input["created_at"])) $orders->whereRaw("DATE(created_at) = '" . $input["created_at"] . "'");
+            $orders = $orders->get();
 
             $ordersReturn["total"] = count($orders);
 

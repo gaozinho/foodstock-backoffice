@@ -36,27 +36,28 @@ class Products extends BaseConfigurationComponent
     public $restaurant;
 
     protected $rules = [
-        'product.category_id' => 'required|integer',
+        'product.category_id' => 'nullable|integer',
         'product.name' => 'max:255|required',
         'product.description' => 'max:500|nullable',
         'product.minimun_stock' => 'required|integer|min:0',
         'product.current_stock' => 'required|integer',
         'product.monitor_stock' => 'required|boolean',
         'product.external_code' => 'max:50|nullable',
-        'product.unit' => 'max:10|required',
+        'product.unit' => 'max:10|nullable',
         'product.ean' => 'max:255|nullable',
-        'product.unit_price' => 'required|numeric|min:0',
+        'product.unit_price' => 'nullable|numeric|min:0',
         'product.index' => 'nullable|integer',
         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         'product.serving' => 'max:20|nullable',
         'product.enabled' => 'required|boolean',
-        'product.initial_step' => 'required|numeric|min:0',
+        'product.initial_step' => 'nullable|numeric|min:0',
     ];
 
     protected $messages = [
         'product.category_id.required' => 'Escolha a categoria.',
         'product.unit.required' => 'Escolha a unidade.',
         'product.unit_price.required' => 'Informe o preço.',
+        'product.initial_step.required' => 'Informe para onde este produto leva sua produção.',
     ];
 
     //Ordena pela coluna escolhida
@@ -82,7 +83,7 @@ class Products extends BaseConfigurationComponent
 		$keyWord = '%'.$this->keyWord .'%';
         $this->emit('paginationLoaded');
 
-        $products = Product::where("restaurant_id", $this->restaurant->id)
+        $products = Product::where("user_id", auth()->user()->id)
             ->where("deleted", 0);
             //->where("parent_id", null)
 
@@ -135,6 +136,11 @@ class Products extends BaseConfigurationComponent
     public function save($continue)
     {
 
+        $this->product->category_id = empty($this->product->category_id) ? null : $this->product->category_id;
+        $this->product->unit = empty($this->product->unit) ? null : $this->product->unit;
+        $this->product->initial_step = intval($this->product->initial_step) ? 0 : $this->product->initial_step;
+        $this->product->unit_price = intval($this->product->unit_price) == 0 ? null : $this->product->unit_price;
+
 		if(intval($this->product->id) > 0){
 			$this->update($continue);
 		}else{
@@ -162,8 +168,9 @@ class Products extends BaseConfigurationComponent
     public function store()
     {
         try {
-            $restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
-            $this->product->restaurant_id = $restaurant->id;
+            //$restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
+            //$this->product->restaurant_id = $restaurant->id;
+            $this->product->user_id = auth()->user()->id;
 			$this->validate();
 			is_object($this->image) ? $this->product->image = $this->image->store('products', 'public') : null;
             $this->product->save();
@@ -178,10 +185,10 @@ class Products extends BaseConfigurationComponent
 
     public function edit($id)
     {
-        $restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
+        //$restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
         $this->resetValidation();
         $this->loadBaseData();
-        $this->product = Product::where("restaurant_id", $restaurant->id)->where("id", $id)->firstOrFail();
+        $this->product = Product::where("user_id", auth()->user()->id)->where("id", $id)->firstOrFail();
 		$this->nome = $this->product->nome;
 		$this->saveMode = true;
     }
@@ -205,13 +212,14 @@ class Products extends BaseConfigurationComponent
 
     public function loadBaseData(){
         
-        $restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
-        $this->categories = Category::where("restaurant_id", $restaurant->id)->orWhere("restaurant_id", null)
+        //$restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
+        $this->categories = Category::where("user_id", auth()->user()->id)
+            ->orWhere("user_id", null)
             ->where("enabled", 1)
             ->orderBy("name")
             ->select("id", "name")
             ->get()->pluck("name", "id")->toArray();
-        $this->productionLines = ProductionLine::where("restaurant_id", $restaurant->id)
+        $this->productionLines = ProductionLine::where("user_id", auth()->user()->id)
             ->where("is_active", 1)
             ->where("production_line_id", null)
             ->orderBy("step")
@@ -223,7 +231,7 @@ class Products extends BaseConfigurationComponent
     public function destroy($id)
     {
         try {
-            $product = Product::findOrFail($id);
+            $product = Product::where("user_id", auth()->user()->id)->where("id", $id)->firstOrFail();
             Storage::delete($product->image);
             $product->delete();
 			session()->flash('success', 'Produto excluído com sucesso.');
@@ -237,8 +245,8 @@ class Products extends BaseConfigurationComponent
     }
 
     public function disable(){
-        $restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
-        $product = Product::where("restaurant_id", $restaurant->id)->where("id", $this->product->id)->firstOrFail();
+        //$restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
+        $product = Product::where("user_id", auth()->user()->id)->where("id", $this->product->id)->firstOrFail();
         $product->deleted = 1;
         $product->save();
         $this->render();
@@ -247,7 +255,7 @@ class Products extends BaseConfigurationComponent
 
     public function confirmDestroy($id)
     {
-        $this->product = Product::findOrFail($id);
+        $this->product = Product::where("user_id", auth()->user()->id)->where("id", $id)->firstOrFail();
         $this->confirm('Deseja excluir ' . $this->product->name . '?', [
             'toast' => false,
             'position' => 'center',

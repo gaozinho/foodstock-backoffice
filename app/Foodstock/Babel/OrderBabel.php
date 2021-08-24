@@ -19,6 +19,7 @@ class OrderBabel
         $customerName, 
         $deliveryFormattedAddress, 
         $brokerId,
+        $brokerName,
         $orderType,
         $benefits,
         $additionalFees,
@@ -32,6 +33,7 @@ class OrderBabel
             $this->orderJson = json_decode($orderString);
 
             $this->brokerId = $this->brokerId(); 
+            $this->brokerName = $this->brokerName(); 
             $this->items = $this->items(); 
             $this->payments = $this->payments(); 
             $this->subtotal = $this->subtotal(); 
@@ -69,6 +71,10 @@ class OrderBabel
     public function brokerId(){
         return $this->brokerId;
     }
+
+    public function brokerName(){
+        return $this->brokerName;
+    }    
 
     public function orderString(){
         return $this->orderString;

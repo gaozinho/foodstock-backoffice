@@ -9,38 +9,55 @@
         onClick='$(".loading").LoadingOverlay("show")'
     >
 
-        <div class="card-body">
+        <div class="card-body py-3 px-3">
             <div class="order-card">
-                <div class="order-card-title-wrapper">
-                    <div class="order-card-date-primary" {!!$cardColor ?? 'style="background-color: ' . $stepColors[$orderSummary->current_step_number] . '"' !!}>
-                        <span class="order-card-date-day text-white">{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</span>
-                        
-                    </div>
-                    <div class="order-card-meeting-info">
-                        <span class="order-card-pro-title">IFOOD <span class="text-muted"><small>{{$babelized->orderType}}</small></span>
-                            @if($babelized->schedule)
-                                <i class="fas fa-lg fa-clock text-danger"></i>
+                <h1><span class="badge badge-secondary w-100">{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</span></h1>
+                <div style="line-height: 1" class="row">
+                    <div class="col-sm-12">
+                        <small>
+                            @if($orderSummary->canceled == 1)
+                                <span class="text-danger">CANCELADO</span>
+                            @else
+                                {{\Carbon\Carbon::parse($orderSummary->created_at)->diffForhumans()}}
                             @endif
-                        </span>
+
                         
-                        @if($orderSummary->canceled == 1)
-                            <span class="order-card-meeting-time text-danger">CANCELADO</span>
-                        @else
-                            <span class="order-card-meeting-time">{{\Carbon\Carbon::parse($orderSummary->created_at)->diffForhumans()}}</span>
-                        @endif
-                        @if($babelized->schedule)
-                            <span class="order-card-meeting-time">
-                                <small>{{date("d/m H:i", strtotime($babelized->schedule->start))}} ~ {{date("H:i", strtotime($babelized->schedule->end))}}</small>
-                            </span>
-                        @endif
+                        
+                        {!!$babelized->brokerName() ? $babelized->brokerName() . ' &bull;' : ''!!} {{$orderSummary->restaurant}} <!-- {{$babelized->orderType}} --></small>
                     </div>
-                </div>
-                <ol class="order-card-meeting-points mb-0">
-                    @foreach($babelized->items as $item)
-                        <li seq="{{$item->quantity}}" class="order-card-meeting-item"><span>{{$item->name}}</span></li>
-                    @endforeach                                                    
-                    
-                </ol>
+                    <div class="col-sm-12 col-md-6">
+                        <small>
+                            @if($babelized->schedule)
+                                
+                                <small><i class="fas fa-lg fa-clock text-danger"></i> {{date("d/m H:i", strtotime($babelized->schedule->start))}} ~ {{date("H:i", strtotime($babelized->schedule->end))}}</small>
+                            @endif
+                        </small>
+                    </div>
+                    @if($productionLine->clickable == 0)
+                        <div class="col-sm-12">
+                            <hr class="my-2" />
+                            
+                                @foreach($babelized->items as $item)
+                                    <div>
+                                        <small>{{ $item->quantity }} - {{$item->name}}</small>
+                                        @foreach ($item->subitems as $subitem)
+                                            <div class="ml-3">
+                                                <div>
+                                                    <small>
+                                                        {{ $subitem->quantity }} {{ $subitem->name }}
+                                                        @if ($subitem->observations) 
+                                                            <span class="bg-warning">{{ $subitem->observations }}</span>
+                                                        @endif
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        @endforeach                                
+                                    </div>
+                                @endforeach
+                        </div>
+                    @endif
+
+                </div>                
             </div>
         </div>
     </div>

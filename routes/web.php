@@ -59,7 +59,7 @@ Route::group(['middleware' => ['role:admin', 'verified']], function (){
 
 Route::get('/panel/production-line/{role_name}', ProductionLinePanel::class)->name('panels.production-line-panel.index')->middleware('auth');
 Route::get('/panel/delivery', DeliveryPanel::class)->name('panels.delivery-panel.index')->middleware('auth');
-Route::get('/panel/deliveryman/{restaurant_id}', DeliverymanPanel::class)->name('panels.public-delivery-panel.index');
+Route::get('/panel/deliveryman/{user_id}', DeliverymanPanel::class)->name('panels.public-delivery-panel.index');
 Route::get('/order/keyboard', NumericKeyboard::class)->name('orders.keyboard.index')->middleware('auth');
 
 

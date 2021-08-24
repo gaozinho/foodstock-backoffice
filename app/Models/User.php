@@ -83,7 +83,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function recoverUserRestaurant(){
         try{
             $recoverUserRestaurant = new RecoverUserRestaurant();
-            return $recoverUserRestaurant->recover($this->id);
+            return $recoverUserRestaurant->recoverAll($this->id);
         }catch(\Exception $e){
             return null;
         }

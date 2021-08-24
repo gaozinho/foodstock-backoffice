@@ -41,7 +41,7 @@ class Cancellation extends Component
     public function mount($orderSummaryId){
         $this->orderSummaryId = $orderSummaryId;
         try{
-            $this->restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
+            //$this->restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
             $this->orderSummaryDetail = $this->prepareOrderSummary($orderSummaryId);
         }catch(\Exception $e){
             session()->flash('error', 'Você não está vinculado a um delivery. Solicite ao responsável a sua correta vinculação.');
@@ -82,7 +82,7 @@ class Cancellation extends Component
     private function prepareOrderSummary($order_summary_id){
         $orderSummary =  OrderSummary::join("production_movements", "production_movements.order_summary_id", "order_summaries.id")
             ->where("order_summaries.id", $order_summary_id)
-            ->where("order_summaries.restaurant_id", $this->restaurant->id)
+            //->where("order_summaries.restaurant_id", $this->restaurant->id)
             ->select(['order_summaries.*', 'production_movements.paused'])
             ->orderBy("production_movements.id", "desc")
             ->firstOrFail();

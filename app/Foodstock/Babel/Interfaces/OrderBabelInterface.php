@@ -22,5 +22,6 @@ interface OrderBabelInterface{
     public function brokerId();
     public function schedule();
     public function benefits();
+    public function brokerName();
 
 }

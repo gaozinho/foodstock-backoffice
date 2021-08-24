@@ -80,9 +80,9 @@
                         <div {!!$clickAction!!}
                             onClick='$(".loading").LoadingOverlay("show")'
                             class="order-card card mb-2 {{$lastStepProductionLine->id == $orderSummary->production_line_id ? 'bg-success' : 'bg-danger'}}" {!!$cardColor!!}>
-                            <div class="card-body">
-                                <h4 class="text-white">{!! $orderNumber !!}</h4>
-                                <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }} :: {{$babelized->orderType}}</div>
+                            <div class="card-body p-2">
+                                <div class="text-white h4">{!! $orderNumber !!}</div>
+                                <div class="m-0 p-0 small text-white" style="line-height: 1"><small>{{ $orderSummary->restaurant }} &bull; {{ $orderSummary->broker }}<!-- :: {{$babelized->orderType}}--></small></div>
                             </div>
                         </div>
                 @endforeach

@@ -47,13 +47,13 @@
                             
                             <div class="col-xs-12 col-sm-4 col-md-4">
                                 <div class="form-group">
-                                    <strong>Categoria *</strong>
+                                    <strong>Categoria</strong>
                                     {!! Form::select('category_id', ['' => 'Escolha'] + $categories, $product->category_id, ['wire:model.defer' => 'product.category_id', 'class' => 'form-control', 'onClick'=>"this.select();"]) !!}
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-4 col-md-4">
                                 <div class="form-group">
-                                    <strong>Unidade *</strong>
+                                    <strong>Unidade</strong>
                                     <select name="unit" class="form-control" wire:model.defer="product.unit">
                                         <option value="">Escolha</option>
                                         <option value="UNIDADE">UNIDADE</option>
@@ -191,12 +191,11 @@
                                 </div>                       
                                 @endif
                             </div>
-                        </div>      
-                        
+                        </div>
                         
                         <div class="form-group">
                             <strong>Este produto leva a produção para a</strong>
-                            {!! Form::select('initial_step', ["" => "Escolha", "0" => "Não interfere nas etapas de produção"] + $productionLines, $product->initial_step, ['wire:model.defer' => 'product.initial_step', 'class' => 'form-control mb-2']) !!}
+                            {!! Form::select('initial_step', ["0" => "Não interfere nas etapas de produção"] + $productionLines, $product->initial_step, ['wire:model.defer' => 'product.initial_step', 'class' => 'form-control mb-2']) !!}
                         </div>                        
         
                         <div class="mb-5 ml-3">

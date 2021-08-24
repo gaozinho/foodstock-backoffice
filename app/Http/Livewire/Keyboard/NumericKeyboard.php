@@ -18,6 +18,7 @@ class NumericKeyboard extends Component
 {
 
     public $restaurant;
+    public $restaurantIds;
     public $orderSummaryDetail;
     public $productionLine;
 
@@ -25,7 +26,7 @@ class NumericKeyboard extends Component
 
     public function mount()
     {
-        $this->restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
+        $this->restaurantIds = (new RecoverUserRestaurant())->recoverAllIds(auth()->user()->id);
         $this->orderSummaryDetail = new OrderSummary();
     }    
 
@@ -54,7 +55,7 @@ class NumericKeyboard extends Component
 
         try{
         $orderSummary =  OrderSummary::where("friendly_number", $order_number)
-            ->where("restaurant_id", $this->restaurant->id)
+            ->whereIn("restaurant_id", $this->restaurantIds)
             ->where("finalized", 0)
             ->firstOrFail();
         }catch(\Exception $e){

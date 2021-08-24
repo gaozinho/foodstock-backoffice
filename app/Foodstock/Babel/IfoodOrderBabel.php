@@ -15,6 +15,7 @@ class IfoodOrderBabel extends OrderBabel implements OrderBabelInterface
 {
     public function __construct($orderString){
         parent::__construct($orderString);
+        $this->brokerName = "ifood";
     }
 
     public function items(){
@@ -69,6 +70,10 @@ class IfoodOrderBabel extends OrderBabel implements OrderBabelInterface
     public function brokerId(){
         return $this->orderJson->id;
     } 
+
+    public function brokerName(){
+        return $this->brokerName;
+    }     
     
     public function schedule(){
         if($this->orderJson->orderTiming == "SCHEDULED"){

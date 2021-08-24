@@ -27,6 +27,7 @@ class ProductionLines extends BaseConfigurationComponent
     public $areThereAlive = false;
 
     public function prepareProductionLine($restaurant_id){
+        
         $totalMovements = ProductionLineVersion::join("production_movements", "production_movements.production_line_version_id", "=", "production_line_versions.id")
             ->where("production_line_versions.restaurant_id", $restaurant_id)
             ->where("production_line_versions.is_active", 1)
@@ -91,7 +92,7 @@ class ProductionLines extends BaseConfigurationComponent
         $this->productionLines();
         if($this->productionLines->isEmpty()) $this->confirmDefault(false);
 
-        $this->countAlive = (new RecoveryOrders())->countAlive($this->userRestaurant()->id);
+        $this->countAlive = (new RecoveryOrders())->countAlive((new RecoverUserRestaurant())->recover(auth()->user()->id)->toArray());
 
         $this->roles = Role::where("guard_name", ProductionLineType::RoleProductionLine)->get()->pluck("name","id");
     }
@@ -108,9 +109,9 @@ class ProductionLines extends BaseConfigurationComponent
     }
 
 
-    private function userRestaurant(){
+    private function userRestaurants(){
         //return Restaurant::where("user_id", "=", auth()->user()->id)->firstOrFail();
-        return (new RecoverUserRestaurant())->recover(auth()->user()->id);
+        return (new RecoverUserRestaurant())->recoverAll(auth()->user()->id);
     }
 
     private function productionLines(){

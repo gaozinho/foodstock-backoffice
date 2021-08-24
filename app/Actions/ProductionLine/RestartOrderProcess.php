@@ -11,12 +11,12 @@ use Spatie\Permission\Models\Role;
 class RestartOrderProcess
 {
 
-    public function restart($json, $restaurant_id){
+    public function restart($json, $user_id){
         try{
             DB::beginTransaction();
             //DB::statement("SET optimizer_switch = 'derived_merge=off'");
             //1 - Criar nova versão da linha de produção
-            $currentProductionLineVersion = ProductionLineVersion::where("restaurant_id", $restaurant_id)->where("is_active", 1)->firstOrFail();
+            $currentProductionLineVersion = ProductionLineVersion::where("user_id", $user_id)->where("is_active", 1)->firstOrFail();
             $newProductionLineVersion = $this->createProductionLineVersion($restaurant_id);
             $this->createProductionLine($json, $newProductionLineVersion);
             // 2 - Volta para o primeiro passo
@@ -29,13 +29,13 @@ class RestartOrderProcess
         }        
     }
 
-    public function restartDefault($restaurant_id){
+    public function restartDefault($user_id){
         try{
             DB::beginTransaction();
             //DB::statement("SET optimizer_switch = 'derived_merge=off'");
             //1 - Criar nova versão da linha de produção
-            $currentProductionLineVersion = ProductionLineVersion::where("restaurant_id", $restaurant_id)->where("is_active", 1)->firstOrFail();
-            $newProductionLineVersion = $this->createProductionLineVersion($restaurant_id);
+            $currentProductionLineVersion = ProductionLineVersion::where("user_id", $user_id)->where("is_active", 1)->firstOrFail();
+            $newProductionLineVersion = $this->createProductionLineVersion($user_id);
             $this->createDefaultProductionLine($newProductionLineVersion);
             // 2 - Volta para o primeiro passo
             $this->arrangeOrders($currentProductionLineVersion, $newProductionLineVersion);
@@ -55,7 +55,8 @@ class RestartOrderProcess
                 "role_id" => ProductionLineType::Cozinha,
                 'production_line_version_id' => $productionLineVersion->id, 
                 'production_line_id' => null, 
-                'restaurant_id' => $productionLineVersion->restaurant_id, 
+                'user_id' => $productionLineVersion->user_id, 
+                //'restaurant_id' => $productionLineVersion->restaurant_id, 
                 'name' => Role::find(ProductionLineType::Cozinha)->description, 
                 'step' => 1, 
                 'clickable' => true, 
@@ -73,7 +74,8 @@ class RestartOrderProcess
                 "role_id" => ProductionLineType::Montagem,
                 'production_line_version_id' => $productionLineVersion->id, 
                 'production_line_id' => null, 
-                'restaurant_id' => $productionLineVersion->restaurant_id, 
+                'user_id' => $productionLineVersion->user_id, 
+                //'restaurant_id' => $productionLineVersion->restaurant_id, 
                 'name' => Role::find(ProductionLineType::Montagem)->description, 
                 'step' => 2, 
                 'clickable' => true, 
@@ -111,7 +113,8 @@ class RestartOrderProcess
                 "role_id" => ProductionLineType::Selagem,
                 'production_line_version_id' => $productionLineVersion->id, 
                 'production_line_id' => null, 
-                'restaurant_id' => $productionLineVersion->restaurant_id, 
+                'user_id' => $productionLineVersion->user_id, 
+                //'restaurant_id' => $productionLineVersion->restaurant_id, 
                 'name' => Role::find(ProductionLineType::Selagem)->description, 
                 'step' => 3, 
                 'clickable' => true, 
@@ -129,7 +132,8 @@ class RestartOrderProcess
                 "role_id" => ProductionLineType::Expedicao,
                 'production_line_version_id' => $productionLineVersion->id, 
                 'production_line_id' => null, 
-                'restaurant_id' => $productionLineVersion->restaurant_id, 
+                'user_id' => $productionLineVersion->user_id, 
+                //'restaurant_id' => $productionLineVersion->restaurant_id, 
                 'name' => Role::find(ProductionLineType::Expedicao)->description, 
                 'step' => 4, 
                 'clickable' => true, 
@@ -145,7 +149,7 @@ class RestartOrderProcess
 
             DB::commit();
 
-            return ProductionLine::where("restaurant_id", $productionLineVersion->restaurant_id)->where("is_active", 1)->get();
+            return ProductionLine::where("user_id", $productionLineVersion->user_id)->where("is_active", 1)->get();
 
         }catch(\Exception $exception){
             DB::rollBack();
@@ -182,7 +186,7 @@ class RestartOrderProcess
 
         // 3 - Muda a versão da linha de produção
 
-        $productionLineNextStep = $this->nextStep($newProductionLineVersion->restaurant_id, 1);
+        $productionLineNextStep = $this->nextStep($newProductionLineVersion->user_id, 1);
 
         $nrd = DB::update('UPDATE production_movements pm
             INNER JOIN order_summaries os ON os.id = pm.order_summary_id
@@ -199,8 +203,8 @@ class RestartOrderProcess
             WHERE os.finalized = 0 AND pm.production_line_version_id = ' . $currentProductionLineVersion->id);
     }
 
-    private function nextStep($restaurant_id, $current_step){
-        return ProductionLine::where("restaurant_id", $restaurant_id)->where("is_active", 1)->where("step", ($current_step + 1))->first();
+    private function nextStep($user_id, $current_step){
+        return ProductionLine::where("user_id", $user_id)->where("is_active", 1)->where("step", ($current_step + 1))->first();
     }    
 
     public function createProductionLine($json, ProductionLineVersion $productionLineVersion)
@@ -215,7 +219,7 @@ class RestartOrderProcess
 
             //Etapa pai
             if(intval($productionLines["father_step"][$i]) > 0){
-                $fatherProductionLine = ProductionLine::where("restaurant_id", $productionLineVersion->restaurant_id)
+                $fatherProductionLine = ProductionLine::where("user_id", $productionLineVersion->user_id)
                     ->where("is_active", 1)
                     ->where("step", intval($productionLines["father_step"][$i]))->first();
                 if(is_object($fatherProductionLine)) $fatherProductionLineId = $fatherProductionLine->id;
@@ -231,7 +235,8 @@ class RestartOrderProcess
                 "color" => $productionLines["color"][$i],
                 "role_id" => $role->id, //intval($productionLines["role_id"][$i]),
                 "name" => $productionLines["name"][$i] == "" ? ("Etapa produtiva " . $productionLines["step"][$i]) : $productionLines["name"][$i],
-                "restaurant_id" => $productionLineVersion->restaurant_id,
+                //"restaurant_id" => $productionLineVersion->restaurant_id,
+                "user_id" => $productionLineVersion->user_id,
                 'production_line_version_id' => $productionLineVersion->id, 
                 'version' => $productionLineVersion->version, 
                 "production_line_id" => $fatherProductionLineId,
@@ -252,16 +257,17 @@ class RestartOrderProcess
             ProductionLine::create($productionLine);
         }
 
-        return ProductionLine::where("restaurant_id", $productionLineVersion->restaurant_id)->where("is_active", 1)->get();
+        return ProductionLine::where("user_id", $productionLineVersion->user_id)->where("is_active", 1)->get();
 
     }    
 
-    public function createProductionLineVersion($restaurant_id){
-        $currentVersion = ProductionLineVersion::where("restaurant_id", $restaurant_id)->max('version');
-        ProductionLine::where("restaurant_id", $restaurant_id)->where("is_active", 1)->update(['is_active' => 0]);
-        ProductionLineVersion::where("restaurant_id", $restaurant_id)->where("is_active", 1)->update(['is_active' => 0]);
+    public function createProductionLineVersion($user_id){
+        $currentVersion = ProductionLineVersion::where("user_id", $user_id)->max('version');
+        ProductionLine::where("user_id", $user_id)->where("is_active", 1)->update(['is_active' => 0]);
+        ProductionLineVersion::where("user_id", $user_id)->where("is_active", 1)->update(['is_active' => 0]);
         return ProductionLineVersion::create([
-            "restaurant_id" => $restaurant_id,
+            "user_id" => $user_id,
+            //"restaurant_id" => $restaurant_id,
             "version" => $currentVersion + 1,
             "is_active" => 1
         ]);

@@ -1,5 +1,5 @@
 @php
-    $restaurant = auth()->user()->recoverUserRestaurant();
+    $restaurants = auth()->user()->recoverUserRestaurant();
 @endphp
 <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom sticky-top full-screen">
     <div class="container">
@@ -88,9 +88,7 @@
                                 <img class="rounded-circle" width="32" height="32" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
                             @else
                             <i class="fas fa-user"></i>
-                                @if(is_object($restaurant))
-                                    {{$restaurant->name}}
-                                @endif                            
+                                {{auth()->user()->name}}                           
                              
                             @endif
                         </x-slot>
@@ -127,9 +125,13 @@
     <div class="container">
         <div class="row">
             <div class="col my-1">
-                @if(is_object($restaurant))
-                    <span class="h5">{{$restaurant->name}}</span>
-                @endif
+                @foreach($restaurants as $restaurant)
+                    @php
+                        $names[] = $restaurant->name;
+                    @endphp
+                    
+                @endforeach
+                <span class="h5 text-muted"><small>{!!implode(' &bull; ', $names)!!} </small></span>
             </div>
         </div>
     </div>

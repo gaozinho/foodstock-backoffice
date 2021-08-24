@@ -23,11 +23,14 @@ class OrdersWeek extends Component
     {
         $weekMap = [0 => 'DOM', 1 => 'SEG', 2 => 'TER', 3 => 'QUA', 4 => 'QUI', 5 => 'SEX', 6 => 'SAB'];
         
-        $restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
+        $restaurant_ids = (new RecoverUserRestaurant())->recoverAllIds(auth()->user()->id)->toArray();
 
-        $lineChartModel = FederatedDayOrder::where("restaurant_id", $restaurant->id)
+        $lineChartModel = FederatedDayOrder::whereIn("restaurant_id", $restaurant_ids)
             ->whereBetween("date", [Carbon::now()->subDays(6)->toDateString(), Carbon::now()->toDateString()])
+            ->groupBy("date")
             ->orderBy("date")
+            ->select("federated_day_orders.date")
+            ->selectRaw("SUM(federated_day_orders.total) as total")            
             ->get()
             ->reduce(function ($lineChartModel, $data) use ($weekMap){
                     $date = Carbon::createFromFormat('Y-m-d', $data->date)->dayOfWeek;
@@ -39,9 +42,12 @@ class OrdersWeek extends Component
                     ->setAnimated(true)
             );
 
-        FederatedDayOrder::where("restaurant_id", $restaurant->id)
+        FederatedDayOrder::whereIn("restaurant_id", $restaurant_ids)
             ->whereBetween("date", [Carbon::now()->subDays(13)->toDateString(), Carbon::now()->subDays(7)->toDateString()])
+            ->groupBy("date")
             ->orderBy("date")
+            ->select("federated_day_orders.date")
+            ->selectRaw("SUM(federated_day_orders.total) as total")            
             ->get()
             ->reduce(function ($previousWeek, $data) use ($lineChartModel, $weekMap){
                 $date = Carbon::createFromFormat('Y-m-d', $data->date)->dayOfWeek;

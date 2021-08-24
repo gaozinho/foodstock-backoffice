@@ -85,16 +85,18 @@
                                         </div>
                                     </div>
                                     <h4 class="step-title">Loja ativa</h4>
-                                    @foreach($merchantsInfo as $key => $info)
-                                    <small style="line-height: 1.0;">
-                                        @if ($info["available"])
-                                            <i class="fas fa-lg fa-check text-success"></i>
-                                        @else
-                                            <i class="fas fa-lg fa-times text-danger"></i>
-                                        @endif
+                                    @foreach($merchantsInfo as $keyBroker => $restaurantInfo)
+                                        @foreach($restaurantInfo as $keyRest => $info)
+                                            <div style="line-height: 1.0;"><small style="line-height: 1.0;">
+                                            @if ($info["available"])
+                                                <i class="fas fa-lg fa-check text-success"></i>
+                                            @else
+                                                <i class="fas fa-lg fa-times text-danger"></i>
+                                            @endif
 
-                                        {{ $key }} ({{$info["reason"]}})</small>
-
+                                            {{ $keyBroker }} {{$keyRest}} ({{$info["reason"]}})</small>
+                                            </div>
+                                        @endforeach
                                     @endforeach
                                 </a>
                             </div>

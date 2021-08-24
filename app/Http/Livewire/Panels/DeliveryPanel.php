@@ -20,19 +20,21 @@ class DeliveryPanel extends Component
     protected $listeners = ['loadData'];
 
     public $restaurant;
+    public $restaurantIds;
     public $total_orders;
     public $orderSummaries = [];
     public $orderSummaryDetail;
     public $lastStepProductionLine;
     public $qrCodeUrl;
-
+ 
     public function mount()
     {
-        $this->restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
+        $userId = auth()->user()->id;
+        $this->restaurantIds = (new RecoverUserRestaurant())->recoverAllIds($userId)->toArray();
 
-        $this->qrCodeUrl = route('panels.public-delivery-panel.index', (new GenerateTrackingOrdersQr())->encode($this->restaurant->id));
+        $this->qrCodeUrl = route('panels.public-delivery-panel.index', (new GenerateTrackingOrdersQr())->encode($userId));
 
-        $this->lastStepProductionLine = ProductionLine::where("restaurant_id", $this->restaurant->id)
+        $this->lastStepProductionLine = ProductionLine::whereIn("restaurant_id", $this->restaurantIds)
             ->where("is_active", 1)
             ->where("production_line_id", null)
             ->orderBy("step", "desc")
@@ -46,10 +48,14 @@ class DeliveryPanel extends Component
     public function loadData(){
         $this->orderSummaries = OrderSummary::join("production_movements", "order_summaries.id", "=", "production_movements.order_summary_id")
             //->where("production_movements.production_line_id", $this->lastStepProductionLine->id)
+            ->join("brokers", "brokers.id", "=", "order_summaries.broker_id")
+            ->join("restaurants", "restaurants.id", "=", "order_summaries.restaurant_id")
             ->where("production_movements.step_finished", 0)
-            ->where("production_movements.restaurant_id", $this->restaurant->id)
+            ->whereIn("production_movements.restaurant_id", $this->restaurantIds)
             ->where("order_summaries.finalized", 0)
-            ->select("order_summaries.*" , "production_movements.production_line_id")
+            ->select("order_summaries.*", "production_movements.production_line_id")
+            ->selectRaw("restaurants.name as restaurant")
+            ->selectRaw("brokers.name as broker")
             ->orderBy("order_summaries.friendly_number")
             ->get();
 

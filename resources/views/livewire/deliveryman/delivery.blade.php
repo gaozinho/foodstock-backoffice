@@ -1,6 +1,6 @@
 <div>
     <div class="full-screen mb-3">
-        <h2 class="mt-3 mb-0 pb-0">{{ $restaurant->name }}
+        <h2 class="mt-3 mb-0 pb-0">Pedidos 
             <span class="badge badge-secondary">{{ $total_orders }}</span>
         </h2>
         <span class="legend mt-0 pt-0">Legenda:
@@ -35,9 +35,9 @@
                     @endphp
                         <div 
                             class="order-card card mb-2 {{$lastStepProductionLine->id == $orderSummary->production_line_id ? 'bg-success' : 'bg-danger'}}">
-                            <div class="card-body">
-                                <h4 class="text-white">{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</h4>
-                                <div class="m-0 p-0 small text-white">{{ $orderSummary->broker->name }}</div>
+                            <div class="card-body p-2">
+                                <div class="text-white h4">{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</div>
+                                <div class="m-0 p-0 small text-white"><small>{{ $orderSummary->restaurant }} &bull; {{ $orderSummary->broker }}</small></div>
                             </div>
                         </div>
                 @endforeach

@@ -146,6 +146,7 @@ class IfoodIntegrationDistributed extends IfoodIntegration
             
             $this->requestOptions["headers"]["Authorization"] = "Bearer " . $ifoodBroker->accessToken;
             $httpResponse = $this->httpClient->get($this->broker->merchantApi . $ifoodBroker->merchant_id . "/status", $this->requestOptions);
+            
             $jsonMerchants = $this->parseMerchantsResponse($httpResponse->getBody()->getContents());
 
             foreach($jsonMerchants as $jsonMerchant){
@@ -153,9 +154,8 @@ class IfoodIntegrationDistributed extends IfoodIntegration
             }
 
         }catch(\Exception $exception){
-
-            if(env('APP_DEBUG')) throw $exception;
-            return false;
+            throw $exception;
+            //return false;
         }        
     }    
 

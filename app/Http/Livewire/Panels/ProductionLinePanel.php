@@ -29,7 +29,7 @@ class ProductionLinePanel extends Component
     public $legends;
     public $orderSummaryDetail;
 
-    public $restaurant;
+    public $restaurantIds;
     public $recoveryOrders;
     public $role_name;
     public $total_orders = 0;
@@ -45,6 +45,8 @@ class ProductionLinePanel extends Component
     public function mount($role_name)
     {
 
+        $userId = auth()->user()->id;
+
         if(!(auth()->user()->hasRole("admin") || auth()->user()->hasRole($role_name))){
             return redirect()->to('/dashboard');
         }
@@ -56,7 +58,7 @@ class ProductionLinePanel extends Component
         //MVP 1 - Um restaurante por usuário
 
         try{
-            $this->restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
+            $this->restaurantIds = (new RecoverUserRestaurant())->recoverAllIds(auth()->user()->id)->toArray();
         }catch(\Exception $e){
             session()->flash('error', 'Você não está vinculado a um delivery. Solicite ao responsável a sua correta vinculação.');
             return redirect()->route('dashboard');
@@ -64,26 +66,28 @@ class ProductionLinePanel extends Component
 
         //$this->restaurant = Restaurant::where("user_id", "=", auth()->user()->id)->firstOrFail();
         $recoveryOrders = new RecoveryOrders();
-        $this->productionLine = $recoveryOrders->getCurrentProductionLineByRoleName($this->restaurant->id, $role_name);
+        $this->productionLine = $recoveryOrders->getCurrentProductionLineByRoleName($userId, $role_name);
 
-        $this->stepColors = $recoveryOrders->getProductionLineColors($this->restaurant->id);
-        $this->legends = $this->getLegend($this->restaurant->id, $role_name);
+        $this->stepColors = $recoveryOrders->getProductionLineColors($userId);
+        $this->legends = $this->getLegend($userId, $role_name);
         $this->loadData();
     }    
 
     public function loadData(){
+        $userId = auth()->user()->id;
+        $restaurantIds = (new RecoverUserRestaurant())->recoverAllIds($userId)->toArray();
         $recoveryOrders = new RecoveryOrders();
-        $this->orderSummaries = $recoveryOrders->recoveryByRoleName($this->restaurant->id, $this->role_name);
-        $this->orderSummariesPreviousStep = $recoveryOrders->recoveryPreviousByRoleName($this->restaurant->id, $this->role_name); 
+        $this->orderSummaries = $recoveryOrders->recoveryByRoleName($restaurantIds, $userId, $this->role_name);
+        $this->orderSummariesPreviousStep = $recoveryOrders->recoveryPreviousByRoleName($userId, $this->role_name); 
         $this->total_orders = count($this->orderSummaries) + count($this->orderSummariesPreviousStep);
     }
 
-    public function getLegend($restaurant_id, $role_name){
+    public function getLegend($user_id, $role_name){
 
         $role = Role::where("name", $role_name)->where("guard_name", "production-line")->firstOrFail();  
         $previousProductionLine = null;
 
-        $currentProductionLine = ProductionLine::where("restaurant_id", $restaurant_id)
+        $currentProductionLine = ProductionLine::where("user_id", $user_id)
             ->where("is_active", 1)
             ->where("role_id", $role->id)
             ->where("production_line_id", null)
@@ -91,14 +95,14 @@ class ProductionLinePanel extends Component
 
         //Se see_previous, pega cor anterior
         if($currentProductionLine->see_previous){
-            $previousProductionLine = ProductionLine::where("restaurant_id", $restaurant_id)
+            $previousProductionLine = ProductionLine::where("user_id", $user_id)
                 ->where("is_active", 1)
                 ->where("step", ($currentProductionLine->step - 1))
                 ->where("production_line_id", null)
                 ->firstOrFail();
         }
         //Se tem filhos, pega cor dos filhos
-        $nextProductionLines = ProductionLine::where("restaurant_id", $restaurant_id)
+        $nextProductionLines = ProductionLine::where("user_id", $user_id)
             ->where("is_active", 1)
             ->where("production_line_id", $currentProductionLine->id)->get();
         
@@ -115,7 +119,7 @@ class ProductionLinePanel extends Component
 
         $orderSummary =  OrderSummary::join("production_movements", "production_movements.order_summary_id", "order_summaries.id")
             ->where("order_summaries.id", $order_summary_id)
-            ->where("order_summaries.restaurant_id", $this->restaurant->id)
+            ->whereIn("order_summaries.restaurant_id", $this->restaurantIds)
             ->select(['order_summaries.*', 'production_movements.paused'])
             ->orderBy("production_movements.id", "desc")
             ->firstOrFail();
@@ -125,9 +129,9 @@ class ProductionLinePanel extends Component
 
     public function finishOrders(){
         //$this->emit('loadingData');
-        $restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
+        $restaurant_ids = (new RecoverUserRestaurant())->recoverAllIds(auth()->user()->id)->toArray();
         $finishOrder = new FinishOrder();
-        $finishOrder->finish($restaurant->id, auth()->user()->id);
+        $finishOrder->finish($restaurant_ids, auth()->user()->id);
         $this->loadData();
         $this->emit('moveForward');
         $this->alert("success", "Todos os pedidos foram finalizados com sucesso.", [
@@ -163,7 +167,7 @@ class ProductionLinePanel extends Component
 
     public function orderDetailAndMoveForward($order_summary_id){
         $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
-        (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $this->restaurant->id);
+        (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, auth()->user()->id);
         $this->emit('openOrderModal');
         $this->loadData();
     }
@@ -172,12 +176,12 @@ class ProductionLinePanel extends Component
 
         $currentStep = $this->productionLine->step;
         $forwardProductionProccess = new ForwardProductionProccess();
-        $nextProductionLineStep = $forwardProductionProccess->nextStep($this->restaurant->id, $currentStep);
+        $nextProductionLineStep = $forwardProductionProccess->nextStep(auth()->user()->id, $currentStep);
 
         if(is_object($nextProductionLineStep)){
             $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
             do{
-                $productionMovement = $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $this->restaurant->id);
+                $productionMovement = $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, auth()->user()->id);
             }while($productionMovement->current_step_number < $nextProductionLineStep->step);
         }
         
@@ -191,7 +195,7 @@ class ProductionLinePanel extends Component
         $productionLine = ProductionLine::findOrFail($production_line_id);
         
         if($productionLine->next_on_click == 1){ //Se passa para próximo passo no clique
-            (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $this->restaurant->id);
+            (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, auth()->user()->id);
             $this->emit('moveForward');
         }else{
             $this->emit('openOrderModal');
@@ -202,7 +206,7 @@ class ProductionLinePanel extends Component
 
     public function nextStep($order_summary_id){
         $forwardProductionProccess = new ForwardProductionProccess();
-        $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $this->restaurant->id);
+        $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, auth()->user()->id);
         $this->loadData();
         $this->emit('closeOrderModal');
     }
