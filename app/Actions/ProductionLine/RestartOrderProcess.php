@@ -17,7 +17,7 @@ class RestartOrderProcess
             //DB::statement("SET optimizer_switch = 'derived_merge=off'");
             //1 - Criar nova versão da linha de produção
             $currentProductionLineVersion = ProductionLineVersion::where("user_id", $user_id)->where("is_active", 1)->firstOrFail();
-            $newProductionLineVersion = $this->createProductionLineVersion($restaurant_id);
+            $newProductionLineVersion = $this->createProductionLineVersion($user_id);
             $this->createProductionLine($json, $newProductionLineVersion);
             // 2 - Volta para o primeiro passo
             $this->arrangeOrders($currentProductionLineVersion, $newProductionLineVersion);

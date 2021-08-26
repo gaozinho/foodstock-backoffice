@@ -49,8 +49,8 @@ class ProductionLines extends BaseConfigurationComponent
     public function confirmFirstStep($jsonProductionLines){
         try{
             
-            $restaurant = $this->userRestaurant();
-            $newProductionLineVersion = (new RestartOrderProcess())->restart($jsonProductionLines, $restaurant->id);
+            //$restaurant = $this->userRestaurant();
+            $newProductionLineVersion = (new RestartOrderProcess())->restart($jsonProductionLines, auth()->user()->id);
 
             $this->productionLines();
             $this->emit('reloadColors');
@@ -67,10 +67,10 @@ class ProductionLines extends BaseConfigurationComponent
     public function confirmDefault($message = true){
         try{
             
-            $restaurant = $this->userRestaurant();
+            //$restaurant = $this->userRestaurant();
             $restartOrderProcess = new RestartOrderProcess();
 
-            $newProductionLineVersion = $restartOrderProcess->createProductionLineVersion($restaurant->id);
+            $newProductionLineVersion = $restartOrderProcess->createProductionLineVersion(auth()->user()->id);
             $restartOrderProcess->createDefaultProductionLine($newProductionLineVersion);
 
             $this->productionLines();
@@ -115,7 +115,7 @@ class ProductionLines extends BaseConfigurationComponent
     }
 
     private function productionLines(){
-        $restaurant = $this->userRestaurant();
-        $this->productionLines = ProductionLine::where("restaurant_id", $restaurant->id)->where("is_active", 1)->orderBy("step")->orderBy("id")->get();
+        //$restaurant = $this->userRestaurant();
+        $this->productionLines = ProductionLine::where("user_id", auth()->user()->id)->where("is_active", 1)->orderBy("step")->orderBy("id")->get();
     }
 }

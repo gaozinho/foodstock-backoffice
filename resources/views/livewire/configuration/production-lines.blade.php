@@ -11,7 +11,7 @@
                         <div class="row justify-content-between mb-2">
 
                             <div class="col-6">
-                                <button type="button" class="btn btn-primary" id="bt_add_item">
+                                <button type="button" class="btn btn-lg btn-success" id="bt_add_item">
                                     <i class="fa fa-plus"></i> Adicionar etapa
                                 </button>
                             </div>
@@ -19,6 +19,7 @@
 
                                 <button onclick="defaultProcess()" type="button" name="createDefaultProductionLine"
                                     value="ok" class="btn btn-link">
+                                    <i style="display: none" class="fas fa-cog fa-spin loading"></i>
                                     Restaurar padrão</button>
                             </div>
                         </div>
@@ -169,7 +170,7 @@
                             @else
                                 <div class="row mb-2">
                                     <div class="col-lg-12 col-md-12 text-right">
-                                        <button type="button" onclick="saveProcess()" class="btn btn-success btn-lg"
+                                        <button type="button" onclick="saveProcess()" class="btn btn-success text-dark text-uppercase font-weight-bold"
                                             id="bt_salvar">
                                             <i style="display: none" class="fas fa-cog fa-spin loading"></i>
                                             <i class="fa fa-save"></i> Salvar nova versão
