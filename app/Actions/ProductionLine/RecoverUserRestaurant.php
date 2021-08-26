@@ -11,11 +11,11 @@ class RecoverUserRestaurant
         $user = auth()->user();
 
         if($user->hasRole("admin")){
-            return Restaurant::where("user_id", "=", $user_id)->firstOrFail();
+            return Restaurant::where("user_id", "=", $user_id)->where("enabled", 1)->firstOrFail();
         }
 
         if($user->restaurant_member == 1){
-            return $user->restaurants()->firstOrFail();
+            return $user->restaurants()->where("enabled", 1)->firstOrFail();
         }
     }
 
@@ -23,11 +23,11 @@ class RecoverUserRestaurant
         $user = auth()->user();
 
         if($user->hasRole("admin")){
-            return Restaurant::where("user_id", "=", $user_id)->get();
+            return Restaurant::where("user_id", "=", $user_id)->where("enabled", 1)->orderBy("created_at", "desc")->get();
         }
 
         if($user->restaurant_member == 1){
-            return $user->restaurants()->get();
+            return $user->restaurants()->where("enabled", 1)->get();
         }
     }    
 
@@ -35,7 +35,7 @@ class RecoverUserRestaurant
         $user = auth()->user();
 
         if($user->hasRole("admin")){
-            $values = Restaurant::where("user_id", "=", $user_id)
+            $values = Restaurant::where("user_id", "=", $user_id)->where("enabled", 1)
                 //->selectRaw("GROUP_CONCAT(id SEPARATOR ',') as ids")
                 ->select("id")
                 ->get();
@@ -44,11 +44,11 @@ class RecoverUserRestaurant
         }
 
         if($user->restaurant_member == 1){
-            return $user->restaurants()->select("id")->select("id")->get();
+            return $user->restaurants()->where("enabled", 1)->select("id")->get();
         }
     }        
 
     public function recoverOrNew($user_id){
-        return Restaurant::where("user_id", "=", $user_id)->firstOrNew();
+        return Restaurant::where("user_id", "=", $user_id)->where("enabled", 1)->firstOrNew();
     }
 }

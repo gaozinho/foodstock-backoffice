@@ -3,120 +3,47 @@
     <div class="row">
         <div class="col-lg-8 col-md-8 margin-tb">
 
-            <div class="card">
-                <div class="card-body">
 
-                    <!-- TODO - Make component -->
-                    <div class="row">
-                        <div class="col-lg-12 margin-tb">
-                            @if (count($errors) > 0)
-                                <div class="alert alert-danger">
-                                    <p><strong>Ops!</strong> Temos alguns problemas.</p>
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                        </div>
-
-                        <div class="col-lg-12 margin-tb">
-                            {!! Form::model($restaurant, ['method' => 'POST', 'wire:submit.prevent' => 'save', 'id' => 'restaurant-form']) !!}
-
-                            <div class="form-group">
-                                <strong>Nome fantasia de seu restaurante *</strong>
-                                {!! Form::text('name', $restaurant->name, ['wire:model.defer' => 'restaurant.name', 'class' => 'form-control']) !!}
-                            </div>
+                    <div class="card border mb-4">
+                        <div class="card-body">
 
                             <div class="row">
-                                <div class="col-xs-12 col-sm-6 col-md-6">
-                                    <div class="form-group">
-                                        <strong>Endereço *</strong>
-                                        {!! Form::text('endereco', $restaurant->address, ['wire:model.defer' => 'restaurant.address', 'class' => 'form-control']) !!}
-                                    </div>
-                                </div>
-
-                                <div class="col-xs-12 col-sm-6 col-md-3">
-                                    <div class="form-group">
-                                        <strong>Complemento</strong>
-                                        {!! Form::text('complement', $restaurant->complement, ['wire:model.defer' => 'restaurant.complement', 'class' => 'form-control']) !!}
-                                    </div>
-                                </div>
-
-                                <div class="col-xs-12 col-sm-6 col-md-3">
-                                    <div class="form-group">
-                                        <strong>CEP *</strong>
-                                        {!! Form::text('cep', $restaurant->cep, ['wire:model.defer' => 'restaurant.cep', 'class' => 'cep form-control']) !!}
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="row">
-
-                                <div class="col-xs-12 col-sm-6 col-md-6">
-                                    <div class="form-group">
-                                        <strong>Site</strong>
-                                        {!! Form::text('site', $restaurant->complement, ['wire:model.defer' => 'restaurant.site', 'class' => 'site form-control', 'placeholder' => 'http://']) !!}
-                                    </div>
-                                </div>
-
-                                <div class="col-xs-12 col-sm-6 col-md-6">
-                                    <div class="form-group">
-                                        <strong>E-mail *</strong>
-                                        {!! Form::text('email', $restaurant->email, ['wire:model.defer' => 'restaurant.email', 'class' => 'form-control']) !!}
-                                    </div>
-                                </div>
-
-                                <div class="col-xs-12 col-sm-6 col-md-6">
-                                    <div class="form-group">
-                                        <strong>CNPJ</strong>
-                                        {!! Form::text('cnpj', $restaurant->cnpj, ['wire:model.defer' => 'restaurant.cnpj', 'class' => 'cnpj form-control']) !!}
-                                    </div>
-                                </div>
-
-                                <div class="col-xs-12 col-sm-6 col-md-6">
-                                    <div class="form-group">
-                                        <strong>Telefone *</strong>
-                                        {!! Form::text('phone', $restaurant->phone, ['wire:model.defer' => 'restaurant.phone', 'class' => 'phone form-control']) !!}
-                                    </div>
-                                </div>
-                            </div>
-
-                            @if ($wizard)
-                                <div class="form-group text-right">
-                                    <button wire:click="save" type="button" name="save" value="ok"
-                                        class="btn btn-success pr-4 pl-4 text-dark font-weight-bold text-uppercase"> <i
-                                            wire:loading wire:target="save" class="fas fa-cog fa-spin"></i>
-                                        Continuar <i class="fas fa-forward"></i></button>
-                                </div>
-                            @else
-                                <div class="form-group text-right">
-                                    <button wire:click="save" type="button" name="save" value="ok"
-                                        class="btn btn-success pr-4 pl-4 text-dark font-weight-bold text-uppercase"><i
-                                            class="fas fa-save"></i> <i wire:loading wire:target="save"
-                                            class="fas fa-cog fa-spin"></i>
-                                        Salvar</button>
-                                </div>
-                            @endif
-                            <div>
-                                @if (session()->has('success'))
-                                    <div class="alert alert-success">
-                                        {{ session('success') }}
-                                    </div>
+                                <div class="col-md-12 mb-3">
+                                @if($restaurantsCount == 0)
+                                    <span class="h3">Você ainda não tem lojas cadastradas.</span>
+                                    <div>Cadastre pelo menos uma loja para prosseguir e integrá-la ao(s) seu(s) <i>marketplace</i>.</div>
+                                @else
+                                    <span class="h3">Você já cadastrou {{ $restaurantsCount }} lojas.</span>
                                 @endif
-                                @if (session()->has('error'))
-                                    <div class="alert alert-error">
-                                        {{ session('error') }}
-                                    </div>
-                                @endif
+                                </div>
                             </div>
-                            {!! Form::close() !!}
+
+                            <div class="row justify-content-between">
+                                <div class="col-md-8 align-self-end">
+                                    <a wire:click="createRestaurant" class="btn btn-success btn-lg">
+                                        <i class="fas fa-plus"></i>
+                                        <i wire:loading="createRestaurant" wire:target="createRestaurant" class="fas fa-cog fa-spin"></i>
+                                        Criar nova loja
+                                    </a>
+                                </div>
+                                <div class="col-auto">
+
+
+                                    @if ($wizard && $restaurantsCount > 0)
+                                        <a href="{{route('wizard.broker.index')}}" name="save" class="btn btn-success btn-lg">Continuar <i class="fas fa-forward"></i></a>
+                                    @endif 
+
+                                </div>
+                            </div>
+                           
+
+                            
                         </div>
                     </div>
-                </div>
-            </div>
+
+                    @foreach ($restaurants as $index => $restaurant)
+                        <livewire:configuration.restaurant :index="++$index" :restaurant="$restaurant" key="{{now()}}" />
+                    @endforeach
 
         </div>
         <div class="col-lg-4 col-md-4 margin-tb">
@@ -145,36 +72,46 @@
         </div>
     </div>
 </div>
-<!-- Máscaras nos campos -->
-<script src="{{ asset('node_modules/cleave.js/cleave.min.js') }}"></script>
+@push('scripts')
+    <!-- Máscaras nos campos -->
+    <script src="{{ asset('node_modules/cleave.js/cleave.min.js') }}"></script>
 
-<script>
-    $(document).ready(function() {
+    <script>
 
-        //Máscaras dos inputs
-        new Cleave('.cnpj', {
-            numericOnly: true,
-            delimiters: ['.', '.', '/', '-'],
-            blocks: [2, 3, 3, 4, 2]
+        function mountPageComponents(){
+
+            $('.cnpj').toArray().forEach(function (field) {
+                new Cleave(field, {
+                    numericOnly: true,
+                    delimiters: ['.', '.', '/', '-'],
+                    blocks: [2, 3, 3, 4, 2]
+                });
+            });
+
+            $('.cep').toArray().forEach(function (field) {
+                new Cleave(field, {
+                    numericOnly: true,
+                    delimiters: ['.', '-'],
+                    blocks: [2, 3, 3]
+                });
+            }); 
+
+            $('.phone').toArray().forEach(function (field) {
+                new Cleave(field, {
+                    numericOnly: true,
+                    blocks: [0, 2, 0, 5, 4],
+                    delimiters: ["(", ")", " ", "-"]
+                });
+            });   
+        }
+
+        $(document).ready(function() {         
+            mountPageComponents();
         });
 
-        new Cleave('.cep', {
-            numericOnly: true,
-            delimiters: ['.', '-'],
-            blocks: [2, 3, 3]
-        });
-
-        /**
-        new Cleave('.site', {
-            prefix: 'http://',
-        });    
-        */
-
-        new Cleave('.phone', {
-            numericOnly: true,
-            blocks: [0, 2, 0, 5, 4],
-            delimiters: ["(", ")", " ", "-"]
-        });
-    });
-
-</script>
+        Livewire.on('mountPageComponents', function(){
+            mountPageComponents();
+            $(".name")[0].focus(); //Foco no primeiro campo
+        })
+    </script>
+@endpush

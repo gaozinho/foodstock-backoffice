@@ -12,7 +12,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12 mx-0 text-center">
-                                <ul id="progressbar">
+                                <ul id="progressbar" class="pl-0">
                                     <li {!!$wizardStep == 1 ? 'class="active"' : ''!!} id="step1"><strong>Sobre seu delivery</strong></li>
                                     <li {!!$wizardStep == 2 ? 'class="active"' : ''!!} id="step2"><strong>Integrações</strong></li>
                                     <li {!!$wizardStep == 3 ? 'class="active"' : ''!!} id="step3"><strong>Processo de produção</strong></li>

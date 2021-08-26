@@ -8,6 +8,7 @@ use App\Models\ProductionMovement;
 use App\Models\ProductionLine;
 use App\Models\ProductionLineVersion;
 use App\Models\Product;
+use App\Models\Restaurant;
 use App\Actions\ProductionLine\GenerateOrderJson;
 use App\Actions\Product\ProcessOrderProducts;
 
@@ -60,9 +61,11 @@ class StartProductionProccess
     }
 
     protected function createFirstMovement(Order $order, OrderSummary $orderSummary){
+        $restaurant = Restaurant::findOrFail($order->restaurant_id);
+
         $productionLine = $this->firstStep($order->restaurant_id);
         $productionLineNextStep = $this->nextStep($order->restaurant_id, $productionLine->step);
-        $productionLineVersion = ProductionLineVersion::where("restaurant_id", $order->restaurant_id)->where("is_active", 1)->firstOrFail();
+        $productionLineVersion = ProductionLineVersion::where("user_id", $restaurant->user_id)->where("is_active", 1)->firstOrFail();
         
         return ProductionMovement::firstOrCreate([
                 'order_id' => $order->id, 
@@ -131,14 +134,16 @@ class StartProductionProccess
         ->min("products.initial_step");
     }
 
-    protected function firstStep($restaurant_id){
-        return ProductionLine::where("restaurant_id", $restaurant_id)
+    protected function firstStep($restaurant_id){ 
+        $restaurant = Restaurant::findOrFail($restaurant_id);
+        return ProductionLine::where("user_id", $restaurant->user_id)
         ->where("is_active", 1)
         ->where("step", 1)
         ->firstOrFail();
     }
 
     protected function nextStep($restaurant_id, $current_step){
-        return ProductionLine::where("restaurant_id", $restaurant_id)->where("is_active", 1)->where("step", ($current_step + 1))->first();
+        $restaurant = Restaurant::findOrFail($restaurant_id);
+        return ProductionLine::where("user_id", $restaurant->user_id)->where("is_active", 1)->where("step", ($current_step + 1))->first();
     }
 }

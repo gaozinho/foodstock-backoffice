@@ -11,7 +11,7 @@
 
         <div class="card-body py-3 px-3">
             <div class="order-card">
-                <h1><span class="badge badge-secondary w-100">{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</span></h1>
+                <h1><span class="badge badge-secondary w-100" {!!$cardColor ?? 'style="background-color: ' . $stepColors[$orderSummary->current_step_number] . '"' !!}>{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</span></h1>
                 <div style="line-height: 1" class="row">
                     <div class="col-sm-12">
                         <small>
@@ -20,9 +20,6 @@
                             @else
                                 {{\Carbon\Carbon::parse($orderSummary->created_at)->diffForhumans()}}
                             @endif
-
-                        
-                        
                         {!!$babelized->brokerName() ? $babelized->brokerName() . ' &bull;' : ''!!} {{$orderSummary->restaurant}} <!-- {{$babelized->orderType}} --></small>
                     </div>
                     <div class="col-sm-12 col-md-6">

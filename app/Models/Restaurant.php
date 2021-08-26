@@ -37,7 +37,7 @@ class Restaurant extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'name', 'address', 'complement', 'cep', 'cnpj', 'site', 'email', 'phone', 'created_at', 'updated_at'];
+    protected $fillable = ['enabled', 'user_id', 'name', 'address', 'complement', 'cep', 'cnpj', 'site', 'email', 'phone', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

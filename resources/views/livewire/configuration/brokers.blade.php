@@ -1,9 +1,10 @@
 <div>
 
-    @foreach($brokers as $broker)
-        @livewire('configuration.' . $broker->code)
-        <hr />
+    @foreach ($restaurants as $index => $restaurant)
+        <livewire:configuration.broker.restaurant :index="++$index" :restaurant="$restaurant" key="{{now()}}" />
     @endforeach
+
+
 
     @if($wizard)
     <hr />

@@ -52,13 +52,24 @@ class NumericKeyboard extends Component
 
     private function prepareOrderSummary($order_number){
         //$orderSummary = OrderSummary::findOrFail($order_summary_id);
-
         try{
         $orderSummary =  OrderSummary::where("friendly_number", $order_number)
             ->whereIn("restaurant_id", $this->restaurantIds)
             ->where("finalized", 0)
             ->firstOrFail();
         }catch(\Exception $e){
+            $order_number = 'Pedido ' . implode(",", $order_number) . ' não encontrado.';
+            $this->alert('error', ($order_number), [
+                'position' =>  'top-end', 
+                'timer' =>  5000,  
+                'toast' =>  true, 
+                'text' =>  '', 
+                'confirmButtonText' =>  'Ok', 
+                'cancelButtonText' =>  'Cancel', 
+                'showCancelButton' =>  false, 
+                'showConfirmButton' =>  false, 
+            ]);
+
             return false;
         }
 

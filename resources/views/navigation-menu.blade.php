@@ -125,6 +125,9 @@
     <div class="container">
         <div class="row">
             <div class="col my-1">
+                @php
+                    $names = [];
+                @endphp            
                 @foreach($restaurants as $restaurant)
                     @php
                         $names[] = $restaurant->name;

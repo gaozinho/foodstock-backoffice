@@ -44,7 +44,7 @@ class IntegrationController extends BaseController
             $this->startOneOrder($order);
             return $this->sendResponse(new IfoodOrderResource($order), 'IfoodOrder saved successfully.');
         }catch(\Exception $e){
-            return $this->sendResponse(["success" => false, "order_id" => $order->id], 'Cant save IfoodOrder.');
+            return $this->sendResponse(["success" => false, "order_id" => $order->id], 'Cant save IfoodOrder.' . $e->getMessage());
         }        
     }
 

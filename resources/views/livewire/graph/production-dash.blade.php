@@ -20,7 +20,7 @@
                         elseif($productionMovement->role_id == 4) $icon = "motorcycle";
                         elseif($productionMovement->role_id == 5) $icon = "utensils";
                     @endphp
-                <div class="col-md-2">
+                <div class="col-md-2 col-6">
                     <a href="{{ route('panels.production-line-panel.index', ['role_name' => $productionMovement->role]) }}">
                         <div class="card-counter primary" style="background-color: {{$productionMovement->color}}">
                             <i class="fa fa-{{$icon}}"></i>

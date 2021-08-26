@@ -14,6 +14,8 @@ use App\Actions\ProductionLine\RecoverUserRestaurant;
 class Ifood extends Component
 {
     public IfoodBroker $ifoodBroker;
+    public $restaurant;
+    public $opened = false;
 
     protected $listeners = ['copied' => 'copiedAlert', 'regenerateCode' => 'generateIfoodCode'];
 
@@ -44,8 +46,8 @@ class Ifood extends Component
         
         try{
             //MVP 1 - Um ifoodBrokere por usuário
-            $restaurant = $this->userRestaurant();
-            $this->ifoodBroker = IfoodBroker::where("restaurant_id", "=", $restaurant->id)
+            //$restaurant = $this->userRestaurant();
+            $this->ifoodBroker = IfoodBroker::where("restaurant_id", "=", $this->restaurant->id)
                 ->firstOrNew();
         }catch(\Exception $exception){
             if(env('APP_DEBUG')) throw $exception;
@@ -79,8 +81,8 @@ class Ifood extends Component
     public function storeIfood($sendMessage = true)
     {
         try {	
-            $restaurant = $this->userRestaurant();
-            $this->ifoodBroker->restaurant_id = $restaurant->id;
+            //$restaurant = $this->userRestaurant();
+            $this->ifoodBroker->restaurant_id = $this->restaurant->id;
             $this->ifoodBroker->save();
 			if($sendMessage) $this->simpleAlert('success', 'Integração IFOOD registrada com sucesso.');
         } catch (Exception $exception) {
@@ -126,10 +128,11 @@ class Ifood extends Component
             $this->simpleAlert('success', 'Código gerado com sucesso.');
             $this->dispatchBrowserEvent('reloadCountdown', ['time' => $this->ifoodBroker->usercode_expires]);
         }
+        $this->opened = true;
     }
 
     public function validateIfoodCode(){
-        $restaurant = $this->userRestaurant();
+        //$restaurant = $this->userRestaurant();
         $IfoodIntegration = new IfoodIntegrationDistributed();
         try{
             $IfoodIntegration->getToken($this->ifoodBroker->authorizationCode, $this->ifoodBroker->id);
@@ -145,7 +148,7 @@ class Ifood extends Component
             }
 
             if($success){
-                $this->ifoodBroker = IfoodBroker::where("enabled", "=", 1)->where("restaurant_id", "=", $restaurant->id)->firstOrFail();
+                $this->ifoodBroker = IfoodBroker::where("enabled", "=", 1)->where("restaurant_id", "=", $this->restaurant->id)->firstOrFail();
                 $this->simpleAlert('success', 'Parabéns! Conseguimos integrar o FoodStock com o seu delivery.');
             }else{
                 $this->simpleAlert('error', 'Não é possível prosseguir. Este restaurante do ifood já está vinculado a outro usuário.');
@@ -156,6 +159,7 @@ class Ifood extends Component
             else if($e->getCode() == 500) $this->simpleAlert('error', 'O código informado é inválido. Verifique o formato infomado. Ex: A01A-AAAA');
             else $this->simpleAlert('error', 'Ocorreu um erro desconhecido. Tente novamente mais tarde.');
         }
+        $this->opened = true;
     }
 
     public function copiedAlert($code)

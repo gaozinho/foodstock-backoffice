@@ -11,10 +11,12 @@ use App\Actions\ProductionLine\RecoverUserRestaurant;
 class Brokers extends BaseConfigurationComponent
 {
     public $brokers;
+    public $restaurants;
 
     public function mount()
     {
         $this->wizardStep = 2;
+        $this->loadData();
     }    
 
     public function render()
@@ -31,4 +33,9 @@ class Brokers extends BaseConfigurationComponent
 
 
     } 
+
+    public function loadData(){
+        $this->restaurants =  (new RecoverUserRestaurant())->recoverAll(auth()->user()->id);
+        
+    }    
 }

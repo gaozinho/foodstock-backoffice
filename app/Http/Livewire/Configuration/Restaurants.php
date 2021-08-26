@@ -4,28 +4,18 @@ namespace App\Http\Livewire\Configuration;
 
 use Livewire\Component;
 use App\Models\Restaurant;
+use App\Models\IfoodBroker;
 use App\Http\Livewire\Configuration\BaseConfigurationComponent;
 use App\Actions\ProductionLine\RecoverUserRestaurant;
+use Illuminate\Database\Eloquent\Collection;
 
 class Restaurants extends BaseConfigurationComponent
 {
 
-    public Restaurant $restaurant;
-
-    protected $rules = [
-        'restaurant.name' => 'required|string|min:1|max:255',
-        'restaurant.address' => 'max:255|required',
-        'restaurant.cep' => 'formato_cep|size:10|required',
-        'restaurant.cnpj' => 'cnpj|size:18|nullable',
-        'restaurant.complement' => 'max:255|nullable',
-        'restaurant.site' => 'url|max:500|nullable',
-        'restaurant.email' => 'email|max:255|required',
-        'restaurant.phone' => 'min:14|max:15|required',
-    ];
-
-    protected $messages = [
-        'restaurant.cnpj.cnpj' => 'O CNPJ informado é inválido.'
-    ]; 
+    public $restaurants;
+    public $restaurantsCount = 0;
+    public $id_restaurant;
+    protected $listeners = ['loadData', 'disable', 'confirmDestroy'];
 
     public function mount()
     {
@@ -33,9 +23,15 @@ class Restaurants extends BaseConfigurationComponent
         
         $this->wizardStep = 1;
         //MVP 1 - Um restaurante por usuário
-        $this->restaurant =  (new RecoverUserRestaurant())->recoverOrNew(auth()->user()->id);
+        $this->loadData();
         //$this->restaurant = Restaurant::where("user_id", "=", auth()->user()->id)->firstOrNew();
-    }    
+    }
+
+    public function loadData(){
+        $this->restaurants =  (new RecoverUserRestaurant())->recoverAll(auth()->user()->id);
+        $this->restaurantsCount = count($this->restaurants);
+        
+    }
 
     public function render()
     {
@@ -45,38 +41,40 @@ class Restaurants extends BaseConfigurationComponent
         return view($viewName, [])->layout('layouts.app', ['header' => 'Sobre seu delivery']);
     }
 
-    public function save()
-    {
-        $this->validate();
-		if(intval($this->restaurant->id) > 0){
-			$this->update();
-		}else{
-			$this->store();
-		}
-
-        if($this->wizard) return redirect()->route('wizard.broker.index');
-	}
-
-    public function store()
-    {
-        try {	
-            $this->restaurant->user_id = auth()->user()->id;
-            $this->restaurant->save();
-            $this->simpleAlert('success', 'Delivery atualizado com sucesso.');
-        } catch (Exception $exception) {
-            if(env('APP_DEBUG')) throw $exception;
-            $this->simpleAlert('error', 'Ops... ocorreu em erro ao tentar salvar o Restaurant.');
-        }
+    public function createRestaurant(){
+        $restaurants =  (new RecoverUserRestaurant())->recoverAll(auth()->user()->id);
+        $this->restaurantsCount = count($restaurants);
+        $restaurants->prepend((new Restaurant())->setConnection('mysql'));
+        $this->restaurants = $restaurants;
+        $this->emit('mountPageComponents');
     }
 
-    public function update()
-    {
-        try {
-            $this->restaurant->save();
-			$this->simpleAlert('success', 'Delivery atualizado com sucesso.');
-        } catch (Exception $exception) {
-            if(env('APP_DEBUG')) throw $exception;
-            $this->simpleAlert('error', 'Ops... ocorreu em erro ao tentar salvar o Restaurant.');
+    public function disable(){
+        try{
+            $restaurant = Restaurant::findOrFail($this->id_restaurant);
+            $restaurant->enabled = 0;
+            $restaurant->save();
+            IfoodBroker::where("restaurant_id", $restaurant->id)->delete();
+            $this->simpleAlert('success', 'Loja excluída com sucesso.');
+            $this->loadData();
+        }catch(\Exception $e){
+            $this->simpleAlert('error', 'Não conseguimos escluir a loja.');
         }
+
     }
+
+    public function confirmDestroy($id_restaurant)
+    {
+        $this->id_restaurant = $id_restaurant;
+        $this->confirm('Deseja excluir ' . Restaurant::findOrFail($id_restaurant)->name . '?', [
+            'text' => 'Esta operação não pode ser desfeita. Todos os pedidos deste restaurante serão excluídos.',
+            'toast' => false,
+            'position' => 'center',
+            'showConfirmButton' => true,
+            'cancelButtonText' => 'Não',
+            'confirmButtonText' => 'Sim',
+            'onConfirmed' => 'disable'
+        ]);
+    }
+
 }
