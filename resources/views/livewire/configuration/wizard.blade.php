@@ -18,7 +18,8 @@
                                     <li {!!$wizardStep == 3 ? 'class="active"' : ''!!} id="step3"><strong>Processo de produção</strong></li>
                                 </ul>
                         </div>
-                        <div class="col-md-12 px-3">
+                    </div>
+                    <div class="mx-4">
                             @if($wizardStep == 1)
                                 @include('livewire.configuration.restaurants')
                             @elseif($wizardStep == 2)
@@ -26,7 +27,6 @@
                             @elseif($wizardStep == 3)
                                 @include('livewire.configuration.production-lines')
                             @endif
-                        </div>
                     </div>
                 </div>
             </div>

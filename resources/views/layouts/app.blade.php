@@ -43,16 +43,17 @@
         @livewire('navigation-menu')
 
         @if(isset($header))
-        <!-- Page Heading -->
+        <!-- Page Heading 
         <header class="d-flex py-3 bg-white shadow-sm border-bottom full-screen mb-4">
             <div class="container">
                 <span class="h3 text-muted">{{ $header }}</span>
             </div>
         </header>
+        -->
         @endif
 
         <!-- Page Content -->
-        <main id="main-container" class="container mb-4">
+        <main id="main-container" class="container mb-4 mt-4">
             {{ $slot }}
         </main>
     </body>
