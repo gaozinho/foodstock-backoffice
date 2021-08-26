@@ -41,7 +41,12 @@ class Teams extends Component
         $this->restaurant =  (new RecoverUserRestaurant())->recoverOrNew(auth()->user()->id);
         //$this->restaurant = Restaurant::where("user_id", "=", auth()->user()->id)->firstOrNew();
         $this->user = new User();
-        $this->roles = Role::where("guard_name", "production-line")->get();
+        $this->roles = Role::join("production_lines", "production_lines.role_id", "=", "roles.id")
+            ->where("production_lines.user_id", auth()->user()->id)
+            ->where("production_lines.is_active", 1)
+            ->where("roles.guard_name", "production-line")
+            ->select("roles.id", "production_lines.name")
+            ->get();
         $this->restaurantUsers = $this->restaurant->usersPivot()->get();
     }    
 

@@ -13,13 +13,11 @@
                             <p class="mb-2" style="line-height: 1.2">O foodStock buscará os pedidos no marketplaces e colocará nos paineis para que você acompanhe e movimente a produção.</p>
                         </div>
                         @if ($wizard)
-                            <div class="col-auto">
-                                <div class="form-group text-right mx-4">
+                            <div class="col-md-4 align-self-end text-right">
                                     <button wire:click="continue('wizard.production-line.index')" type="button" name="save" value="ok"
                                         class="btn btn-success btn-lg"> <i wire:loading wire:target="continue" class="fas fa-cog fa-spin"></i>
                                         Continuar <i
                                         class="fas fa-forward"></i></button>
-                                </div>
                             </div>
                         @endif 
                     </div>

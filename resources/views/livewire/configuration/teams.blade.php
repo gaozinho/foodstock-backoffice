@@ -2,10 +2,24 @@
 
     <div class="row">
         <div class="col-lg-8 col-md-8 margin-tb">
-            <div class="card">
+
+            <div class="card border mb-4">
+                <div class="card-body">
+ 
+
+                    <div class="row justify-content-between">
+                        <div class="col-md-12 align-self-end">
+                            <span class="h3">Equipe de trabalho</span>
+                            <p class="mb-2" style="line-height: 1.2">Além de você, configure outras pessoas que poderão interagir com o processo de produção de suas lojas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border">
                 <div class="card-body">
                     <h5>
-                        Cadastro de integrante da equipe
+                        Dados do integrante da equipe
                     </h5>                                    
                     <div class="row">
                         <div class="col-lg-12 margin-tb">
@@ -57,8 +71,11 @@
                                 <div class="col-xs-12 col-sm-12 col-md-12">
                                     <strong>Qual é o papel deste integrante? *</strong>
                                     <div class="row mt-2 loading">
+                                        <div class="col-12 text-muted mb-2">
+                                            <small>Os papéis abaixo são aqueles que você definiu em seu <a href="{{route('configuration.production-line.index')}}">Processo de Produção</a>.</small>
+                                        </div>
                                         @foreach($roles as $role)
-                                        <div class="col-xs-12 col-sm-6 col-md-6">
+                                        <div class="col-xs-12 col-sm-3 col-md-3">
                                             <div class="form-group">
                                                 <div class="pretty p-switch p-fill">
                                                     <input onClick='$(".loading").LoadingOverlay("show")' name="role_id[{{ $role->id }}]" type="checkbox" 
@@ -66,7 +83,7 @@
                                                         value="{{ $role->id }}"
                                                     />
                                                     <div class="state">
-                                                        <label>{{$role->description}}</label>
+                                                        <label>{{$role->name}}</label>
                                                     </div>
                                                 </div>
                                             </div>

@@ -19,7 +19,7 @@
                                 </ul>
                         </div>
                     </div>
-                    <div class="mx-4">
+                    <div class="mx-4 mb-4">
                             @if($wizardStep == 1)
                                 @include('livewire.configuration.restaurants')
                             @elseif($wizardStep == 2)

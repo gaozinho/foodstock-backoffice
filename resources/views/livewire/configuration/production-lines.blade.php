@@ -6,7 +6,28 @@
 
         <div class="row">
             <div class="col-lg-8 col-md-12 margin-tb">
-                <div class="card">
+
+            <div class="card border mb-4">
+                <div class="card-body">
+
+                    <div class="row justify-content-between">
+                        <div class="col-md-8 align-self-end">
+                            <span class="h3">Seu processo de produção   </span>
+                            <p class="mb-2" style="line-height: 1.2">Customize seu processo de produção. Cada etapa aqui definida representa um item no menu "Acompanhe".</p>
+                        </div>
+                        @if ($wizard)
+                            <div class="col-md-4 align-self-end text-right">
+                                    <button wire:click="continue('wizard.success.index')" type="button" name="save" value="ok"
+                                        class="btn btn-success btn-lg"> <i wire:loading wire:target="continue" class="fas fa-cog fa-spin"></i>
+                                        Continuar <i
+                                        class="fas fa-forward"></i></button>
+                            </div>
+                        @endif                         
+                    </div>
+                </div>
+            </div>
+
+                <div class="card border">
                     <div class="card-body">
                         <div class="row justify-content-between mb-2">
 
@@ -188,12 +209,8 @@
                 <div class="card">
                     <div class="card-body">
                         <h4>
-                            Configure seu processo de produção
+                            Entenda como funciona
                         </h4>
-
-                        <p>
-                            O processo é dividido em etapas. Cada etapa tem um item no menu "Acompanhe".
-                        </p>
                         <p>
                             Funciona assim: projetamos o foodStock para trabalhar com painéis e cada etapa é um painel.
                             Por exemplo: o painel da cozinha recebe os pedidos novos e, assim que o pedido é preparado,
