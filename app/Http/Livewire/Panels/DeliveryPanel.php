@@ -34,7 +34,7 @@ class DeliveryPanel extends Component
 
         $this->qrCodeUrl = route('panels.public-delivery-panel.index', (new GenerateTrackingOrdersQr())->encode($userId));
 
-        $this->lastStepProductionLine = ProductionLine::whereIn("restaurant_id", $this->restaurantIds)
+        $this->lastStepProductionLine = ProductionLine::where("user_id", auth()->user()->id)
             ->where("is_active", 1)
             ->where("production_line_id", null)
             ->orderBy("step", "desc")

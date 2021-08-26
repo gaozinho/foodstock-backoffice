@@ -28,7 +28,7 @@
     @if(!is_object($lastStepProductionLine))
     <div class="row">
         <div class="col">
-            <div class="alert alert-danger">
+            <div class="alert alert-danger mt-4">
 
                         <i class="fas fa-exclamation-circle"></i> Atenção! Você ainda não configurou o seu processo de produção. 
                         <br />Para que os pedidos apareçam aqui, é necessário configurar pelo menos uma <b>integração</b> e também configurar o seu <b>processo de produção</b>.

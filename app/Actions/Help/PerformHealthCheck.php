@@ -43,11 +43,13 @@ class PerformHealthCheck
             ];
         }
 
-        $success = false;
-
-        foreach($this->brokersOk as $ok){
-            if($ok) return true;
+        foreach($this->brokersOk as $restaurantName => $broker){
+            foreach($broker as $success){
+                if(!$success) return false;
+            }
         }
+
+        return true;
     }
 
     public function proccessOk(){
@@ -73,10 +75,9 @@ class PerformHealthCheck
             }
 
         }catch(\Exception $e){
-
-            $merchantsInfo["IFOOD"][""] = [
+            $merchantsInfo[""][""] = [
                 "available" => false, 
-                "reason" => $e->getMessage()
+                "reason" => "Nenhuma integração configurada"
             ];
         }
 

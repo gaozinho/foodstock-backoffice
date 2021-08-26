@@ -51,14 +51,19 @@
                                     <h4 class="step-title">Integrações</h4>
                                 </a>
                                 <small>
-                                    @foreach ($brokersOk as $key => $ok)
-                                        @if ($ok)
-                                            <i class="fas fa-lg fa-check text-success"></i>
-                                        @else
-                                            <i class="fas fa-lg fa-times text-danger"></i>
-                                        @endif
+                                    @foreach ($brokersOk as $restaurantName => $broker)
+                                        {{$restaurantName}} ( 
 
-                                        {{ $key }}
+                                            @foreach($broker as $brokerName => $success)
+
+                                                @if ($success)
+                                                    <i class="fas fa-lg fa-check text-success"></i>
+                                                @else
+                                                    <i class="fas fa-lg fa-times text-danger"></i> 
+                                                @endif
+                                            {{$brokerName}}
+                                            @endforeach
+                                        ) 
                                     @endforeach
                                 </small>
                             </div>
