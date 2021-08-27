@@ -44,7 +44,7 @@ class RecoverUserRestaurant
         }
 
         if($user->restaurant_member == 1){
-            return $user->restaurants()->where("enabled", 1)->select("id")->get();
+            return $user->restaurants()->where("enabled", 1)->select("id")->get()->pluck("id");
         }
     }        
 

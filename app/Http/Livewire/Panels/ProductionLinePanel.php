@@ -45,7 +45,8 @@ class ProductionLinePanel extends Component
     public function mount($role_name)
     {
 
-        $userId = auth()->user()->id;
+        //Tenta membro de restaurante e depois o dono
+        $userId = auth()->user()->user_id ?? auth()->user()->id;
 
         if(!(auth()->user()->hasRole("admin") || auth()->user()->hasRole($role_name))){
             return redirect()->to('/dashboard');
@@ -66,6 +67,7 @@ class ProductionLinePanel extends Component
 
         //$this->restaurant = Restaurant::where("user_id", "=", auth()->user()->id)->firstOrFail();
         $recoveryOrders = new RecoveryOrders();
+        
         $this->productionLine = $recoveryOrders->getCurrentProductionLineByRoleName($userId, $role_name);
 
         $this->stepColors = $recoveryOrders->getProductionLineColors($userId);
@@ -74,7 +76,8 @@ class ProductionLinePanel extends Component
     }    
 
     public function loadData(){
-        $userId = auth()->user()->id;
+        $userId = auth()->user()->user_id ?? auth()->user()->id;
+        
         $restaurantIds = (new RecoverUserRestaurant())->recoverAllIds($userId)->toArray();
         $recoveryOrders = new RecoveryOrders();
         $this->orderSummaries = $recoveryOrders->recoveryByRoleName($restaurantIds, $userId, $this->role_name);

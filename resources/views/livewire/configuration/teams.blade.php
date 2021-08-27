@@ -53,6 +53,53 @@
                                     </div>
                                 </div>   
                                 
+                                <div class="loading">
+                                    <div class="col-xs-12 col-sm-12 col-md-12">
+                                        <strong>Qual é o papel deste integrante? *</strong>
+                                        <div class="row mt-2">
+                                            <div class="col-12 text-muted mb-2">
+                                                <small>Os papéis abaixo são aqueles que você definiu em seu <a href="{{route('configuration.production-line.index')}}">Processo de Produção</a>.</small>
+                                            </div>
+                                            @foreach($roles as $role)
+                                            <div class="col-xs-12 col-sm-3 col-md-3">
+                                                <div class="form-group">
+                                                    <div class="pretty p-switch p-fill">
+                                                        <input onClick='$(".loading").LoadingOverlay("show")' name="role_id[{{ $role->id }}]" type="checkbox" 
+                                                            wire:model="selectedRoles.{{ $role->id }}" 
+                                                            value="{{ $role->id }}"
+                                                        />
+                                                        <div class="state">
+                                                            <label>{{$role->name}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-12 col-sm-12 col-md-12">
+                                        <strong>Este integrante terá acesso a qual loja?</strong>
+                                        <div class="row mt-2">
+                                            @foreach($restaurants as $restaurant)
+                                            <div class="col-xs-12 col-sm-3 col-md-3">
+                                                <div class="form-group">
+                                                    <div class="pretty p-switch p-fill">
+                                                        <input onClick='$(".loading").LoadingOverlay("show")' name="restaurant_id[{{ $restaurant->id }}]" type="checkbox" 
+                                                            wire:model="selectedRestaurants.{{ $restaurant->id }}" 
+                                                            value="{{ $restaurant->id }}"
+                                                        />
+                                                        <div class="state">
+                                                            <label>{{$restaurant->name}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="col-xs-12 col-sm-6 col-md-6">
                                     <div class="form-group">
                                         <strong>Senha *</strong>
@@ -67,30 +114,8 @@
                                         <strong>Confirmar senha *</strong>
                                         {!! Form::text('password_confirmation', null, ['wire:model.defer' => 'password_confirmation', 'class' => 'form-control']) !!}
                                     </div>
-                                </div>
-                                <div class="col-xs-12 col-sm-12 col-md-12">
-                                    <strong>Qual é o papel deste integrante? *</strong>
-                                    <div class="row mt-2 loading">
-                                        <div class="col-12 text-muted mb-2">
-                                            <small>Os papéis abaixo são aqueles que você definiu em seu <a href="{{route('configuration.production-line.index')}}">Processo de Produção</a>.</small>
-                                        </div>
-                                        @foreach($roles as $role)
-                                        <div class="col-xs-12 col-sm-3 col-md-3">
-                                            <div class="form-group">
-                                                <div class="pretty p-switch p-fill">
-                                                    <input onClick='$(".loading").LoadingOverlay("show")' name="role_id[{{ $role->id }}]" type="checkbox" 
-                                                        wire:model="selectedRoles.{{ $role->id }}" 
-                                                        value="{{ $role->id }}"
-                                                    />
-                                                    <div class="state">
-                                                        <label>{{$role->name}}</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        @endforeach
-                                    </div>
-                                </div>
+                                </div>                                
+
                             </div>    
                             <div class="form-group text-right">
                                 @if(intval($user->id) > 0)
@@ -139,6 +164,11 @@
                             <a href="#" wire:click="loadUser({{$restaurantUser->id}})" class="list-group-item list-group-item-action">
                                 <i wire:loading wire:target="loadUser({{$restaurantUser->id}})" class="fas fa-cog fa-spin"></i> {{$restaurantUser->name}}
                                 <div>
+
+                                @foreach($restaurantUser->restaurants()->get() as $restaurant)
+                                    <span class="badge badge-warning">{{$restaurant->name}}</span> 
+                                @endforeach
+                                <br />
                                 @foreach($restaurantUser->roles as $role)
                                     <span class="badge badge-danger">{{$role->description}}</span> 
                                 @endforeach

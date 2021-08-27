@@ -39,6 +39,7 @@ class RecoveryOrders
     }    
 
     public function recoveryByRoleName($restaurant_ids, $user_id, $role_name){
+
         $currentProductionLines = $this->findCurrentProductionLinesByRoleName($user_id, $role_name);
 
         return OrderSummary::join("production_movements", "production_movements.order_summary_id", "order_summaries.id")
