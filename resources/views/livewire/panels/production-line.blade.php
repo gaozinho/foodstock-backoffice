@@ -4,8 +4,6 @@
             <h2 class="mt-3 mb-0 pb-0">{{ $productionLine->name }} 
                 <span class="badge badge-secondary">{{ $total_orders }}</span> 
             </h2>
-
-            
         </div>
         <div class="col-auto">
             <span class="legend mt-0 pt-0">Legenda:
@@ -21,8 +19,6 @@
                     <span class="badge" style="color: #fff; background-color: rgb(165, 162, 0)">Pausado</span> 
                 @endif
                 <span class="badge" style="color: #fff; background-color: #ff8e09">Cancelado</span> 
-                
-
                 <span class="badge"><i class="fas fa-lg fa-clock"></i> Pedido agendado</span> 
                 @role('admin')
                 <span class="badge"><a onclick='$(".loading").LoadingOverlay("show", {zIndex : 1050})' style="text-decoration: none" href="javascript:;" wire:click="confirmFinishOrders"><i wire:loading wire:target="confirmFinishOrders" class="fas fa-cog fa-spin"></i> Finalizar todos os pedidos</a></span> 
@@ -34,7 +30,6 @@
         <div class="col">
             <div class="loading">
                 <div>
-
                     @if($total_orders == 0)
                         <hr />
                         <div class="text-center mt-5">
@@ -42,22 +37,18 @@
                                 <h3>Nenhum pedido nesta etapa.</h3>
                         </div>
                     @endif
-
                     <div class="row">
                         @foreach ($orderSummariesPreviousStep as $orderSummary)
                             @php
-                                $babelized = new App\Foodstock\Babel\OrderBabelized($orderSummary->order_json);
-                            @endphp
-
-                            @php
                                 $clickAction = "";
-                                if($productionLine->clickable == 1 && $productionLine->next_on_click == 1){
+                                if($productionLine->next_on_click == 1){
                                     $clickAction = 'wire:click="moveForwardFromCurrentStep(' . $orderSummary->id . ')"';
-                                }else if($productionLine->clickable == 1){
+                                }else{
                                     $clickAction = 'wire:click="orderDetailAndMoveForward(' . $orderSummary->id . ')"';
                                 }
+
+                                $babelized = new App\Foodstock\Babel\OrderBabelized($orderSummary->order_json);
                             @endphp
-                            
                             @include('livewire.panels.card-include')    
                         @endforeach
 
@@ -73,8 +64,7 @@
                                 }elseif($productionLine->color != '' && isset($stepColors[$orderSummary->current_step_number])){
                                     $cardColor = 'style="background-color: ' . $stepColors[$orderSummary->current_step_number] . '"';
                                 }
-                            @endphp
-                            @php
+
                                 $babelized = new App\Foodstock\Babel\OrderBabelized($orderSummary->order_json);
                             @endphp                            
                             

@@ -18,21 +18,21 @@ use App\Enums\OrderType;
 class ForwardProductionProccess
 {
     public function forward($orderNumber, $user_id){
+        
         $order = null;
         try{
             $order = Order::findOrFail($orderNumber);
             $productionMovement = $this->getCurrentMovementByOrderId($order->id);
+            
             if(!is_object($productionMovement)) return false;
             $productionMovement->step_finished = 1;
             $productionMovement->finished_at = date("Y-m-d H:i:s");
             $productionMovement->save();
 
-            /*
             $currentProductionLine = ProductionLine::findOrFail($productionMovement->production_line_id);
             if($currentProductionLine->ready == 1){ //Avisa que prato está pronto
-                //$this->ready($order->id); Retiradoa pedido do ifood
+                $this->ready($order->id); //Retiradoa pedido do ifood
             }
-            */
 
             if(intval($productionMovement->next_step_id) == 0){ //Finaliza processo caso não exista próximo passo
                 $this->finishProcess($order->id);
@@ -40,7 +40,7 @@ class ForwardProductionProccess
             }
             
             $productionLine = ProductionLine::findOrFail($productionMovement->next_step_id);
-            $productionLineNextStep = $this->nextStep($order->restaurant_id, $productionLine->step);
+            $productionLineNextStep = $this->nextStep($user_id, $productionLine->step);
 
             return ProductionMovement::firstOrCreate([
                     'order_id' => $order->id, 
@@ -55,7 +55,7 @@ class ForwardProductionProccess
                     'order_id' => $order->id,
                     'next_step_id'=> $productionLineNextStep ? $productionLineNextStep->id : null,
                     'production_line_version_id' => $productionMovement->production_line_version_id,
-                    'user_id' => $user_id
+                    'user_id' => auth()->user()->id
             ]);
 
             return true;
@@ -74,7 +74,7 @@ class ForwardProductionProccess
         
         $orderSummary = OrderSummary::where([
             'order_id' => $orderId
-        ])->firstOrFail();
+        ])->firstOrFail(); 
 
         $babelized = new OrderBabelized($orderSummary->order_json);
 

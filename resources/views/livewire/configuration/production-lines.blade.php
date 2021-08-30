@@ -89,7 +89,7 @@
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="row">
-                                                        <!--
+
                                                             <div class="col-md-auto">
                                                                 <div class="pretty p-switch p-fill">
                                                                     <input name="clickable" class="clickable"
@@ -97,11 +97,10 @@
                                                                         value="{{ $productionItem->step }}"
                                                                         {{ old('clickable', optional($productionItem)->clickable) == '1' ? 'checked' : '' }} />
                                                                     <div class="state">
-                                                                        <label>Clicável</label>
+                                                                        <label>Exibir detalhes do pedido no cartão</label>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        -->
 
                                                             <div class="col-lg-6 col-md-6">
                                                                 <div class="pretty p-switch p-fill">

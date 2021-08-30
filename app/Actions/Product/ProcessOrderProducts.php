@@ -42,9 +42,12 @@ class ProcessOrderProducts
         }catch(\Exception $e1){
             try{
                 //Encontrar pelo nome
-                $product = Product::where("name", $item->name)->where("restaurant_id", $orderSummary->restaurant_id)->firstOrFail();
-                //Criar um external code
-                $product->external_code = $this->generateExternalCode($product->id);
+                $product = Product::where("name", $item->name)
+                    ->where("deleted", 0)
+                    ->where("restaurant_id", $orderSummary->restaurant_id)
+                    ->firstOrFail();
+                //Criar um external code, se não fornecido
+                $product->external_code = isset($item->externalCode) && $item->externalCode != "" ? $item->externalCode : $this->generateExternalCode($product->id);
                 $product->current_stock = $product->current_stock - intval($item->quantity);
                 $product->enabled = 1;
                 $product->deleted = 0;
@@ -68,7 +71,7 @@ class ProcessOrderProducts
                     'initial_step' => 0,
                     'parent_id' => $parent_id
                 ]);
-                $product->external_code = $this->generateExternalCode($product->id);
+                $product->external_code = isset($item->externalCode) && $item->externalCode != "" ? $item->externalCode : $this->generateExternalCode($product->id);
                 $product->save();
             }
         }

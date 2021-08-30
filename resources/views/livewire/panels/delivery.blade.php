@@ -40,7 +40,7 @@
     </div>
         
     @endif
-    <div class="loading my-3 mx-3">
+    <div class=" my-3 mx-3">
         <div>
             @if($total_orders == 0)
             <div class="text-center">
@@ -48,7 +48,7 @@
                     <h3>Nenhum item em produção ou pronto.</h3>
             </div>
             @endif
-            <div class="row">
+            <div class="row loading">
                 @php
                     $prevStartNumber = -1;                        
                 @endphp                        

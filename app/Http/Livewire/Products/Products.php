@@ -248,6 +248,9 @@ class Products extends BaseConfigurationComponent
         //$restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
         $product = Product::where("user_id", auth()->user()->id)->where("id", $this->product->id)->firstOrFail();
         $product->deleted = 1;
+        $product->minimun_stock = 0;
+        $product->current_stock = 0;
+        $product->monitor_stock = 0;
         $product->save();
         $this->render();
         $this->simpleAlert('success', 'Produto excluído com sucesso.');

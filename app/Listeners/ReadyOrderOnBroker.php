@@ -43,7 +43,7 @@ class ReadyOrderOnBroker implements ShouldQueue
                 $httpResponse = $httpClient->post(env('INTEGRATION_IFOOD_READYTOPICK_URI'), $payload);
             }
         }catch(\Exception $e){
-            
+
         }
     }
 }

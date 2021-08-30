@@ -1,9 +1,8 @@
-
 <div class="mb-2 col-xl-3 col-lg-3 col-md-4 col-6">
     <div class="card-painel card-margin" 
         @if($clickAction != "")
             {!! $clickAction !!} 
-        @elseif($productionLine->clickable == 1)
+        @else
             wire:click="orderDetail({{$orderSummary->id}}, {{$orderSummary->production_line_id}})"
         @endif
         onClick='$(".loading").LoadingOverlay("show")'
@@ -30,30 +29,28 @@
                             @endif
                         </small>
                     </div>
-                    @if($productionLine->clickable == 0)
+                    @if($productionLine->clickable == 1)
                         <div class="col-sm-12">
                             <hr class="my-2" />
-                            
-                                @foreach($babelized->items as $item)
-                                    <div>
-                                        <small>{{ $item->quantity }} - {{$item->name}}</small>
-                                        @foreach ($item->subitems as $subitem)
-                                            <div class="ml-3">
-                                                <div>
-                                                    <small>
-                                                        {{ $subitem->quantity }} {{ $subitem->name }}
-                                                        @if ($subitem->observations) 
-                                                            <span class="bg-warning">{{ $subitem->observations }}</span>
-                                                        @endif
-                                                    </small>
-                                                </div>
+                            @foreach($babelized->items as $item)
+                                <div>
+                                    <small>{{ $item->quantity }} - {{$item->name}}</small>
+                                    @foreach ($item->subitems as $subitem)
+                                        <div class="ml-3">
+                                            <div>
+                                                <small>
+                                                    {{ $subitem->quantity }} {{ $subitem->name }}
+                                                    @if ($subitem->observations) 
+                                                        <span class="bg-warning">{{ $subitem->observations }}</span>
+                                                    @endif
+                                                </small>
                                             </div>
-                                        @endforeach                                
-                                    </div>
-                                @endforeach
+                                        </div>
+                                    @endforeach                                
+                                </div>
+                            @endforeach
                         </div>
                     @endif
-
                 </div>                
             </div>
         </div>

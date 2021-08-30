@@ -156,8 +156,7 @@
             <div class="card">
                 <div class="card-body">                    
                     <h5>
-                        Membros da equipe <button wire:click="reloadForm" type="button" name="reloadForm" value="ok" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> <i wire:loading wire:target="reloadForm" class="fas fa-cog fa-spin"></i>
-                        Adicionar</button>
+                        Membros da equipe
                     </h5>
                     <div class="list-group">
                         @forelse($restaurantUsers as $restaurantUser)
