@@ -6,6 +6,20 @@
             </h2>
         </div>
         <div class="col-auto">
+                @role('admin')
+                    <div class="dropdown loading">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a href="javascript:;" class="dropdown-item" onclick='$(".loading").LoadingOverlay("show", {zIndex : 1050})' wire:click="selectOrders">Selecionar itens</a>
+                            <a href="javascript:;" class="dropdown-item" onclick='$(".loading").LoadingOverlay("show", {zIndex : 1050})' style="text-decoration: none" href="javascript:;" wire:click="batchNextStep"><i wire:loading wire:target="batchNextStep" class="fas fa-cog fa-spin"></i> Avançar selecionados</a>
+                            <a href="javascript:;" class="dropdown-item" onclick='$(".loading").LoadingOverlay("show", {zIndex : 1050})' style="text-decoration: none" href="javascript:;" wire:click="confirmFinishOrders"><i wire:loading wire:target="confirmFinishOrders" class="fas fa-cog fa-spin"></i> Finalizar selecionados</a>
+                        </div>
+                    </div>
+                @endrole
+        </div>
+        <div class="col-auto">
             <span class="legend mt-0 pt-0">Legenda:
                 @foreach ($legends as $legend)
                     @php
@@ -20,13 +34,15 @@
                 @endif
                 <span class="badge" style="color: #fff; background-color: #ff8e09">Cancelado</span> 
                 <span class="badge"><i class="fas fa-lg fa-clock"></i> Pedido agendado</span> 
-                @role('admin')
-                <span class="badge"><a onclick='$(".loading").LoadingOverlay("show", {zIndex : 1050})' style="text-decoration: none" href="javascript:;" wire:click="confirmFinishOrders"><i wire:loading wire:target="confirmFinishOrders" class="fas fa-cog fa-spin"></i> Finalizar todos os pedidos</a></span> 
-                @endrole
             </span>
         </div>
     </div>
     <div class="row mt-3">
+        @if($selectable)
+        <div class="col-12 mb-2">
+            <i class="fas fa-check"></i> <a href="javascript:;" onclick="$('.order-checkbox').trigger('click')">Selecionar todos</a>
+        </div>    
+        @endif
         <div class="col">
             <div class="loading">
                 <div>
@@ -38,6 +54,7 @@
                         </div>
                     @endif
                     <div class="row">
+
                         @foreach ($orderSummariesPreviousStep as $orderSummary)
                             @php
                                 $clickAction = "";
@@ -67,7 +84,6 @@
 
                                 $babelized = new App\Foodstock\Babel\OrderBabelized($orderSummary->order_json);
                             @endphp                            
-                            
                             @include('livewire.panels.card-include', ["cardColor" => $cardColor])
                         @endforeach
                     </div>
@@ -91,6 +107,7 @@
         }
 
         $(document).ready(function() {
+
             var reloadDataInterval = reloadPage();
             
             $('#order-modal').on('hide.bs.modal', function (e) {
@@ -118,7 +135,7 @@
             })       
 
             Livewire.on('loadingData', function(){
-                $(".loading").LoadingOverlay("show")
+                $(".loading").LoadingOverlay("show", {text : "Aguarde", textAnimation : "pulse", textAutoResize : true, textResizeFactor : true, textColor : "#ccc"})
             })
         });
     </script>

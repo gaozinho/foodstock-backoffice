@@ -13,6 +13,9 @@
             <div class="col-auto">
                 @if ($ifoodBroker->id > 0 && $ifoodBroker->validated)
                         <span class="text-success"><i class="fas fa-lg fa-check"></i> {{$restaurant->name}} está conectado ao {{ $ifood->name }}.</span>
+                        @if ($ifoodBroker->enabled == 0)
+                        <div class="text-danger mb-2"><small><i class="fas fa-lg fa-info-circle"></i>  Você desativou temporariamente esta integração.</small></div>
+                        @endif
                 @else
                         <span class="text-danger"><i class="fas fa-lg fa-exclamation-triangle"></i> {{$restaurant->name}} ainda não está está conectado ao {{ $ifood->name }}.</span>
                 @endif                

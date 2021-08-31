@@ -138,7 +138,7 @@ class Products extends BaseConfigurationComponent
 
         $this->product->category_id = empty($this->product->category_id) ? null : $this->product->category_id;
         $this->product->unit = empty($this->product->unit) ? null : $this->product->unit;
-        $this->product->initial_step = intval($this->product->initial_step) ? 0 : $this->product->initial_step;
+        $this->product->initial_step = intval($this->product->initial_step) == 0 ? 0 : intval($this->product->initial_step);
         $this->product->unit_price = intval($this->product->unit_price) == 0 ? null : $this->product->unit_price;
 
 		if(intval($this->product->id) > 0){
@@ -200,6 +200,7 @@ class Products extends BaseConfigurationComponent
             if(is_object($this->image)){
                 $this->product->image = $this->image->store('products', 'public');
             }
+
             $this->product->save();
 			//session()->flash('success', 'Produto atualizado com sucesso.');
             $this->simpleAlert('success', 'Produto atualizado com sucesso.');

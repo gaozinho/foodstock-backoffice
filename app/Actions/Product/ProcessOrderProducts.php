@@ -36,22 +36,38 @@ class ProcessOrderProducts
         try{
             //Encontrar produto pelo external code
             if(empty($item->externalCode)) throw new \Exception("Invalid external code");
-            $product = Product::where("external_code", $item->externalCode)->where("restaurant_id", $orderSummary->restaurant_id)->firstOrFail();
-            $product->current_stock = intval($product->current_stock) - intval($item->quantity);
+            
+            $product = Product::where("external_code", $item->externalCode)
+                ->where("restaurant_id", $orderSummary->restaurant_id)
+                ->firstOrFail();
+
+            if($product->deleted == 1){
+                $product->current_stock = 0 - intval($item->quantity);
+            }else{
+                $product->current_stock = $product->current_stock - intval($item->quantity);
+            }
+
+            $product->enabled = 1;
+            $product->deleted = 0;            
             $product->save();
         }catch(\Exception $e1){
             try{
                 //Encontrar pelo nome
                 $product = Product::where("name", $item->name)
-                    ->where("deleted", 0)
                     ->where("restaurant_id", $orderSummary->restaurant_id)
                     ->firstOrFail();
+
+                if($product->deleted == 1){
+                    $product->current_stock = 0 - intval($item->quantity);
+                }else{
+                    $product->current_stock = $product->current_stock - intval($item->quantity);
+                }
+
                 //Criar um external code, se não fornecido
                 $product->external_code = isset($item->externalCode) && $item->externalCode != "" ? $item->externalCode : $this->generateExternalCode($product->id);
-                $product->current_stock = $product->current_stock - intval($item->quantity);
+                
                 $product->enabled = 1;
                 $product->deleted = 0;
-                $product->parent_id = $parent_id;
                 $product->save();
             }catch(\Exception $e2){
                 //Cria produto
@@ -68,7 +84,7 @@ class ProcessOrderProducts
                     'index' => null, 
                     'enabled' => 1, 
                     'deleted' => 0, 
-                    'initial_step' => 0,
+                    'initial_step' => 1,
                     'parent_id' => $parent_id
                 ]);
                 $product->external_code = isset($item->externalCode) && $item->externalCode != "" ? $item->externalCode : $this->generateExternalCode($product->id);

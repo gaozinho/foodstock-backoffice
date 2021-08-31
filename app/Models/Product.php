@@ -88,7 +88,8 @@ class Product extends Model
 
     public function productionLine()
     {
-        return \App\Models\ProductionLine::where("restaurant_id", $this->restaurant_id)
+        $user_id = auth()->user()->user_id ?? auth()->user()->id;
+        return \App\Models\ProductionLine::where("user_id", $user_id)
             ->where("step", $this->initial_step)
             ->where("is_active", 1)
             ->first();

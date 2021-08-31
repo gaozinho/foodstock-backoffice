@@ -20,7 +20,7 @@ use App\Foodstock\Babel\OrderBabelized;
 class ProductionLinePanel extends Component
 {
 
-    protected $listeners = ['loadData', 'finishOrders', 'cancelOperation'];
+    protected $listeners = ['loadData', 'finishOrders', 'cancelOperation', 'batchFinish'];
 
     public $orderSummaries;
     public $orderSummariesPreviousStep;
@@ -28,6 +28,8 @@ class ProductionLinePanel extends Component
     public $stepColors;
     public $legends;
     public $orderSummaryDetail;
+    public $selectedOrderIds = [];
+    public $selectable = false;
 
     public $restaurantIds;
     public $recoveryOrders;
@@ -137,16 +139,7 @@ class ProductionLinePanel extends Component
         $finishOrder->finish($restaurant_ids, auth()->user()->id);
         $this->loadData();
         $this->emit('moveForward');
-        $this->alert("success", "Todos os pedidos foram finalizados com sucesso.", [
-            'position' =>  'top-end', 
-            'timer' =>  5000,  
-            'toast' =>  true, 
-            'text' =>  '', 
-            'confirmButtonText' =>  'Ok', 
-            'cancelButtonText' =>  'Cancel', 
-            'showCancelButton' =>  false, 
-            'showConfirmButton' =>  false, 
-        ]);        
+        $this->alert("success", "Todos os pedidos foram finalizados com sucesso.", ['timer' =>  5000]);        
     }
 
     public function cancelOperation(){
@@ -163,9 +156,10 @@ class ProductionLinePanel extends Component
             'showConfirmButton' => true,
             'cancelButtonText' => 'Não',
             'confirmButtonText' => 'Sim',
-            'onConfirmed' => 'finishOrders',
+            'onConfirmed' => 'batchFinish',
             'onCancelled' => 'cancelOperation'
         ]);
+        $this->loadData();
     }    
 
     public function orderDetailAndMoveForward($order_summary_id){
@@ -208,6 +202,40 @@ class ProductionLinePanel extends Component
         $this->loadData();
     }
 
+    public function batchFinish(){
+        $user_id = auth()->user()->user_id ?? auth()->user()->id;
+        $finishOrder = new FinishOrder();
+        
+        $totalSuccess = $finishOrder->batchFinish($user_id, $this->selectedOrderIds);
+
+        if($totalSuccess > 0){
+            $this->alert("success", sprintf("%s pedidos finalizados.", $totalSuccess), ['timer' =>  5000]);              
+        }else{
+            $this->alert("error", sprintf("Nenhum pedido selecionado."), ['timer' =>  5000]);  
+        }
+
+        $this->selectedOrderIds = [];
+        $this->loadData();
+        $this->emit('moveForward');
+    }
+
+    public function batchNextStep(){
+        $user_id = auth()->user()->user_id ?? auth()->user()->id;
+        $forwardProductionProccess = new ForwardProductionProccess();
+
+        if(is_array($this->selectedOrderIds) && count($this->selectedOrderIds) > 0){
+            foreach($this->selectedOrderIds as $order_id){
+                $forwardProductionProccess->forward($order_id, $user_id);
+            }
+            $this->alert("success", sprintf("%s pedidos avançaram para a próxima etapa.", count($this->selectedOrderIds)), ['timer' =>  5000]);              
+        }else{
+            $this->alert("error", sprintf("Nenhum pedido selecionado."), ['timer' =>  5000]);  
+        }
+        $this->selectedOrderIds = [];
+        $this->loadData();
+        $this->emit('moveForward');
+    }
+
     public function nextStep($order_summary_id){
         $userId = auth()->user()->user_id ?? auth()->user()->id;
         $forwardProductionProccess = new ForwardProductionProccess();
@@ -221,6 +249,12 @@ class ProductionLinePanel extends Component
         $pauseProductionProccess->pause($this->orderSummaryDetail->order_id, auth()->user()->id);
         $this->loadData();
         $this->emit('closeOrderModal');
+    }
+
+    public function selectOrders(){
+        $this->selectable = !$this->selectable;
+        $this->loadData();
+        $this->emit('moveForward');
     }
 
     public function render()

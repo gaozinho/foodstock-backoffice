@@ -19,4 +19,20 @@ class FinishOrder
             }
         }
     }
+
+    public function batchFinish($user_id, $order_ids){
+        $user_id = auth()->user()->user_id ?? auth()->user()->id;
+        $forwardProductionProccess = new ForwardProductionProccess();
+        
+        if(is_array($order_ids) && count($order_ids) > 0){
+            foreach($order_ids as $order_id){
+                while($forwardProductionProccess->forward($order_id, $user_id)){
+    
+                }
+            }
+        }
+
+        return count($order_ids);
+    }
+
 }

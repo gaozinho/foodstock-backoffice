@@ -1,14 +1,25 @@
 <div class="mb-2 col-xl-3 col-lg-3 col-md-4 col-6">
-    <div class="card-painel card-margin" 
-        @if($clickAction != "")
-            {!! $clickAction !!} 
-        @else
-            wire:click="orderDetail({{$orderSummary->id}}, {{$orderSummary->production_line_id}})"
-        @endif
-        onClick='$(".loading").LoadingOverlay("show")'
-    >
+    
 
-        <div class="card-body py-3 px-3">
+    <div class="card-painel card-margin">
+        @if($selectable)
+        <div class="card-header pl-2 pt-2 pb-0">
+            <div class="form-check">
+                <input type="checkbox" id="order{{ $orderSummary->order_id }}" value="{{ $orderSummary->order_id }}" wire:model.defer="selectedOrderIds"  class="form-check-input order-checkbox">
+                <label class="form-check-label" for="order{{ $orderSummary->order_id }}">
+                    Selecinar
+                </label>
+            </div>
+        </div>
+        @endif
+        <div class="card-body py-3 px-3"
+            @if($clickAction != "")
+                {!! $clickAction !!} 
+            @else
+                wire:click="orderDetail({{$orderSummary->id}}, {{$orderSummary->production_line_id}})"
+            @endif
+            onClick='$(".loading").LoadingOverlay("show")'        
+        >
             <div class="order-card">
                 <h1><span class="badge badge-secondary w-100" {!!$cardColor ?? 'style="background-color: ' . $stepColors[$orderSummary->current_step_number] . '"' !!}>{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</span></h1>
                 <div style="line-height: 1" class="row">
@@ -19,7 +30,7 @@
                             @else
                                 {{\Carbon\Carbon::parse($orderSummary->created_at)->diffForhumans()}}
                             @endif
-                        {!!$babelized->brokerName() ? $babelized->brokerName() . ' &bull;' : ''!!} {{$orderSummary->restaurant}} <!-- {{$babelized->orderType}} --></small>
+                        {!!$babelized->brokerName() ? $babelized->brokerName() . ' &bull;' : ''!!} {{$orderSummary->restaurant}}</small>
                     </div>
                     <div class="col-sm-12 col-md-6">
                         <small>
