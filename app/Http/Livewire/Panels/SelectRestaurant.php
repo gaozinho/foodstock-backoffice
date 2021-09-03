@@ -16,6 +16,11 @@ class SelectRestaurant extends Component
     public function mount(){
         $this->selectedRestaurants = session('selectedRestaurants');
         $this->restaurants = (new RecoverUserRestaurant())->recoverAll(auth()->user()->id);
+        if(!is_array($this->selectedRestaurants)){
+            foreach($this->restaurants as $restaurant){
+                $this->selectedRestaurants[$restaurant->id] = $restaurant->id;
+            }
+        }
     }
 
     public function render()

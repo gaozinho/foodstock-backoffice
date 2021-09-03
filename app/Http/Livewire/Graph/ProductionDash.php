@@ -12,11 +12,16 @@ class ProductionDash extends Component
     public $productionMovements;
 
     protected $listeners = ['render_dash' => 'render'];
+    public $selectedRestaurants;
+
+    public function mount(){
+        $this->selectedRestaurants = session('selectedRestaurants');
+    }
 
     public function render()
     {
         $user = auth()->user();
-        $restaurant_ids = (new RecoverUserRestaurant())->recoverAllIds($user->id);
+        $restaurant_ids = is_array($this->selectedRestaurants) ? $this->selectedRestaurants : (new RecoverUserRestaurant())->recoverAllIds(auth()->user()->id)->toArray();
 
         $productionMovements = ProductionMovement::join("production_lines", "production_lines.id", "=", "production_movements.production_line_id")
             ->join("roles", "roles.id", "=", "production_lines.role_id")

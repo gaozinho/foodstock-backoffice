@@ -7,7 +7,7 @@
         </div>
         <div class="col-auto">
                 @role('admin')
-                    <div class="dropdown loading">
+                    <div class="dropleft loading">
                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-cog"></i>
                         </button>
