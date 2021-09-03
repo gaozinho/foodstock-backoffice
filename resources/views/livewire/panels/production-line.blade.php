@@ -37,6 +37,11 @@
             </span>
         </div>
     </div>
+    <div class="row">
+        <div class="col-12 mb-2">
+            <livewire:panels.select-restaurant :page="request()->fullUrl()"/>
+        </div> 
+    </div>      
     <div class="row mt-3">
         @if($selectable)
         <div class="col-12 mb-2">
