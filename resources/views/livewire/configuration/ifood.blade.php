@@ -232,6 +232,18 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <div class="pretty p-switch p-fill">
+                                        <input wire:model.defer='ifoodBroker.conclude' name="conclude"
+                                            type="checkbox" value="1"
+                                            {{ old('conclude', optional($ifoodBroker)->conclude) == 1 ? 'checked' : '' }} />
+                                        <div class="state">
+                                            <label>Concluir o pedido automaticamente, assim que o {{ $ifood->name }} concluí-lo.</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
                         </div>
                         <div class="form-group text-right mb-0">
                             @if ($ifoodBroker->id > 0)

@@ -29,6 +29,7 @@ class Ifood extends Component
         //'ifoodBroker.client_secret' => 'max:255|required',
         //'ifoodBroker.username' => 'max:255|required',
         //'ifoodBroker.password' => 'max:255|required',
+        'ifoodBroker.conclude' => 'boolean|nullable',
         'ifoodBroker.enabled' => 'boolean|nullable',
         'ifoodBroker.acknowledgment' => 'boolean|nullable',
         'ifoodBroker.dispatch' => 'boolean|nullable',
@@ -121,6 +122,7 @@ class Ifood extends Component
             $this->ifoodBroker->enabled = 1;
             $this->ifoodBroker->acknowledgment = 1;
             $this->ifoodBroker->dispatch = 1;
+            $this->ifoodBroker->conclude = 1;
             $this->ifoodBroker->userCode = $responseUserCode->userCode;
             $this->ifoodBroker->verificationUrlComplete = $responseUserCode->verificationUrlComplete;
             $this->save(false);

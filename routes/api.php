@@ -16,5 +16,6 @@ Route::middleware('auth:api')->group( function () {
     Route::post('order/restart-production', [IntegrationController::class, 'restartProduction']);
     Route::post('order/reprocess-sales', [IntegrationController::class, 'reprocessSales']);
     Route::post('order/cancel-production', [IntegrationController::class, 'cancelProduction']);
+    Route::post('order/conclude-production', [IntegrationController::class, 'concludeProduction']);
     Route::get('order/check/{order_id}', [IntegrationController::class, 'checkIfCreated']);
 });

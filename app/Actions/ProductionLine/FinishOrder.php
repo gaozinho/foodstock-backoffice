@@ -20,6 +20,13 @@ class FinishOrder
         }
     }
 
+    public function finishOne($order_id){
+        $forwardProductionProccess = new ForwardProductionProccess();
+        while($forwardProductionProccess->forward($order_id, null)){
+
+        }
+    }    
+
     public function batchFinish($user_id, $order_ids){
         $user_id = auth()->user()->user_id ?? auth()->user()->id;
         $forwardProductionProccess = new ForwardProductionProccess();
