@@ -5,9 +5,6 @@
     </div>
 
 
-
-
-
     @if (!$saveMode)
 
         <div class="row">
@@ -99,12 +96,17 @@
                         <table class="table table-hover table-bordered pagination-products">
                             <thead class="thead">
                                 <tr>
-                                    <th colspan="5">
+                                    <th colspan="6">
                                         <span class="legend mt-0 pt-0">Legenda:
                                             <span class="badge bg-monitor">Monitorando estoque</span> 
                                             <span class="badge bg-monitor-warning">Monitorado: abaixo do mínimo</span> 
                                             <span class="badge bg-monitor-danger">Monitorado: sem estoque</span> 
                                         </span>
+                                        <div class="row">
+                                            <div class="col-12 mb-2">
+                                                <livewire:panels.select-restaurant :page="request()->fullUrl()"/>
+                                            </div> 
+                                        </div>                                          
                                     </th>
                                 </tr>
                                 <tr>
@@ -128,12 +130,13 @@
                                         </div>
                                     </th>
                                     <th>Preço</th>
-                                    <th>Estoque</th>
+                                    <th>Inicia em</th>
+                                    <th>Monitorar</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($products as $row)
+                                @foreach ($products as $key => $row)
 
                                     @php
                                         $classMonitor = "";
@@ -146,7 +149,7 @@
                                         }
                                     @endphp
 
-                                    <tr class="{{ $classMonitor }}">
+                                    <tr class="{{ $classMonitor }} loading">
                                         <td width="1%">
                                             {{ $loop->iteration + ($products->currentPage() - 1) * $pageSize }}</td>
                                         <td>
@@ -170,14 +173,45 @@
 
 
                                             </a>
+                                            <i wire:loading wire:target="productModels.{{$key}}.initial_step" class="fas fa-cog fa-spin"></i>
+                                            <i wire:loading wire:target="productModels.{{$key}}.monitor_stock" class="fas fa-cog fa-spin"></i>
                                         </td>
                                         <td width="1%" nowrap class="text-right">
                                             <small>@money($row->unit_price)</small>
                                         </td>
+                                        <td>
+                                            <select id="productModels.{{$key}}.initial_step" name="initial_step" class="form-control form-control-sm" wire:model='productModels.{{$key}}.initial_step'>
+                                                <option value="0">N/D</option>
+                                                @foreach($productionLines as $id => $productionLine)
+                                                <option value="{{$id}}" {{intval($row->initial_step) == intval($id) ? "selected='selected'" : ""}}>
+                                                    {{$productionLine}}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                        </td>        
+                                        <td>
+                                            <div class="form-group mb-0">
+                                                <div class="pretty p-switch p-fill">
+                                                    <input id="productModels.{{$key}}.monitor_stock" wire:model='productModels.{{$key}}.monitor_stock' name="monitor_stock" type="checkbox" value="1"
+                                                        {{ $row->monitor_stock == '1' ? 'checked' : '' }} />
+                                                        <div class="state">
+                                                            <label></label>
+                                                        </div>
+                                                </div>
+                                            @if($row->monitor_stock == 1)
+                                            <div style="line-height: 1">
+                                                <small>Atual: {{ $row->current_stock }}<br/>Min: {{ $row->minimun_stock }}</small>
+                                            </div>
+                                            @endif                                                
+                                            </div>
+
+
+                                        </td>                                                                          
+                                        <!--
                                         <td width="1%" nowrap class="text-right" style="line-height: 0.9">
                                             <small>Atual: {{ $row->current_stock }}<br/>Min: {{ $row->minimun_stock }}</small>
                                         </td>
-
+                                        -->
                                         <td width="1%" nowrap class="text-right">
                                             <a href="javascripf:;" title="Editar" data-toggle="modal" data-target="#updateModal"
                                                 class="text-primary" wire:click="edit({{ $row->id }})">
@@ -250,12 +284,12 @@
 
     @endif
 </div>
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
 
 <script>
     $(document).ready(function() {
 
-        $('.sort-column').on('click', function(e) {
+        $('.sort-column, .pretty').on('click', function(e) {
             $(".pagination-products").LoadingOverlay("show");
         });
 

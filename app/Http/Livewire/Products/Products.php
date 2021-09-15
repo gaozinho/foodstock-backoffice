@@ -34,6 +34,8 @@ class Products extends BaseConfigurationComponent
     public $categories;
     public $productionLines;
     public $restaurant;
+    public $restaurant_ids = [];
+    public $productModels;
 
     protected $rules = [
         'product.category_id' => 'nullable|integer',
@@ -51,6 +53,8 @@ class Products extends BaseConfigurationComponent
         'product.serving' => 'max:20|nullable',
         'product.enabled' => 'required|boolean',
         'product.initial_step' => 'nullable|numeric|min:0',
+        'productModels.*.initial_step' => 'nullable',
+        'productModels.*.monitor_stock' => 'nullable',
     ];
 
     protected $messages = [
@@ -60,32 +64,39 @@ class Products extends BaseConfigurationComponent
         'product.initial_step.required' => 'Informe para onde este produto leva sua produção.',
     ];
 
-    //Ordena pela coluna escolhida
+    // PAGINAÇÃO ######################
     public function sort($column)
     {
         $this->sort = $column;
+       
         $this->direction = $this->direction == "ASC" ? "DESC" : "ASC";
         $this->queryString = array_merge($this->queryString, ["sort" => $this->sort, "direction" => $this->direction]);
         $this->emit('paginationLoaded');
     }   
 
     public function mount(){
-        $this->restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
+        
         if(!auth()->user()->hasRole("admin")) return redirect()->to('/dashboard');
         $this->sort = request()->query('sort');
         $this->direction = request()->query('direction');
+        $this->loadBaseData();
     }
 
     public function render()
     {
-        //$restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
-        //$this->dispatchBrowserEvent('gotoTop');
+        $selectedRestaurants = session('selectedRestaurants');
+        $this->restaurant_ids = (new RecoverUserRestaurant())->recoverAllIds(auth()->user()->id)->toArray();
+
 		$keyWord = '%'.$this->keyWord .'%';
         $this->emit('paginationLoaded');
 
-        $products = Product::where("user_id", auth()->user()->id)
-            ->where("deleted", 0);
-            //->where("parent_id", null)
+        $products = Product::where("deleted", 0);
+
+        if(is_array($selectedRestaurants) && count($selectedRestaurants) > 0){
+            $products->whereIn("restaurant_id", $selectedRestaurants);
+        }else{
+            $products->whereIn("restaurant_id", $this->restaurant_ids);
+        }
 
         if(!empty($this->keyWord)){
             $products->where(function($query) use ($keyWord){
@@ -114,12 +125,75 @@ class Products extends BaseConfigurationComponent
             $products->orderBy($this->sort, !empty($this->direction) ? $this->direction : "ASC");
         }else{
             $products->orderBy("name", "ASC");
-        }      
+        }
+
+        $pagination = $products->paginate($this->pageSize);
+        $this->productModels =  $pagination->items();
 
         return view('livewire.products.view', [
-            'products' => $products->paginate($this->pageSize),
+            'products' => $pagination,
         ]);
     }
+
+    public function updatedProductModels($value, $index){
+        $keyProperty = explode(".", $index);
+        $productArray = $this->productModels[$keyProperty[0]];
+        $product = Product::findOrFail($productArray["id"]);
+        $product->{$keyProperty[1]} = intval($value);
+        $product->save();
+    }
+
+    // FILTROS DA PAGINAÇÃO ##############
+    public function updatingKeyWord($value){
+        $this->emit('tableUpdating');
+        $this->resetPage();
+    }
+
+    public function updatedKeyWord($value){
+        $this->emit('paginationLoaded');
+    }  
+    
+    public function updatingMonitorStock($value){
+        $this->addToQuerystring(["monitor_stock" => $value]);
+        $this->emit('tableUpdating');
+        $this->resetPage();
+    }
+
+    public function updatedMonitorStock($value){
+        $this->emit('paginationLoaded');
+    }  
+    
+    public function updatingEnabled($value){
+        $this->addToQuerystring(["enabled" => $value]);
+        $this->emit('tableUpdating');
+        $this->resetPage();
+    }
+
+    public function updatedEnabled($value){
+        $this->emit('paginationLoaded');
+    }  
+
+    public function updatingStockAlert($value){
+        $this->addToQuerystring(["stock_alert" => $value]);
+        $this->emit('tableUpdating');
+        $this->resetPage();
+    }
+
+    public function updatedStockAlert($value){
+        $this->emit('paginationLoaded');
+    }   
+    
+    public function updatingStockZero($value){
+        $this->addToQuerystring(["stock_zero" => $value]);
+        $this->emit('tableUpdating');
+        $this->resetPage();
+    }
+
+    public function updatedStockZero($value){
+        $this->emit('paginationLoaded');
+    }    
+
+    // EDIÇÃO ####################
 	
     public function cancel()
     {
@@ -188,7 +262,7 @@ class Products extends BaseConfigurationComponent
         //$restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
         $this->resetValidation();
         $this->loadBaseData();
-        $this->product = Product::where("user_id", auth()->user()->id)->where("id", $id)->firstOrFail();
+        $this->product = Product::where("id", $id)->firstOrFail();
 		$this->nome = $this->product->nome;
 		$this->saveMode = true;
     }
@@ -211,28 +285,10 @@ class Products extends BaseConfigurationComponent
         }
     }
 
-    public function loadBaseData(){
-        
-        //$restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
-        $this->categories = Category::where("user_id", auth()->user()->id)
-            ->orWhere("user_id", null)
-            ->where("enabled", 1)
-            ->orderBy("name")
-            ->select("id", "name")
-            ->get()->pluck("name", "id")->toArray();
-        $this->productionLines = ProductionLine::where("user_id", auth()->user()->id)
-            ->where("is_active", 1)
-            ->where("production_line_id", null)
-            ->orderBy("step")
-            ->select("step", "name")
-            ->pluck("name", "step")->toArray();
-
-    }
-
     public function destroy($id)
     {
         try {
-            $product = Product::where("user_id", auth()->user()->id)->where("id", $id)->firstOrFail();
+            $product = Product::where("id", $id)->firstOrFail();
             Storage::delete($product->image);
             $product->delete();
 			session()->flash('success', 'Produto excluído com sucesso.');
@@ -247,7 +303,7 @@ class Products extends BaseConfigurationComponent
 
     public function disable(){
         //$restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
-        $product = Product::where("user_id", auth()->user()->id)->where("id", $this->product->id)->firstOrFail();
+        $product = Product::where("id", $this->product->id)->firstOrFail();
         $product->deleted = 1;
         $product->minimun_stock = 0;
         $product->current_stock = 0;
@@ -259,7 +315,7 @@ class Products extends BaseConfigurationComponent
 
     public function confirmDestroy($id)
     {
-        $this->product = Product::where("user_id", auth()->user()->id)->where("id", $id)->firstOrFail();
+        $this->product = Product::where("id", $id)->firstOrFail();
         $this->confirm('Deseja excluir ' . $this->product->name . '?', [
             'toast' => false,
             'position' => 'center',
@@ -270,11 +326,6 @@ class Products extends BaseConfigurationComponent
         ]);
     }
 
-    public function report() 
-    {
-        $fileName = sprintf("Products %s.xlsx", date("d-m-Y"));
-        return (new ProductsExport)->filtro($this->keyWord)->download($fileName);
-    }
     
     public function removeImagem(){
         Storage::delete("public/" . $this->product->image);
@@ -289,62 +340,40 @@ class Products extends BaseConfigurationComponent
     {
         $this->resetErrorBag();
         $this->resetValidation();
-    }
-
-    // SEARCH
-    public function updatingKeyWord($value){
-        $this->emit('tableUpdating');
-        $this->resetPage();
-    }
-
-    public function updatedKeyWord($value){
-        $this->emit('paginationLoaded');
-    }  
-    
-    public function updatingMonitorStock($value){
-        $this->addToQuerystring(["monitor_stock" => $value]);
-        $this->emit('tableUpdating');
-        $this->resetPage();
-    }
-
-    public function updatedMonitorStock($value){
-        $this->emit('paginationLoaded');
-    }  
-    
-    public function updatingEnabled($value){
-        $this->addToQuerystring(["enabled" => $value]);
-        $this->emit('tableUpdating');
-        $this->resetPage();
-    }
-
-    public function updatedEnabled($value){
-        $this->emit('paginationLoaded');
-    }  
-
-    public function updatingStockAlert($value){
-        $this->addToQuerystring(["stock_alert" => $value]);
-        $this->emit('tableUpdating');
-        $this->resetPage();
-    }
-
-    public function updatedStockAlert($value){
-        $this->emit('paginationLoaded');
     }   
-    
-    public function updatingStockZero($value){
-        $this->addToQuerystring(["stock_zero" => $value]);
-        $this->emit('tableUpdating');
-        $this->resetPage();
-    }
-
-    public function updatedStockZero($value){
-        $this->emit('paginationLoaded');
-    }
-
     
     protected function prepareForValidation($attributes)
     {
         $attributes["product"]->unit_price = floatval(str_replace(',', '.', $attributes["product"]->unit_price));
         return $attributes;
+    }  
+
+    // UTILIDADES ############
+
+
+    public function loadBaseData(){
+        $this->categories = Category::where("user_id", auth()->user()->id)
+            ->orWhere("user_id", null)
+            ->where("enabled", 1)
+            ->orderBy("name")
+            ->select("id", "name")
+            ->get()->pluck("name", "id")->toArray();
+        $this->productionLines = ProductionLine::where("user_id", auth()->user()->id)
+            ->where("is_active", 1)
+            ->where("production_line_id", null)
+            ->orderBy("step")
+            ->select("step", "name")
+            ->pluck("name", "step")->toArray();
+
     }    
+
+    public function report() 
+    {
+        $fileName = sprintf("Products %s.xlsx", date("d-m-Y"));
+        return (new ProductsExport)->filtro($this->keyWord)->download($fileName);
+    }
+
+
+    
+  
 }

@@ -153,7 +153,7 @@ class IntegrationController extends BaseController
             $order_id = $concludeProductionProccess->conclude($input["order_id"]);
             return $this->sendResponse(["order_id" => $input["order_id"]], 'Order concluded successfully.');
         }catch(\Exception $e){
-            if(env("APP_DEBUG")) throw $e;
+            //if(env("APP_DEBUG")) throw $e;
             return $this->sendResponse(["success" => false, "order_id" => $input["order_id"]], 'Cant conclude order.');
         }
     }        

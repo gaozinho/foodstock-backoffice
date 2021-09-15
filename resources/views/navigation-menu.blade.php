@@ -1,7 +1,7 @@
 @php
     $restaurants = auth()->user()->recoverUserRestaurant();
 @endphp
-<div class="fullpage-loading">
+<div class="">
     <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom sticky-top full-screen">
         <div class="container">
             <a class="navbar-brand mr-4" href="{{route('dashboard')}}">

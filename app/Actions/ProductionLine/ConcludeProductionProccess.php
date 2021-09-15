@@ -21,8 +21,8 @@ class ConcludeProductionProccess
         try{
 
             $order = Order::where("order_id", $order_id)->firstOrFail();
-            $orderSummary = OrderSummary::where("order_id", $order_id)->where("finalized", 0)->first();
-  
+            $orderSummary = OrderSummary::where("order_id", $order->id)->where("finalized", 0)->first();
+
             if(is_object($orderSummary)) (new FinishOrder())->finishOne($order->id);
 
             return $order_id;

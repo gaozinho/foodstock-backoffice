@@ -1,4 +1,4 @@
-<div>
+<div class="fullpage-loading">
     @foreach($restaurants as $restaurant)
         <label class="mb-0 mt-1" onclick='$(".fullpage-loading").LoadingOverlay("show");'>
             <small>

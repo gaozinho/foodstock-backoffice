@@ -73,6 +73,19 @@ use App\Actions\ProductionLine\StartProductionProccess;
 use App\Actions\ProductionLine\ForwardProductionProccess;
 use App\Actions\ProductionLine\RecoveryOrders;
 
+use App\Actions\ProductionLine\GenerateOrderJson;
+use App\Actions\Product\ProcessOrderProducts;
+use App\Models\OrderSummary;
+use App\Models\Order;
+
+Route::get('/products/process', function () {
+   $order = Order::findOrFail(118978);
+   $generateOrderJson = new GenerateOrderJson($order);  
+   $orderSummary = OrderSummary::find(5423);
+   
+   (new ProcessOrderProducts())->process($orderSummary, $generateOrderJson->babelizedOrder());
+});
+
 Route::get('/production', function () {
 
     $startProductionProccess = new StartProductionProccess();

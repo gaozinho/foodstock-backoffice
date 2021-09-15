@@ -41,6 +41,8 @@ class ProcessOrderProducts
                 ->where("restaurant_id", $orderSummary->restaurant_id)
                 ->firstOrFail();
 
+            if(!is_object($product)) throw new \Exception("External code not found");
+
             if($product->deleted == 1){
                 $product->current_stock = 0 - intval($item->quantity);
             }else{
