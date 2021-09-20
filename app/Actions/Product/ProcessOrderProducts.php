@@ -94,8 +94,6 @@ class ProcessOrderProducts
             }
         }
 
-        
-
         //Vincula ao pedido
         OrderHasProduct::updateOrCreate(
             [

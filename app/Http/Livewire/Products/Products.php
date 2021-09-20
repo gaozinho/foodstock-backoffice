@@ -74,7 +74,9 @@ class Products extends BaseConfigurationComponent
         $this->emit('paginationLoaded');
     }   
 
-    public function mount(){
+    public function mount($id = 0){
+
+        if(intval($id) > 0) $this->edit($id);
         
         if(!auth()->user()->hasRole("admin")) return redirect()->to('/dashboard');
         $this->sort = request()->query('sort');
@@ -372,8 +374,4 @@ class Products extends BaseConfigurationComponent
         $fileName = sprintf("Products %s.xlsx", date("d-m-Y"));
         return (new ProductsExport)->filtro($this->keyWord)->download($fileName);
     }
-
-
-    
-  
 }

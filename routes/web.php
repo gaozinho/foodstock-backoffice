@@ -38,6 +38,7 @@ use App\Http\Livewire\Deliveryman\DeliverymanPanel;
 use App\Http\Livewire\Keyboard\NumericKeyboard;
 use App\Http\Livewire\Dashboard\Welcome;
 use App\Http\Livewire\Dashboard\Info;
+use App\Http\Livewire\Stock\Panel;
 
 Route::get('/home', Info::class)->name('dashboard')->middleware(['auth', 'verified']);
 Route::get('/dashboard', Info::class)->name('dashboard')->middleware(['auth', 'verified']);
@@ -55,6 +56,8 @@ Route::group(['middleware' => ['role:admin', 'verified']], function (){
    Route::get('/configuration/teams', Teams::class)->name('configuration.teams.index')->middleware('auth');
 
    Route::get('/products', Products::class)->name('products.index')->middleware('auth');
+   Route::get('/products/{id}', Products::class)->name('products.edit')->middleware('auth');
+   Route::get('/stock/panel', Panel::class)->name('stock.panel')->middleware('auth');
 });
 
 Route::get('/panel/production-line/{role_name}', ProductionLinePanel::class)->name('panels.production-line-panel.index')->middleware('auth');
@@ -62,6 +65,7 @@ Route::get('/panel/delivery', DeliveryPanel::class)->name('panels.delivery-panel
 Route::get('/panel/deliveryman/{user_id}', DeliverymanPanel::class)->name('panels.public-delivery-panel.index');
 Route::get('/order/keyboard', NumericKeyboard::class)->name('orders.keyboard.index')->middleware('auth');
 
+/*
 
 //################### TESTES
 
@@ -254,3 +258,5 @@ Route::get('/integrations', function () {
     //$token = $rappiIntegration->getToken(3);
 
 });
+
+*/
