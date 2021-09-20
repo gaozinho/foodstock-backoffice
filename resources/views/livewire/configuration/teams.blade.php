@@ -79,6 +79,27 @@
                                     </div>
 
                                     <div class="col-xs-12 col-sm-12 col-md-12">
+                                        <strong>Quais áreas do sistema podem ser acessadas? *</strong>
+                                        <div class="row mt-2">
+                                            @foreach($genericRoles as $role)
+                                            <div class="col-xs-12 col">
+                                                <div class="form-group">
+                                                    <div class="pretty p-switch p-fill">
+                                                        <input onClick='$(".loading").LoadingOverlay("show")' name="role_id[{{ $role->id }}]" type="checkbox" 
+                                                            wire:model="selectedRoles.{{ $role->id }}" 
+                                                            value="{{ $role->id }}"
+                                                        />
+                                                        <div class="state">
+                                                            <label>{{$role->description}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                    </div>                                    
+
+                                    <div class="col-xs-12 col-sm-12 col-md-12">
                                         <strong>Este integrante terá acesso a qual loja?</strong>
                                         <div class="row mt-2">
                                             @foreach($restaurants as $restaurant)

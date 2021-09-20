@@ -14,6 +14,7 @@ use App\Actions\ProductionLine\CancelProductionProccess;
 use App\Actions\ProductionLine\ConcludeProductionProccess;
 use App\Models\FederatedSale;
 use App\Actions\ProductionLine\GenerateOrderJson;
+use Illuminate\Support\Facades\Log;
 
 
 class IntegrationController extends BaseController
@@ -40,6 +41,8 @@ class IntegrationController extends BaseController
             ['order_id' => $input["order_id"]],
             $input
         );
+
+        Log::info("Order created: " . $order->id);
 
         try{
             $this->startOneOrder($order);
@@ -101,8 +104,11 @@ class IntegrationController extends BaseController
     }
 
     private function startOneOrder($order){
+        Log::info("Start 1");
         $startProductionProccess = new StartProductionProccess();
+        Log::info("Start 2");
         $productionMovement = $startProductionProccess->start($order->id);
+        Log::info("Start 3");
     }
 
     public function cancelProduction(Request $request)

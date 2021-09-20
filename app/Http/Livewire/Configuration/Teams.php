@@ -20,6 +20,7 @@ class Teams extends Component
     public $roles;
     public $selectedRoles = [];
     public $selectedRestaurants = [];
+    public $genericRoles = [];
 
     protected $rules = [
         'user.name' => 'required|string|min:1|max:255',
@@ -36,7 +37,7 @@ class Teams extends Component
 
     public function mount()
     {
-        if(!auth()->user()->hasRole("admin")) return redirect()->to('/dashboard');
+        //if(!auth()->user()->hasRole("admin")) return redirect()->to('/dashboard');
         $this->user = new User();
         $this->loadData();
     }    
@@ -44,11 +45,14 @@ class Teams extends Component
     public function loadData(){
         $user = auth()->user();
         $this->roles = Role::join("production_lines", "production_lines.role_id", "=", "roles.id")
-            ->where("production_lines.user_id", auth()->user()->id)
+            ->where("production_lines.user_id", auth()->user()->user_id ?? auth()->user()->id)
             ->where("production_lines.is_active", 1)
             ->where("roles.guard_name", "production-line")
             ->select("roles.id", "production_lines.name")
             ->get();
+
+        $this->genericRoles = Role::where("guard_name", "panel")->get();
+
         $this->restaurants =  (new RecoverUserRestaurant())->recoverAll($user->id); 
         $restaurantsIds =  (new RecoverUserRestaurant())->recoverAllIds($user->id); 
         $this->restaurantUsers = User::join("restaurant_has_users", "restaurant_has_users.user_id", "=", "users.id")
@@ -111,7 +115,7 @@ class Teams extends Component
             $this->user->password = Hash::make($this->user->password);
             $this->user->restaurant_member = 1;
             $this->user->email_verified_at = date("Y-m-d H:i:s");
-            $this->user->user_id = auth()->user()->id;
+            $this->user->user_id = auth()->user()->user_id ?? auth()->user()->id;
             $this->user->save();
             $selectedRoles = array_values(array_diff( $this->selectedRoles, [false]));
             $selectedRestaurants = array_values(array_diff( $this->selectedRestaurants, [false]));
@@ -167,7 +171,7 @@ class Teams extends Component
         try {
 
             $this->user->restaurant_member = 1;
-            $this->user->user_id = auth()->user()->id;
+            $this->user->user_id = auth()->user()->user_id ?? auth()->user()->id;
             $this->user->save();
 
             $selectedRoles = count($this->selectedRoles) > 0 ? array_values(array_diff( $this->selectedRoles, [false])) : [];

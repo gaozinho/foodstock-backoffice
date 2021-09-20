@@ -53,10 +53,18 @@ Route::group(['middleware' => ['role:admin', 'verified']], function (){
    Route::get('/configuration/restaurants', Restaurants::class)->name('configuration.restaurant.index')->middleware('auth');
    Route::get('/configuration/brokers', Brokers::class)->name('configuration.broker.index')->middleware('auth');
    Route::get('/configuration/production-lines', ProductionLines::class)->name('configuration.production-line.index')->middleware('auth');
-   Route::get('/configuration/teams', Teams::class)->name('configuration.teams.index')->middleware('auth');
+});
 
+Route::group(['middleware' => ['role:admin|equipe', 'verified']], function (){
+   Route::get('/configuration/teams', Teams::class)->name('configuration.teams.index')->middleware('auth');
+});
+
+Route::group(['middleware' => ['role:admin|produtos', 'verified']], function (){
    Route::get('/products', Products::class)->name('products.index')->middleware('auth');
    Route::get('/products/{id}', Products::class)->name('products.edit')->middleware('auth');
+});
+
+Route::group(['middleware' => ['role:admin|estoque', 'verified']], function (){
    Route::get('/stock/panel', Panel::class)->name('stock.panel')->middleware('auth');
 });
 

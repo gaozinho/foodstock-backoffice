@@ -78,7 +78,7 @@ class Products extends BaseConfigurationComponent
 
         if(intval($id) > 0) $this->edit($id);
         
-        if(!auth()->user()->hasRole("admin")) return redirect()->to('/dashboard');
+        //if(!auth()->user()->hasRole("admin")) return redirect()->to('/dashboard');
         $this->sort = request()->query('sort');
         $this->direction = request()->query('direction');
         $this->loadBaseData();
@@ -246,7 +246,7 @@ class Products extends BaseConfigurationComponent
         try {
             //$restaurant = (new RecoverUserRestaurant())->recover(auth()->user()->id);
             //$this->product->restaurant_id = $restaurant->id;
-            $this->product->user_id = auth()->user()->id;
+            $this->product->user_id = auth()->user()->user_id ?? auth()->user()->id;
 			$this->validate();
 			is_object($this->image) ? $this->product->image = $this->image->store('products', 'public') : null;
             $this->product->save();
@@ -354,13 +354,13 @@ class Products extends BaseConfigurationComponent
 
 
     public function loadBaseData(){
-        $this->categories = Category::where("user_id", auth()->user()->id)
+        $this->categories = Category::where("user_id", auth()->user()->user_id ?? auth()->user()->id)
             ->orWhere("user_id", null)
             ->where("enabled", 1)
             ->orderBy("name")
             ->select("id", "name")
             ->get()->pluck("name", "id")->toArray();
-        $this->productionLines = ProductionLine::where("user_id", auth()->user()->id)
+        $this->productionLines = ProductionLine::where("user_id", auth()->user()->user_id ?? auth()->user()->id)
             ->where("is_active", 1)
             ->where("production_line_id", null)
             ->orderBy("step")

@@ -21,7 +21,7 @@
 
                     <livewire:menu.roles />
 
-                    @role('admin')
+                    @hasanyrole('admin|equipe|produtos')
                         @if(auth()->user()->menagesRestaurants())
                             <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                                 <i class="fas fa-chart-line"></i> Gerencie
@@ -39,7 +39,7 @@
                                     {{ __('Integrações e processo') }}
                                 </h6>
                                 -->
-                                
+                                @role('admin')
                                 <x-jet-dropdown-link href="{{ route('wizard.restaurant.index') }}">
                                     {{ __('Configuração expressa') }}
                                 </x-jet-dropdown-link>  
@@ -49,6 +49,7 @@
                                 <x-jet-dropdown-link href="{{ route('configuration.restaurant.index') }}">
                                     {{ __('Sobre seu delivery') }}
                                 </x-jet-dropdown-link>
+                                @endrole
 
                                 @if(auth()->user()->menagesRestaurants())
                                     <x-jet-dropdown-link href="{{ route('configuration.broker.index') }}">
@@ -58,21 +59,25 @@
                                     <x-jet-dropdown-link href="{{ route('configuration.production-line.index') }}">
                                         {{ __('Processo de produção') }}
                                     </x-jet-dropdown-link>
+                                @endif
                                 
-                                    <x-jet-dropdown-link href="{{ route('configuration.teams.index') }}">
-                                        {{ __('Equipe de trabalho') }}
-                                    </x-jet-dropdown-link>
-
+                                    @hasanyrole('admin|equipe')
+                                        <x-jet-dropdown-link href="{{ route('configuration.teams.index') }}">
+                                            {{ __('Equipe de trabalho') }}
+                                        </x-jet-dropdown-link>
+                                    @endhasanyrole
+                                    @hasanyrole('admin|produtos')
                                     <x-jet-dropdown-link href="{{ route('products.index') }}">
                                         {{ __('Produtos comercializados') }}
                                     </x-jet-dropdown-link>
-                                @endif
+                                    @endhasanyrole
+                                
                             </x-slot>
                         </x-jet-dropdown>
 
 
 
-                    @endrole
+                    @endhasanyrole
 
                     @if(auth()->user()->menagesRestaurants())
                         <x-jet-nav-link href="{{ route('welcome') }}" :active="request()->routeIs('welc')">
