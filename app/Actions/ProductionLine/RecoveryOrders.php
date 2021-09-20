@@ -40,7 +40,7 @@ class RecoveryOrders
 
     public function recoveryByRoleName($restaurant_ids, $user_id, $role_name){
 
-        $currentProductionLines = $this->findCurrentProductionLinesByRoleName($user_id, $role_name);
+        $currentProductionLines = $this->findCurrentProductionLinesByRoleName($user_id, $role_name); 
         $selectedRestaurants = session('selectedRestaurants');
 
         return OrderSummary::join("production_movements", "production_movements.order_summary_id", "order_summaries.id")
@@ -48,6 +48,7 @@ class RecoveryOrders
             ->join("restaurants", "restaurants.id", "=", "order_summaries.restaurant_id")            
             ->whereIn("order_summaries.restaurant_id", is_array($selectedRestaurants) ? $selectedRestaurants : $restaurant_ids)
             ->where("order_summaries.finalized", 0)
+            ->where("restaurants.enabled", 1)
             ->where("production_movements.step_finished", 0)
             ->whereIn("production_movements.production_line_id", $currentProductionLines->pluck("id"))
             ->orderBy("order_summaries.created_at")
@@ -84,6 +85,7 @@ class RecoveryOrders
                     ->join("restaurants", "restaurants.id", "=", "order_summaries.restaurant_id")                       
                     //->where("order_summaries.restaurant_id", $previousProductionLine->restaurant_id)
                     ->where("order_summaries.finalized", 0)
+                    ->where("restaurants.enabled", 1)
                     ->where("production_movements.step_finished", 0)
                     ->where("production_movements.production_line_id", $previousProductionLine->id)
                     ->select(['order_summaries.*', 'production_movements.production_line_id', 'production_movements.current_step_number'])
@@ -106,10 +108,19 @@ class RecoveryOrders
 
     private function findCurrentProductionLinesByRoleName($user_id, $role_name){
         if(count($this->productionLines) > 0) return $this->productionLines;
-        $role = Role::where("name", $role_name)->where("guard_name", "production-line")->firstOrFail();  
-        return $role->productionLines()->where("user_id", $user_id)
+        $role = Role::where("name", $role_name)->where("guard_name", "production-line")->firstOrFail();
+
+        $productionLine = ProductionLine::where("role_id", $role->id)
+            ->where("user_id", $user_id)
             ->where("is_active", 1)
-            ->get();
+            ->first();
+
+        $productionLines = ProductionLine::orWhere(function($query) use ($productionLine ) {
+            $query->where('id', $productionLine->id)
+                  ->orWhere('production_line_id', $productionLine->id);
+        })->get();
+        
+        return $productionLines;
     }
 
     public function getCurrentProductionLineByRoleName($user_id, $role_name){

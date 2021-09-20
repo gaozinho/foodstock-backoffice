@@ -121,7 +121,6 @@ class ProductionLinePanel extends Component
 
     private function prepareOrderSummary($order_summary_id){
         //$orderSummary = OrderSummary::findOrFail($order_summary_id);
-
         $orderSummary =  OrderSummary::join("production_movements", "production_movements.order_summary_id", "order_summaries.id")
             ->where("order_summaries.id", $order_summary_id)
             ->whereIn("order_summaries.restaurant_id", $this->restaurantIds)
@@ -174,11 +173,13 @@ class ProductionLinePanel extends Component
         $userId = auth()->user()->user_id ?? auth()->user()->id;
         $currentStep = $this->productionLine->step;
         $forwardProductionProccess = new ForwardProductionProccess();
+
         $nextProductionLineStep = $forwardProductionProccess->nextStep($userId, $currentStep);
 
         if(is_object($nextProductionLineStep)){
             $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
             do{
+                
                 $productionMovement = $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $userId);
             }while($productionMovement->current_step_number < $nextProductionLineStep->step);
         }
