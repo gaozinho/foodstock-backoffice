@@ -6,7 +6,7 @@
         <div class="input-group-prepend">
             <button class="btn btn-outline-secondary minus" type="button"><i class="fas fa-minus"></i></button>
         </div>
-        <input type="text" wire:keydown.enter="moveStock" class="form-control current_stock" wire:model.defer="product.current_stock" value="{{$product->current_stock}}">
+        <input type="text" wire:keydown.enter="moveStock" class="form-control current_stock text-right" wire:model.defer="product.current_stock" value="{{$product->current_stock}}">
         <div class="input-group-append">
             <button class="btn btn-outline-secondary plus" type="button"><i class="fas fa-plus"></i></button>
         </div>
