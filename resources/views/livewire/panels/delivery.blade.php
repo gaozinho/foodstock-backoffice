@@ -8,7 +8,7 @@
                 <span class="legend mt-0 pt-0">Legenda:
                     <span class="badge bg-danger p-1 text-light">Produzindo</span> 
                     <span class="badge bg-success p-1 text-light">Pronto para despachar / balcão / mesa</span>
-                    <span class="badge" style="color: #fff; background-color: #ff8e09">Cancelado</span> 
+                    <span class="badge" style="color: #fff; background-color: #000">Cancelado</span> 
                 </span>
             </div>
             <div class="text-right">
@@ -66,7 +66,7 @@
                         $curStartNumber = substr($orderNumber, 0, 1);
 
                         if($orderSummary->canceled == 1){
-                            $cardColor = 'style="background-color: #ff8e09 !important"';
+                            $cardColor = 'style="background-color: #000 !important"';
                             $orderNumber = '<del>' . $orderNumber . '</del>';
                         }
 

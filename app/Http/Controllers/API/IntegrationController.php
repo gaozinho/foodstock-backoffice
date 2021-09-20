@@ -104,11 +104,8 @@ class IntegrationController extends BaseController
     }
 
     private function startOneOrder($order){
-        Log::info("Start 1");
         $startProductionProccess = new StartProductionProccess();
-        Log::info("Start 2");
         $productionMovement = $startProductionProccess->start($order->id);
-        Log::info("Start 3");
     }
 
     public function cancelProduction(Request $request)

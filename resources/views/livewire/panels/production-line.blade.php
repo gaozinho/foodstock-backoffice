@@ -32,7 +32,7 @@
                 @if($productionLine->can_pause)
                     <span class="badge" style="color: #fff; background-color: rgb(165, 162, 0)">Pausado</span> 
                 @endif
-                <span class="badge" style="color: #fff; background-color: #ff8e09">Cancelado</span> 
+                <span class="badge" style="color: #fff; background-color: #000">Cancelado</span> 
                 <span class="badge"><i class="fas fa-lg fa-clock"></i> Pedido agendado</span> 
             </span>
         </div>
@@ -77,10 +77,14 @@
                         @foreach ($orderSummaries as $orderSummary)
                             @php
                                 $clickAction = "";
+                                if($productionLine->next_on_click == 1 && $productionLine->step == $orderSummary->current_step_number){
+                                    $clickAction = 'wire:click="orderDetailAndMoveForward(' . $orderSummary->id . ')"';
+                                }
+                                                                   
                                 $cardColor = "";
 
                                 if($orderSummary->canceled == 1){
-                                    $cardColor = 'style="background-color: #ff8e09"';
+                                    $cardColor = 'style="background-color: #000"';
                                 }elseif($orderSummary->paused == 1){
                                     $cardColor = 'style="background-color: rgb(165, 162, 0)"';
                                 }elseif($productionLine->color != '' && isset($stepColors[$orderSummary->current_step_number])){
