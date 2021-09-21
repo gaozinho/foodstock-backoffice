@@ -21,13 +21,14 @@ class Panel extends Component
     public function loadData(){
         $selectedRestaurants = session('selectedRestaurants');
         $products = Product::where("deleted", 0)
-            ->where('monitor_stock', 1);
+            ->where('monitor_stock', 1)
+            ->where("user_id", auth()->user()->user_id ?? auth()->user()->id);
 
         if(is_array($selectedRestaurants) && count($selectedRestaurants) > 0){
-            $products->whereIn("restaurant_id", $selectedRestaurants);
+            //$products->whereIn("restaurant_id", $selectedRestaurants);
         }else{
-            $restaurant_ids = (new RecoverUserRestaurant())->recoverAllIds(auth()->user()->id)->toArray();
-            $products->whereIn("restaurant_id", $restaurant_ids);
+            //$restaurant_ids = (new RecoverUserRestaurant())->recoverAllIds(auth()->user()->id)->toArray();
+            //$products->whereIn("restaurant_id", $restaurant_ids);
         }
 
         $products->orderByRaw("current_stock < minimun_stock desc, name");

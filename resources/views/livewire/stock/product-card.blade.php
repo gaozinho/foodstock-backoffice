@@ -18,7 +18,7 @@
     </div>
     <div style="line-height: 1" class="row">
         <div class="col-sm-12">
-            <small>{{$product->restaurant->name}} - Atual: {{$product->current_stock}} • Minimo: {{$product->minimun_stock}}</small>
+            <small>Atual: {{$product->current_stock}} • Minimo: {{$product->minimun_stock}} • Código: {{$product->external_code}}</small>
         </div>
     </div>
 </div>

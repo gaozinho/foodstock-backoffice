@@ -95,10 +95,13 @@ class Products extends BaseConfigurationComponent
         $products = Product::where("deleted", 0);
 
         if(is_array($selectedRestaurants) && count($selectedRestaurants) > 0){
-            $products->whereIn("restaurant_id", $selectedRestaurants);
+            //$products->whereIn("restaurant_id", $selectedRestaurants);
         }else{
-            $products->whereIn("restaurant_id", $this->restaurant_ids);
+            //$products->whereIn("restaurant_id", $this->restaurant_ids);
         }
+
+        $products->where("user_id", auth()->user()->user_id ?? auth()->user()->id);
+        
 
         if(!empty($this->keyWord)){
             $products->where(function($query) use ($keyWord){
