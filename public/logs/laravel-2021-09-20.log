@@ -3523,3 +3523,6 @@
 #88 D:\\Projetos\\foodstock\\foodstock-backoffice\\server.php(21): require_once('D:\\\\Projetos\\\\foo...')
 #89 {main}
 "} 
+[2021-09-20 22:06:43] local.INFO: Order created: 120760  
+[2021-09-20 22:07:24] local.INFO: Order created: 120760  
+[2021-09-20 22:07:47] local.INFO: Order created: 120760  

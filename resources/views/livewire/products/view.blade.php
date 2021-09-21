@@ -101,12 +101,7 @@
                                             <span class="badge bg-monitor">Monitorando estoque</span> 
                                             <span class="badge bg-monitor-warning">Monitorado: abaixo do mínimo</span> 
                                             <span class="badge bg-monitor-danger">Monitorado: sem estoque</span> 
-                                        </span>
-                                        <div class="row">
-                                            <div class="col-12 mb-2">
-                                                <livewire:panels.select-restaurant :page="request()->fullUrl()"/>
-                                            </div> 
-                                        </div>                                          
+                                        </span>                                       
                                     </th>
                                 </tr>
                                 <tr>
