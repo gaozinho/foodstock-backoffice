@@ -15,7 +15,8 @@
                 <div class="d-flex justify-content-between align-items-end">
                     <div class="mr-2">
                         <button class="btn btn-sm btn-primary" id="bt-fullscreen"><i class="fas fa-expand-arrows-alt"></i> Modo painel <small>(F4)</small></button>
-                        <div>Acompanhe pelo seu celular.</div>
+                        <a href="{{route('panels.public-delivery-qrcode.index')}}" target="_blank" class="btn btn-sm btn-secondary"><i class="fas fa-print"></i> Imprimir QRCODE</a>
+                        <div>Acompanhe pelo seu celular <i class="fas fa-arrow-right"></i> </div>
                     </div>
                     <div class="visible-print text-center mt-2">
                         {!! QrCode::size(70)->generate($this->qrCodeUrl); !!}
@@ -28,12 +29,10 @@
     <div class="row">
         <div class="col">
             <div class="alert alert-danger mt-4">
-
-                        <i class="fas fa-exclamation-circle"></i> Atenção! Você ainda não configurou o seu processo de produção. 
-                        <br />Para que os pedidos apareçam aqui, é necessário configurar pelo menos uma <b>integração</b> e também configurar o seu <b>processo de produção</b>.
-                        <br />
-                        <a href="{{route('configuration.production-line.index')}}" class="btn btn-secondary">Configurar processo de produção</a>
-
+                <i class="fas fa-exclamation-circle"></i> Atenção! Você ainda não configurou o seu processo de produção. 
+                <br />Para que os pedidos apareçam aqui, é necessário configurar pelo menos uma <b>integração</b> e também configurar o seu <b>processo de produção</b>.
+                <br />
+                <a href="{{route('configuration.production-line.index')}}" class="btn btn-secondary">Configurar processo de produção</a>
             </div>
         </div>
     </div>
@@ -140,10 +139,6 @@
                 });
             }
             $("#main-container").attr("fullscreen" , "1").addClass("container-full").removeClass("container").removeClass("my-5");
-            
-
-            
-
         }
 
         function cancelFullScreen(){

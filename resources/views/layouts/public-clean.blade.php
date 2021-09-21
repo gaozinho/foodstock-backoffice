@@ -37,7 +37,7 @@
         @stack('scripts')
 
     </head>
-    <body class="font-sans antialiased bg-light">
+    <body class="font-sans antialiased">
 
         <div class="container text-center mt-3">
             <a class="navbar-brand mr-4" href="/">

@@ -29,7 +29,7 @@ class DeliveryPanel extends Component
  
     public function mount()
     {
-        $userId = auth()->user()->id;
+        $userId = auth()->user()->user_id ?? auth()->user()->id;
         $this->restaurantIds = (new RecoverUserRestaurant())->recoverAllIds($userId)->toArray();
 
         $this->qrCodeUrl = route('panels.public-delivery-panel.index', (new GenerateTrackingOrdersQr())->encode($userId));

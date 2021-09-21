@@ -35,6 +35,7 @@ use App\Http\Livewire\Products\{
 };
 
 use App\Http\Livewire\Deliveryman\DeliverymanPanel;
+use App\Http\Livewire\Deliveryman\Qrcode;
 use App\Http\Livewire\Keyboard\NumericKeyboard;
 use App\Http\Livewire\Dashboard\Welcome;
 use App\Http\Livewire\Dashboard\Info;
@@ -67,6 +68,8 @@ Route::group(['middleware' => ['role:admin|produtos', 'verified']], function (){
 Route::group(['middleware' => ['role:admin|estoque', 'verified']], function (){
    Route::get('/stock/panel', Panel::class)->name('stock.panel')->middleware('auth');
 });
+
+Route::get('/panel/deliveryman/qrcode', Qrcode::class)->name('panels.public-delivery-qrcode.index')->middleware('auth');
 
 Route::get('/panel/production-line/{role_name}', ProductionLinePanel::class)->name('panels.production-line-panel.index')->middleware('auth');
 Route::get('/panel/delivery', DeliveryPanel::class)->name('panels.delivery-panel.index')->middleware('auth');

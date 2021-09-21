@@ -72,7 +72,7 @@ class DeliverymanPanel extends BaseConfigurationComponent
     public function render()
     {
         $viewName = 'livewire.deliveryman.delivery';
-        return view($viewName, [])->layout('layouts.public-clean');;
+        return view($viewName, [])->layout('layouts.public-clean');
     }
 
     public function addOrder(){
