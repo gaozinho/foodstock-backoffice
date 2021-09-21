@@ -15,7 +15,9 @@
                 <div class="d-flex justify-content-between align-items-end">
                     <div class="mr-2">
                         <button class="btn btn-sm btn-primary" id="bt-fullscreen"><i class="fas fa-expand-arrows-alt"></i> Modo painel <small>(F4)</small></button>
+                        @role("admin")
                         <a href="{{route('panels.public-delivery-qrcode.index')}}" target="_blank" class="btn btn-sm btn-secondary"><i class="fas fa-print"></i> Imprimir QRCODE</a>
+                        @endrole
                         <div>Acompanhe pelo seu celular <i class="fas fa-arrow-right"></i> </div>
                     </div>
                     <div class="visible-print text-center mt-2">
