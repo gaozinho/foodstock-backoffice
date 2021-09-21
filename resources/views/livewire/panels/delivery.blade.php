@@ -19,7 +19,6 @@
                     </div>
                     <div class="visible-print text-center mt-2">
                         {!! QrCode::size(70)->generate($this->qrCodeUrl); !!}
-                        
                     </div>
                 </div>
             </div>
@@ -132,13 +131,19 @@
 
         function fullScreen(){
             $(".full-screen").hide();
+            if($("#main-container").attr("fullscreen") != "1"){
+                Swal.fire({
+                    text: 'Aperte ESC para sair do modo painel.',
+                    timer: 3000,
+                    showCancelButton: false,
+                    showCloseButton: false
+                });
+            }
             $("#main-container").attr("fullscreen" , "1").addClass("container-full").removeClass("container").removeClass("my-5");
-            Swal.fire({
-                text: 'Aperte ESC para sair do modo painel.',
-                timer: 3000,
-                showCancelButton: false,
-                showCloseButton: false
-            });
+            
+
+            
+
         }
 
         function cancelFullScreen(){
