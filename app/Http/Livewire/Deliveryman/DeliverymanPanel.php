@@ -34,7 +34,7 @@ class DeliverymanPanel extends BaseConfigurationComponent
 
     public function mount($user_id)
     {
-        $this->restaurants = implode(' &bull; ',  (new RecoverUserRestaurant())->recoverAll((new GenerateTrackingOrdersQr())->decode($user_id))->pluck("name")->toArray());
+        $this->restaurants = implode(' &bull; ',  (new RecoverUserRestaurant())->recoverAllUnauthenticated((new GenerateTrackingOrdersQr())->decode($user_id))->pluck("name")->toArray());
         $this->restaurantIds = Restaurant::where("user_id", (new GenerateTrackingOrdersQr())->decode($user_id))->select("id")->get()->toArray();
         $this->lastStepProductionLine = ProductionLine::where("user_id", (new GenerateTrackingOrdersQr())->decode($user_id))
             ->where("is_active", 1)
