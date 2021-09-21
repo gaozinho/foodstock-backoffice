@@ -3,6 +3,7 @@
         <h2 class="mt-3 mb-0 pb-0">Acompanhando 
             <span class="badge badge-secondary">{{ $total_orders }}</span> pedidos
         </h2>
+        <h4>{!! $restaurants !!}</h4>
         
         <span class="legend mt-0 pt-0">Legenda:
             <span class="badge bg-danger text-white p-1">Produzindo</span> 
