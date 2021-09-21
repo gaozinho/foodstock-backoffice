@@ -6,6 +6,7 @@ use App\Models\OrderSummary;
 use App\Models\Order;
 use App\Models\ProductionMovement;
 use App\Models\Product;
+use App\Models\Restaurant;
 use App\Models\OrderHasProduct;
 use App\Models\StockMovement;
 use App\Models\ProductionLine;
@@ -31,14 +32,34 @@ class ProcessOrderProducts
         }
     }
 
+    public function getRestaurantsByRestaurant($restaurant_id){
+        $items = DB::select(DB::raw("SELECT r1.id FROM restaurants r
+            INNER JOIN restaurants r1 ON r1.user_id = r.user_id
+            WHERE r.id = " . $restaurant_id . " AND r1.enabled = 1"
+        ));
+
+        $final = array();
+
+        array_walk_recursive($items, function($item, $key) use (&$final){
+            $final[] = $item->id;
+        });
+
+        return $final;
+    }
+
     private function processItems(OrderSummary $orderSummary, $item, $parent_id = null){
+
         $product = null;
+        //$restaurants = array_values($this->getRestaurantsByRestaurant($orderSummary->restaurant_id));
+
+        $restaurant = Restaurant::find($orderSummary->restaurant_id);
+
         try{
             //Encontrar produto pelo external code
             if(empty($item->externalCode)) throw new \Exception("Invalid external code");
-            
+
             $product = Product::where("external_code", $item->externalCode)
-                ->where("restaurant_id", $orderSummary->restaurant_id)
+                ->where("user_id", $restaurant->user_id)
                 ->firstOrFail();
 
             if(!is_object($product)) throw new \Exception("External code not found");
@@ -54,9 +75,10 @@ class ProcessOrderProducts
             $product->save();
         }catch(\Exception $e1){
             try{
+                
                 //Encontrar pelo nome
                 $product = Product::where("name", $item->name)
-                    ->where("restaurant_id", $orderSummary->restaurant_id)
+                    ->where("user_id", $restaurant->user_id)
                     ->firstOrFail();
 
                 if($product->deleted == 1){
@@ -74,7 +96,7 @@ class ProcessOrderProducts
             }catch(\Exception $e2){
                 //Cria produto
                 $product = Product::create([
-                    'restaurant_id' => $orderSummary->restaurant_id, 
+                    'restaurant_id' => null, //$orderSummary->restaurant_id, 
                     'name' => $item->name, 
                     'description' => null, 
                     'minimun_stock' => 0, 
@@ -87,7 +109,8 @@ class ProcessOrderProducts
                     'enabled' => 1, 
                     'deleted' => 0, 
                     'initial_step' => 1,
-                    'parent_id' => $parent_id
+                    'parent_id' => $parent_id,
+                    'user_id' => $restaurant->user_id
                 ]);
                 $product->external_code = isset($item->externalCode) && $item->externalCode != "" ? $item->externalCode : $this->generateExternalCode($product->id);
                 $product->save();
