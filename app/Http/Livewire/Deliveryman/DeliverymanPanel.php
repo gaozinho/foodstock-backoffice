@@ -27,13 +27,11 @@ class DeliverymanPanel extends Component
     public function mount($user_id)
     {
         $this->restaurantIds = Restaurant::where("user_id", (new GenerateTrackingOrdersQr())->decode($user_id))->select("id")->get()->toArray();
-
-        $this->lastStepProductionLine = ProductionLine::whereIn("restaurant_id", $this->restaurantIds)
+        $this->lastStepProductionLine = ProductionLine::where("user_id", (new GenerateTrackingOrdersQr())->decode($user_id))
             ->where("is_active", 1)
             ->where("production_line_id", null)
             ->orderBy("step", "desc")
-            ->firstOrFail();
-
+            ->first();
         $this->loadData();
     }    
 
