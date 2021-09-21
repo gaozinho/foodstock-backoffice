@@ -96,7 +96,7 @@ class ProcessOrderProducts
             }catch(\Exception $e2){
                 //Cria produto
                 $product = Product::create([
-                    'restaurant_id' => null, //$orderSummary->restaurant_id, 
+                    //'restaurant_id' => null, //$orderSummary->restaurant_id, 
                     'name' => $item->name, 
                     'description' => null, 
                     'minimun_stock' => 0, 
@@ -137,7 +137,7 @@ class ProcessOrderProducts
             'product_id' => $product->id
             ],[
             'product_id' => $product->id, 
-            'restaurant_id' => $orderSummary->restaurant_id, 
+            //'restaurant_id' => $orderSummary->restaurant_id, 
             'order_summary_id' => $orderSummary->id, 
             'user_id' => null, 
             'broker_id' => $orderSummary->broker_id, 
