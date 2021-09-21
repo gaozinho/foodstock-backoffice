@@ -56,6 +56,18 @@ class OrdersWeek extends Component
             }
         );
 
+        $orderAverage = FederatedDayOrder::whereIn("restaurant_id", $restaurant_ids)
+            ->whereBetween("date", [Carbon::now()->subDays(13)->toDateString(), Carbon::now()->toDateString()])
+            //->groupBy("date")
+            //->orderBy("date")
+            ->selectRaw("CEIL(SUM(federated_day_orders.total) / 14) as total")            
+            ->first();
+
+        foreach($weekMap as $key => $day){
+            $lineChartModel->addSeriesPoint("Média", $key, $orderAverage->total);
+        }
+
+
         return view('livewire.graph.orders-week')->with(["lineChartModel" => $lineChartModel]);
     }
 }

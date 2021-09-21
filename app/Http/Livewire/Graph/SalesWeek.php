@@ -58,6 +58,17 @@ class SalesWeek extends Component
             }
         );
 
+        $orderAverage = FederatedDaySale::whereIn("restaurant_id", $restaurant_ids)
+            ->whereBetween("date", [Carbon::now()->subDays(13)->toDateString(), Carbon::now()->toDateString()])
+            //->groupBy("date")
+            //->orderBy("date")
+            ->selectRaw("CEIL(SUM(federated_day_sales.amount) / 14) as amount")            
+            ->first();
+
+        foreach($weekMap as $key => $day){
+            $lineChartModel->addSeriesPoint("Média", $key, $orderAverage->amount);
+        }
+
         return view('livewire.graph.sales-week')->with(["lineChartModel" => $lineChartModel]);
     }
 }
