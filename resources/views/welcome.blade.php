@@ -4,7 +4,7 @@
 <head>
     <title>foodStock :: Seu delivery simples</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1">
     <meta name="description" content="Impulsione o seu delivery com o foodStock" />
     <meta name="keywords" content="foodstock, delivery, gestão de produção, rappi, ifood, uber eats" />
     <meta name="author" content="Wagner Gonçalves wagnerggg@gmail.com" />
