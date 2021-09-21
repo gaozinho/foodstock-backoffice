@@ -12,17 +12,24 @@ use App\Actions\ProductionLine\ForwardProductionProccess;
 use App\Actions\ProductionLine\GenerateTrackingOrdersQr;
 
 use App\Actions\ProductionLine\RecoverUserRestaurant;
+use App\Http\Livewire\Configuration\BaseConfigurationComponent;
 
-class DeliverymanPanel extends Component
+class DeliverymanPanel extends BaseConfigurationComponent
 {
 
     protected $listeners = ['loadData'];
 
     public $restaurantIds;
+    public $order_id;
+    public $orders = [];
     public $total_orders;
     public $orderSummaries = [];
     public $orderSummaryDetail;
     public $lastStepProductionLine;
+
+    protected $rules = [
+        'order_id' => 'required|integer',
+    ];    
 
     public function mount($user_id)
     {
@@ -43,6 +50,7 @@ class DeliverymanPanel extends Component
             ->where("production_movements.step_finished", 0)
             ->whereIn("production_movements.restaurant_id", $this->restaurantIds)
             ->where("order_summaries.finalized", 0)
+            ->whereIn('friendly_number', $this->orders)
             ->select("order_summaries.*", "production_movements.production_line_id")
             ->selectRaw("restaurants.name as restaurant")
             ->selectRaw("brokers.name as broker")
@@ -65,6 +73,24 @@ class DeliverymanPanel extends Component
     {
         $viewName = 'livewire.deliveryman.delivery';
         return view($viewName, [])->layout('layouts.public-clean');;
+    }
+
+    public function addOrder(){
+
+        $orderSummary = OrderSummary::where("friendly_number", intval($this->order_id))
+            ->where("finalized", 0)
+            ->whereIn("restaurant_id", $this->restaurantIds)
+            ->first();
+
+        if(is_object($orderSummary)){
+            $this->orders[] = $this->order_id;
+        }else{
+            $this->simpleAlert('error', 'Pedido não encontrado.');
+        }
+        
+        $this->order_id = '';
+        $this->loadData();
+        $this->emit('loaded');
     }
 
 }

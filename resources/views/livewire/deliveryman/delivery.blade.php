@@ -1,23 +1,45 @@
 <div>
     <div class="full-screen mb-3">
-        <h2 class="mt-3 mb-0 pb-0">Pedidos 
-            <span class="badge badge-secondary">{{ $total_orders }}</span>
+        <h2 class="mt-3 mb-0 pb-0">Acompanhando 
+            <span class="badge badge-secondary">{{ $total_orders }}</span> pedidos
         </h2>
+        
         <span class="legend mt-0 pt-0">Legenda:
             <span class="badge bg-danger text-white p-1">Produzindo</span> 
-            <span class="badge bg-success p-1">Pronto para retirar</span>
+            <span class="badge bg-success p-1">Pronto para retirar</span> <br />
+            <p style="line-height: 1"><small>Você pode acompanhar se seu pedido está pronto para retirada. Basta fornecer o número (ou conjunto de números) no campo abaixo.</small></p>
         </span>                
     </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-xs-12 col">
+                    <div class="form-group">
+                        <strong>Digite o número do pedido</strong>
+                        <div class="input-group mb-3">
+                            <input type="text" wire:model.defer="order_id" class="form-control" placeholder="# Pedido">
+                            <div class="input-group-append">
+                                <button wire:click="addOrder" class="btn btn-add btn-primary" type="button">Adicionar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>   
+        </div>   
+    </div>    
 
     <div class="loading">
         <div class="">
             @if($total_orders == 0)
+            <hr />
             <div class="text-center">
                 <img src="{{ asset('images/ico-logo.png') }}" class="mt-2 mb-2">
-                    <h3>Aguarde! Nenhum item em produção ou pronto.</h3>
+                    <h3>Digite o número do pedido que deseja acompanhar.</h3>
             </div>
             @endif
             <div class="row">
+                <div class="col-xs-12 col">
                 @php
                     $prevStartNumber = -1;                        
                 @endphp                        
@@ -41,6 +63,7 @@
                             </div>
                         </div>
                 @endforeach
+                </div>
             </div>
         </div>
     </div>
@@ -54,6 +77,17 @@
         }
         $(document).ready(function() {
             var reloadDataInterval = reloadPage();
+
+            $('.btn-add').on('click', function(e) {
+                $(".loading").LoadingOverlay("show");
+            });
+
+            Livewire.on('loaded', function() {
+                $(".loading").LoadingOverlay("hide");
+            })
+
         });
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>    
 @endpush
