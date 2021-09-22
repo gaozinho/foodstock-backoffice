@@ -88,6 +88,11 @@ class ProductionMovement extends Model
         return $this->belongsTo('App\Models\User');
     }
 
+    public function pausedBy()
+    {
+        return $this->belongsTo('App\Models\User', "paused_by");
+    }    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

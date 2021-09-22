@@ -61,7 +61,13 @@
                         @include('livewire.panels.order-detail-include')
                         <hr class="my-2">
                         <div>
-                            <div role="toolbar" class="btn-toolbar"><span class="h3">Etapa: {{ $productionLine->name }}</span></div>
+                            <div role="toolbar" class="btn-toolbar">
+                                <small>
+                                    <b>Responsáveis:</b> {!! count($steps) > 0 ? implode(" &bull; ", $steps) : 'Sem dados' !!}
+                                    <br /> <b>Úlima etapa concluída:</b> {{is_object($productionLine) ? $productionLine->name : 'Sem dados'}}
+                                </small>
+                                
+                            </div>
                         </div>
 
                         <div>

@@ -42,7 +42,8 @@ class RecoverUserRestaurant
             $values = Restaurant::where("user_id", "=", $user_id)->where("enabled", 1)
                 //->selectRaw("GROUP_CONCAT(id SEPARATOR ',') as ids")
                 ->select("id")
-                ->get();
+                ->get()
+                ->pluck("id");;
 
             return $values;
         }
