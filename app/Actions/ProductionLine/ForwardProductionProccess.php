@@ -25,8 +25,11 @@ class ForwardProductionProccess
             $productionMovement = $this->getCurrentMovementByOrderId($order->id);
             
             if(!is_object($productionMovement)) return false;
+
             $productionMovement->step_finished = 1;
+            $productionMovement->finished_by = auth()->user()->id;
             $productionMovement->finished_at = date("Y-m-d H:i:s");
+            
             $productionMovement->save();
 
             $currentProductionLine = ProductionLine::findOrFail($productionMovement->production_line_id);

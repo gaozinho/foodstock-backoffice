@@ -179,7 +179,6 @@ class ProductionLinePanel extends Component
         if(is_object($nextProductionLineStep)){
             $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
             do{
-                
                 $productionMovement = $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $userId);
             }while($productionMovement->current_step_number < $nextProductionLineStep->step);
         }

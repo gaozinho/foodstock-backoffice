@@ -43,7 +43,7 @@ class NumericKeyboard extends Component
         $this->orderSummaryDetail = $this->prepareOrderSummary($order_number);   
         if($this->orderSummaryDetail){
             $productionMovements = ProductionMovement::where("order_summary_id", $this->orderSummaryDetail->id)
-                ->where("step_finished", 0)
+                ->where("step_finished", 1)
                 ->orderBy("current_step_number")
                 ->get();
             if(count($productionMovements) > 0){
@@ -52,7 +52,7 @@ class NumericKeyboard extends Component
             }
 
         }
-
+//dd($this->steps);
         $this->emit('openOrderModal');
     }
 
@@ -65,7 +65,7 @@ class NumericKeyboard extends Component
             $steps[] = $etapa . ": " . $user;
 
             if($productionMovement->paused == 1){
-                $steps[] =  $etapa . " pausado: " . $productionMovement->pausedBy->name;
+                $steps[] = $etapa . " pausado: " . $productionMovement->pausedBy->name;
             } 
         }
         return $steps;
@@ -75,7 +75,7 @@ class NumericKeyboard extends Component
         //$orderSummary = OrderSummary::findOrFail($order_summary_id);
         try{
             $this->restaurantIds = (new RecoverUserRestaurant())->recoverAllIds(auth()->user()->user_id ?? auth()->user()->id);
-        $orderSummary =  OrderSummary::where("friendly_number", $order_number)
+            $orderSummary =  OrderSummary::where("friendly_number", $order_number)
             ->whereIn("restaurant_id", $this->restaurantIds)
             //->where("finalized", 0)
             ->where(function($query){
