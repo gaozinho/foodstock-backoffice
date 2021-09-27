@@ -87,12 +87,21 @@ class DeliverymanPanel extends BaseConfigurationComponent
         if(is_object($orderSummary)){
             $this->orders[] = $this->order_id;
         }else{
-            $this->simpleAlert('error', 'Pedido não encontrado.');
+            $this->simpleAlert('error', 'Pedido não encontrado ou já enviado.');
         }
         
         $this->order_id = '';
         $this->loadData();
         $this->emit('loaded');
     }
+
+    public function removeOrder($friendly_number){
+
+        if (($key = array_search(intval($friendly_number), $this->orders)) !== false) {
+            unset($this->orders[$key]);       
+        }
+        $this->loadData();
+        $this->emit('loaded');             
+    }    
 
 }

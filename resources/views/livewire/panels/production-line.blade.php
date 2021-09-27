@@ -29,10 +29,10 @@
                     @endphp
                     <span class="badge" style="color: #fff; background-color: {{$legend['color']}}">{{$startText}}{{$legend['name']}}</span> 
                 @endforeach
-                @if($productionLine->can_pause)
+                @if($productionLine->can_pause == 1 || $productionLineCanPause)
                     <span class="badge" style="color: #fff; background-color: rgb(165, 162, 0)">Pausado</span> 
                 @endif
-                <span class="badge" style="color: #fff; background-color: #000">Cancelado</span> 
+                <span class="badge" style="color: #fff; background-color: #000">Cancelado</span>
                 <span class="badge"><i class="fas fa-lg fa-clock"></i> Pedido agendado</span> 
             </span>
         </div>

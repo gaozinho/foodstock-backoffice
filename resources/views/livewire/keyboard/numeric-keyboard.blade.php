@@ -63,7 +63,7 @@
                         <div>
                             <div role="toolbar" class="btn-toolbar">
                                 <small>
-                                    <b>Responsáveis:</b> {!! count($steps) > 0 ? implode(" &bull; ", $steps) : 'Sem dados' !!}
+                                    <b>Responsáveis:</b> {!! count($steps) > 0 ? implode(' <i class="fas fa-arrow-right"></i> ', $steps) : 'Sem dados' !!}
                                     <br /> <b>Úlima etapa concluída:</b> {{is_object($productionLine) ? $productionLine->name : 'Sem dados'}}
                                 </small>
                                 
@@ -110,6 +110,11 @@
             });
 
             $(document).keyup(function(e) {
+                if(($("#order-modal").data('bs.modal') || {})._isShown){
+                    $('#order-modal').modal("hide");
+                }
+
+                var clickedValue = $(this).val();
                 addToDisplay(e.key);
            });      
            

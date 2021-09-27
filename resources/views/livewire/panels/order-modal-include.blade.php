@@ -20,11 +20,11 @@
                                 <i wire:loading wire:target="nextStep" class="fas fa-cog fa-spin"></i> Tirar do painel <i class="fas fa-trash-alt"></i></button>
                         </div>
 
-                    @elseif (isset($productionLine))
+                    @elseif (isset($orderProductionLine))
 
                         <div>
                             <button type="button" data-dismiss="modal" class="mt-2 btn btn-secondary mr-1">Fechar <i class="fas fa-times"></i></button>
-                            @if ($productionLine->can_pause && $orderSummaryDetail->paused != 1)
+                            @if ($orderProductionLine->can_pause && $orderSummaryDetail->paused != 1)
                                 <button type="button" name="pause" value="pause" wire:click="pause({{ $orderSummaryDetail->id }})" class="mt-2 btn btn-warning">
                                     <i wire:loading wire:target="pause" class="fas fa-cog fa-spin"></i> Pausar <i class="fas fa-pause"></i>
                                 </button>

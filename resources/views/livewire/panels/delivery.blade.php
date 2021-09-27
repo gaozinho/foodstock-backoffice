@@ -1,17 +1,17 @@
-<div class="my-3 mx-3">
+<div class="my-3 mx-0 mx-md-3">
     <div class="full-screen">
-        <div class="d-flex justify-content-between align-items-end">
-            <div>
-                <h2 class="mt-3 mb-0 pb-0"><i class="fas fa-tv"></i> Painel de delivery
+        <div class="row d-flex justify-content-between align-items-end">
+            <div class="col-12 col-md-6 mx-0">
+                <h2 class="mt-0 mt-md-3 mb-0 pb-0"><i class="fas fa-tv"></i> Painel de delivery
                     <span class="badge badge-secondary">{{ $total_orders }}</span>
                 </h2>
                 <span class="legend mt-0 pt-0">Legenda:
                     <span class="badge bg-danger p-1 text-light">Produzindo</span> 
-                    <span class="badge bg-success p-1 text-light">Pronto para despachar / balcão / mesa</span>
-                    <span class="badge" style="color: #fff; background-color: #000">Cancelado</span> 
+                    <span class="badge bg-success p-1 text-light">Pronto para despacho</span>
+                    <span class="badge p-1 text-light" style="color: #fff; background-color: #000">Cancelado</span> 
                 </span>
             </div>
-            <div class="text-right">
+            <div class="d-none d-sm-block col-12 col-md-auto text-right">
                 <div class="d-flex justify-content-between align-items-end">
                     <div class="mr-2">
                         <button class="btn btn-sm btn-primary" id="bt-fullscreen"><i class="fas fa-expand-arrows-alt"></i> Modo painel <small>(F4)</small></button>
@@ -40,7 +40,7 @@
     </div>
         
     @endif
-    <div class=" my-3 mx-3">
+    <div class="my-3 mx-1 mx-md-3">
         <div>
             @if($total_orders == 0)
             <div class="text-center">
@@ -140,12 +140,12 @@
                     showCloseButton: false
                 });
             }
-            $("#main-container").attr("fullscreen" , "1").addClass("container-full").removeClass("container").removeClass("my-5");
+            $("#main-container").attr("fullscreen" , "1").addClass("container-full").addClass("mx-3").removeClass("container").removeClass("my-5");
         }
 
         function cancelFullScreen(){
             $(".full-screen").show();
-            $("#main-container").removeAttr("fullscreen").removeClass("container-full").addClass("container").addClass("my-5");
+            $("#main-container").removeAttr("fullscreen").removeClass("container-full").removeClass("mx-3").addClass("container").addClass("my-5");
         }        
 
         $(document).ready(function() {

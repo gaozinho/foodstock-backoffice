@@ -4,6 +4,21 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 
+use App\Actions\Report\ProductionSpentTimeReport;
+
+Route::get('/report', function () {
+   $productionSpentTime = new ProductionSpentTimeReport();
+   
+
+   $contents = $productionSpentTime->displayReport([61, 67, 66, 54, 62], '2021-09-23');
+   $filename = 'test.pdf';
+   return response()->streamDownload(function () use ($contents) {
+       echo $contents;
+   }, $filename);
+
+
+});
+
 Route::get('/', function () {
     return view('welcome');
 });

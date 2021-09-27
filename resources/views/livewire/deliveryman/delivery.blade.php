@@ -40,31 +40,24 @@
             </div>
             @endif
             <div class="row">
-                <div class="col-xs-12 col">
-                @php
-                    $prevStartNumber = -1;                        
-                @endphp                        
                 @foreach ($orderSummaries as $index => $orderSummary)
-                    @php
-                        //$curStartNumber = intval(substr($orderSummary->friendly_number, 0, 1));
-
-                        $curStartNumber = substr(str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT), 0, 1);
-                        if($curStartNumber != $prevStartNumber){
-                            if($prevStartNumber >= 0) echo '</div>';
-                            $prevStartNumber = $curStartNumber;
-                            //Abre coluna
-                            if($index < count($orderSummaries)) echo '<div class="text-center col px-1">';
-                        }
-                    @endphp
-                        <div 
-                            class="order-card card mb-2 {{$lastStepProductionLine->id == $orderSummary->production_line_id ? 'bg-success' : 'bg-danger'}}">
+                    <div class="text-center col-12">
+                        <div class="card mb-2 {{$lastStepProductionLine->id == $orderSummary->production_line_id ? 'bg-success' : 'bg-danger'}}">
                             <div class="card-body p-2">
-                                <div class="text-white h4">{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</div>
-                                <div class="m-0 p-0 small text-white"><small>{{ $orderSummary->restaurant }} &bull; {{ $orderSummary->broker }}</small></div>
+                                <div class="text-white h4">
+                                    {{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}
+                                    
+                                </div>
+                                <div class="m-0 p-0 small text-white">
+                                    <small>{{ $orderSummary->restaurant }} &bull; {{ $orderSummary->broker }}
+                                    &bull; 
+                                    <span onclick='$(".loading").LoadingOverlay("show")' class="text-white" wire:click="removeOrder({{$orderSummary->friendly_number}})"><i class="fas fa-minus-circle"></i> remover</span>
+                                </small></div>
                             </div>
                         </div>
+                    </div>
                 @endforeach
-                </div>
+                
             </div>
         </div>
     </div>
@@ -82,6 +75,10 @@
             $('.btn-add').on('click', function(e) {
                 $(".loading").LoadingOverlay("show");
             });
+
+            $('.btn-remove').on('click', function(e) {
+                $(".loading").LoadingOverlay("show");
+            });            
 
             Livewire.on('loaded', function() {
                 $(".loading").LoadingOverlay("hide");

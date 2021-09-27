@@ -26,9 +26,10 @@ class ForwardProductionProccess
             
             if(!is_object($productionMovement)) return false;
 
+            //Finaliza passo atual
             $productionMovement->step_finished = 1;
-            $productionMovement->finished_by = auth()->user()->id;
-            $productionMovement->finished_at = date("Y-m-d H:i:s");
+            $productionMovement->finished_by = $productionMovement->finished_by ?? auth()->user()->id;
+            $productionMovement->finished_at = $productionMovement->finished_at ?? date("Y-m-d H:i:s");
             
             $productionMovement->save();
 
@@ -45,14 +46,17 @@ class ForwardProductionProccess
             $productionLine = ProductionLine::findOrFail($productionMovement->next_step_id);
             $productionLineNextStep = $this->nextStep($user_id, $productionLine->step);
 
+            //Cria próximo passo
             return ProductionMovement::firstOrCreate([
                     'order_id' => $order->id, 
-                    'production_line_id' => $productionLine->id
+                    'production_line_id' => $productionLine->id,
                 ],
                 [
                     'production_line_id' => $productionLine->id,
                     'current_step_number' => $productionLine->step,
                     'step_finished' => 0,
+                    'finished_at' => null,
+                    'finished_by' => null,
                     'restaurant_id' => $order->restaurant_id,
                     'order_summary_id' => $productionMovement->order_summary_id,
                     'order_id' => $order->id,
@@ -61,7 +65,6 @@ class ForwardProductionProccess
                     'user_id' => auth()->user()->id
             ]);
 
-            return true;
         }catch(\Exception $e){
             if(env('APP_DEBUG')) throw $e;
             $mensagem = 'Não foi possível avançar o processo do pedido %d. Mais detalhes: %s';

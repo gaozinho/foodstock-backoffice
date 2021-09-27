@@ -12,11 +12,13 @@
     "require": {
         "php": "^7.3|^8.0",
         "asantibanez/livewire-charts": "^2.3",
+        "barryvdh/laravel-dompdf": "^0.9.0",
         "bensampo/laravel-enum": "^3.3",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "7.0",
         "jantinnerezo/livewire-alert": "^2.1",
+        "jimmyjs/laravel-report-generator": "^2.1",
         "laravel/framework": "^8.40",
         "laravel/jetstream": "^2.3",
         "laravel/passport": "^10.1",

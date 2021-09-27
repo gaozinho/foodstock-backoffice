@@ -38,7 +38,7 @@ class ProductionMovement extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'production_line_id', 'order_summary_id', 'restaurant_id', 'order_summary_id', 'order_id', 'next_step_id', 'production_line_version_id', 'current_step_number', 'step_finished', 'created_at', 'updated_at', 'finished_at', 'finished_by', 'paused', 'paused_at', 'paused_by'];
+    protected $fillable = ['user_id', 'production_line_id', 'order_summary_id', 'restaurant_id', 'order_summary_id', 'order_id', 'next_step_id', 'production_line_version_id', 'current_step_number', 'step_finished', 'finished_at', 'finished_by', 'paused', 'paused_at', 'paused_by'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -87,6 +87,11 @@ class ProductionMovement extends Model
     {
         return $this->belongsTo('App\Models\User');
     }
+
+    public function finishedBy()
+    {
+        return $this->belongsTo('App\Models\User', 'finished_by');
+    }    
 
     public function pausedBy()
     {

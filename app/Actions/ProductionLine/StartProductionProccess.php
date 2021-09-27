@@ -37,6 +37,7 @@ class StartProductionProccess
             ]);
 
             $initialProductionMovement = $this->createFirstMovement($order, $orderSummary);
+            //$initialProductionMovement->finished_at = !isnull($initialProductionMovement->finished_at) ? null : null;
             
             try{ // Criar/tratar produtos e estoque
                 (new ProcessOrderProducts())->process($orderSummary, $generateOrderJson->babelizedOrder());
@@ -66,7 +67,8 @@ class StartProductionProccess
         $productionLine = $this->firstStep($order->restaurant_id);
         $productionLineNextStep = $this->nextStep($order->restaurant_id, $productionLine->step);
         $productionLineVersion = ProductionLineVersion::where("user_id", $restaurant->user_id)->where("is_active", 1)->firstOrFail();
-        
+
+
         return ProductionMovement::firstOrCreate([
                 'order_id' => $order->id, 
                 'production_line_id' => $productionLine->id
@@ -75,12 +77,15 @@ class StartProductionProccess
                 'production_line_id' => $productionLine->id,
                 'current_step_number' => $productionLine->step,
                 'step_finished' => 0,
+                'finished_at' => null,
+                'finished_by' => null,
                 'restaurant_id' => $order->restaurant_id,
                 'order_summary_id' => $orderSummary->id,
                 'order_id' => $order->id,
                 'next_step_id'=> $productionLineNextStep ? $productionLineNextStep->id : null,
                 'production_line_version_id' => $productionLineVersion->id
         ]);
+
     }
 
     protected function placeOrderOnProductionLine(OrderSummary $orderSummary, ProductionMovement $productionMovement){
@@ -100,7 +105,7 @@ class StartProductionProccess
                     $productionLine = ProductionLine::findOrFail($productionMovement->next_step_id);  
                     
                     $productionMovement->step_finished = 1;
-                    $productionMovement->finished_at = date("Y-m-d H:i:s");
+                    $productionMovement->finished_at = $productionMovement->finished_at ?? date("Y-m-d H:i:s");
                     $productionMovement->save();                
 
                     $productionLineNextStep = $this->nextStep($productionMovement->restaurant_id, $productionLine->step);
@@ -113,6 +118,8 @@ class StartProductionProccess
                             'production_line_id' => $productionLine->id,
                             'current_step_number' => $productionLine->step,
                             'step_finished' => 0,
+                            'finished_at' => null,
+                            'finished_by' => null,                            
                             'restaurant_id' => $productionMovement->restaurant_id,
                             'order_summary_id' => $productionMovement->order_summary_id,
                             'order_id' => $productionMovement->order_id,

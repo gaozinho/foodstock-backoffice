@@ -43,7 +43,14 @@ class NumericKeyboard extends Component
         $this->orderSummaryDetail = $this->prepareOrderSummary($order_number);   
         if($this->orderSummaryDetail){
             $productionMovements = ProductionMovement::where("order_summary_id", $this->orderSummaryDetail->id)
-                ->where("step_finished", 1)
+                
+                ->where(function($query){
+                    $query->where("step_finished", 1)
+                        ->orWhere(function($q2){
+                            $q2->where("step_finished", 0)->where("paused", 1);
+                        });
+                        
+                })
                 ->orderBy("current_step_number")
                 ->get();
             if(count($productionMovements) > 0){
@@ -60,13 +67,13 @@ class NumericKeyboard extends Component
         $steps = [];
         
         foreach($productionMovements as $productionMovement){
-            $etapa = $productionMovement->productionLine->name;
-            $user = is_object($productionMovement->user) ? $productionMovement->user->name : "Sistema";
-            $steps[] = $etapa . ": " . $user;
-
             if($productionMovement->paused == 1){
-                $steps[] = $etapa . " pausado: " . $productionMovement->pausedBy->name;
-            } 
+                $steps[] = "Pausado: " . $productionMovement->pausedBy->name;
+            }else{
+                $etapa = $productionMovement->productionLine->name;
+                $user = is_object($productionMovement->finishedBy) ? $productionMovement->finishedBy->name : "foodStock";
+                $steps[] = $etapa . ": " . $user;
+            }
         }
         return $steps;
     }

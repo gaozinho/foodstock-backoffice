@@ -25,6 +25,8 @@ class ProductionLinePanel extends Component
     public $orderSummaries;
     public $orderSummariesPreviousStep;
     public $productionLine;
+    public $productionLineCanPause;
+    public $orderProductionLine;
     public $stepColors;
     public $legends;
     public $orderSummaryDetail;
@@ -71,11 +73,21 @@ class ProductionLinePanel extends Component
         $recoveryOrders = new RecoveryOrders();
         
         $this->productionLine = $recoveryOrders->getCurrentProductionLineByRoleName($userId, $role_name);
+        $this->productionLineCanPause = $this->canPause($this->productionLine);
+
+        if($role_name != $this->productionLine->role->name){
+            return redirect()->route('panels.production-line-panel.index', $this->productionLine->role->name);
+        }
 
         $this->stepColors = $recoveryOrders->getProductionLineColors($userId);
         $this->legends = $this->getLegend($userId, $role_name);
+        
         $this->loadData();
-    }    
+    }
+
+    private function canPause($productionLine){
+        return $productionLine->can_pause == 1 || ProductionLine::where("production_line_id", $productionLine->id)->count() > 0;
+    }
 
     public function loadData(){
         $userId = auth()->user()->user_id ?? auth()->user()->id;
@@ -190,10 +202,10 @@ class ProductionLinePanel extends Component
     public function orderDetail($order_summary_id, $production_line_id){
 
         $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
-        $productionLine = ProductionLine::findOrFail($production_line_id);
+        $this->orderProductionLine = ProductionLine::findOrFail($production_line_id);
         
-        if($productionLine->next_on_click == 1){ //Se passa para próximo passo no clique
-            (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $productionLine->user_id);
+        if($this->orderProductionLine->next_on_click == 1){ //Se passa para próximo passo no clique
+            (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $this->orderProductionLine->user_id);
             $this->emit('moveForward');
         }else{
             $this->emit('openOrderModal');

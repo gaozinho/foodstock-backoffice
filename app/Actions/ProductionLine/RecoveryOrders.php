@@ -125,11 +125,18 @@ class RecoveryOrders
 
     public function getCurrentProductionLineByRoleName($user_id, $role_name){
         if(count($this->productionLines) > 0) return $this->productionLines;
+
         $role = Role::where("name", $role_name)->where("guard_name", "production-line")->firstOrFail();  
-        return $role->productionLines()->where("user_id", $user_id)
-        ->where("is_active", 1)
-        ->where("production_line_id", null)
-        ->firstOrFail();
+        
+        $productionLine = $role->productionLines()->where("user_id", $user_id)
+            ->where("is_active", 1)
+            //->where("production_line_id", null)
+            ->firstOrFail();
+        if(is_numeric($productionLine->production_line_id)){
+            return ProductionLine::find($productionLine->production_line_id);
+        }
+
+        return $productionLine;
     }    
 
     public function getProductionLineColors($user_id){
