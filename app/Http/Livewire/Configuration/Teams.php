@@ -60,6 +60,7 @@ class Teams extends Component
             ->where("users.restaurant_member", '1')
             ->whereIn("restaurant_has_users.restaurant_id", $restaurantsIds)
             ->selectRaw("distinct users.*")
+            ->orderBy("users.name")
             ->get();        
     }
 
