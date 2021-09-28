@@ -1,20 +1,14 @@
-<div>
+<div class="mb-5">
+
+    <div class="full-screen mb-3">
+        <h2 class="mt-3 mb-0 pb-0"><i class="fas fa-users-cog"></i> Equipe de trabalho</h2>
+        <p class="mb-2" style="line-height: 1.2">Além de você, configure outras pessoas que poderão interagir com o processo de produção de suas lojas.</p>
+    </div>
+
 
     <div class="row">
         <div class="col-lg-8 col-md-8 margin-tb">
 
-            <div class="card border mb-4">
-                <div class="card-body">
- 
-
-                    <div class="row justify-content-between">
-                        <div class="col-md-12 align-self-end">
-                            <span class="h3">Equipe de trabalho</span>
-                            <p class="mb-2" style="line-height: 1.2">Além de você, configure outras pessoas que poderão interagir com o processo de produção de suas lojas.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div class="card border">
                 <div class="card-body">

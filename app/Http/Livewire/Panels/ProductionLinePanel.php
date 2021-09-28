@@ -173,15 +173,16 @@ class ProductionLinePanel extends Component
         $this->loadData();
     }    
 
-    public function orderDetailAndMoveForward($order_summary_id){
+    public function orderDetailAndMoveForward($order_summary_id, $production_line_id = null){
         $userId = auth()->user()->user_id ?? auth()->user()->id;
         $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
-        (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $userId);
+        
+        (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $userId, $this->productionLine);
         $this->emit('openOrderModal');
         $this->loadData();
     }
 
-    public function moveForwardFromCurrentStep($order_summary_id){
+    public function moveForwardFromCurrentStep($order_summary_id, $production_line_id = null){
         $userId = auth()->user()->user_id ?? auth()->user()->id;
         $currentStep = $this->productionLine->step;
         $forwardProductionProccess = new ForwardProductionProccess();
@@ -191,7 +192,7 @@ class ProductionLinePanel extends Component
         if(is_object($nextProductionLineStep)){
             $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
             do{
-                $productionMovement = $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $userId);
+                $productionMovement = $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $userId, $this->productionLine);
             }while($productionMovement->current_step_number < $nextProductionLineStep->step);
         }
         
@@ -205,7 +206,7 @@ class ProductionLinePanel extends Component
         $this->orderProductionLine = ProductionLine::findOrFail($production_line_id);
         
         if($this->orderProductionLine->next_on_click == 1){ //Se passa para próximo passo no clique
-            (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $this->orderProductionLine->user_id);
+            (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $this->orderProductionLine->user_id, $this->productionLine);
             $this->emit('moveForward');
         }else{
             $this->emit('openOrderModal');
@@ -237,7 +238,7 @@ class ProductionLinePanel extends Component
 
         if(is_array($this->selectedOrderIds) && count($this->selectedOrderIds) > 0){
             foreach($this->selectedOrderIds as $order_id){
-                $forwardProductionProccess->forward($order_id, $user_id);
+                $forwardProductionProccess->forward($order_id, $user_id, $this->productionLine);
             }
             $this->alert("success", sprintf("%s pedidos avançaram para a próxima etapa.", count($this->selectedOrderIds)), ['timer' =>  5000]);              
         }else{
@@ -251,7 +252,7 @@ class ProductionLinePanel extends Component
     public function nextStep($order_summary_id){
         $userId = auth()->user()->user_id ?? auth()->user()->id;
         $forwardProductionProccess = new ForwardProductionProccess();
-        $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $userId);
+        $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $userId, $this->productionLine);
         $this->loadData();
         $this->emit('closeOrderModal');
     }
