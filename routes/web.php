@@ -8,13 +8,10 @@ use App\Actions\Report\ProductionSpentTimeReport;
 
 Route::get('/report', function () {
    $productionSpentTime = new ProductionSpentTimeReport();
-   
 
-   $contents = $productionSpentTime->displayReport([61, 67, 66, 54, 62], '2021-09-23');
-   $filename = 'test.pdf';
-   return response()->streamDownload(function () use ($contents) {
-       echo $contents;
-   }, $filename);
+   //return $productionSpentTime->displayExcelReport([61, 67, 66, 54, 62], '2021-09-26');
+
+   return $productionSpentTime->displayPdfReport([61, 67, 66, 54, 62], '2021-09-26');
 
 
 });

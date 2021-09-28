@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+        
 
         @livewireStyles
 
@@ -23,7 +24,7 @@
 
         @livewireScripts
         @livewireChartsScripts
-
+        <script src="{{ asset('vendor/livewire-charts/app.js') }}"></script>
         <!-- ALERTS -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>  
         
@@ -36,6 +37,16 @@
         <link href="{{ asset('js/spectrum/spectrum.css') }}" rel="stylesheet" type="text/css">
         
         @stack('scripts')
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPL9CXZHBZ"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-VPL9CXZHBZ');
+        </script>
 
     </head>
     <body class="font-sans antialiased bg-light">

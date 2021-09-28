@@ -18,6 +18,17 @@
 
         <!-- Templates -->
         <link rel="stylesheet" href="{{ asset('landing/css/style.css') }}">
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-VPL9CXZHBZ"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-VPL9CXZHBZ');
+        </script>
+
     </head>
     <body class="bg-light font-sans antialiased">
 

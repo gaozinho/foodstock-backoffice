@@ -7,6 +7,7 @@ use App\Models\RappiBroker;
 use App\Models\ProductionLine;
 use App\Actions\ProductionLine\RecoverUserRestaurant;
 use App\Integrations\IfoodIntegrationDistributed;
+use Illuminate\Support\Facades\Log;
 
 class PerformHealthCheck
 {
@@ -66,15 +67,30 @@ class PerformHealthCheck
             foreach($restaurants as $restaurant){
                 $availableData = $ifoodIntegrationDistributed->merchantAvailable($restaurant->id);
 
-                $availableReason = $availableData->message->title . " - " . $availableData->message->subtitle;
-    
-                $merchantsInfo["IFOOD"][$restaurant->name] = [
-                    "available" => $availableData->available, 
-                    "reason" => $availableData->message->title . (isset($availableData->message->subtitle) && !empty($availableData->message->subtitle) ? " - " . $availableData->message->subtitle : "")
-                ];
+                //$availableReason = $availableData->message->title . " - " . $availableData->message->subtitle;
+
+                if(is_object($availableData)){
+                    $merchantsInfo["IFOOD"][$restaurant->name] = [
+                        "available" => ($availableData->status == "AVAILABLE"), 
+                        "reason" => ($availableData->status == "AVAILABLE") ? "Loja aberta" : "Loja fechada" // $availableData->message->title . (isset($availableData->message->subtitle) && !empty($availableData->message->subtitle) ? " - " . $availableData->message->subtitle : "")
+                    ];
+                }else if(is_array($availableData)){
+                    $info = [];
+                    foreach($availableData as $data){
+                        $info[] = $data->message->title . " para " . $data->operation;
+                    }
+                    $merchantsInfo["IFOOD"][$restaurant->name] = [
+                        "available" => ($data->available == "AVAILABLE"), 
+                        "reason" => implode(", ", $info) 
+                    ];
+                }
             }
 
         }catch(\Exception $e){
+            dd($e);
+            Log::error("Error on health check", [
+                "message" => $e->getMessage()
+            ]);
             $merchantsInfo[""][""] = [
                 "available" => false, 
                 "reason" => "Nenhuma integração configurada"

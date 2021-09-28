@@ -62,7 +62,7 @@ class IfoodIntegrationDistributed extends IfoodIntegration
     private function parseMerchantsResponse($response)
     {
         $response = json_decode($response);
-        if(is_array($response) && count($response) > 0){
+        if(is_object($response) || is_array($response)){
             return $response;
         }
         return false;
@@ -125,9 +125,9 @@ class IfoodIntegrationDistributed extends IfoodIntegration
             
             $this->requestOptions["headers"]["Authorization"] = "Bearer " . $ifoodBroker->accessToken;
             $httpResponse = $this->httpClient->get($this->broker->merchantsApi, $this->requestOptions);
-            $jsonMerchants = $this->parseMerchantsResponse($httpResponse->getBody()->getContents());
+            $jsonMerchant = $this->parseMerchantsResponse($httpResponse->getBody()->getContents());
 
-            return $jsonMerchants;
+            return $jsonMerchant;
         }catch(\Exception $exception){
             if(env('APP_DEBUG')) throw $exception;
             return false;
@@ -146,13 +146,10 @@ class IfoodIntegrationDistributed extends IfoodIntegration
             
             $this->requestOptions["headers"]["Authorization"] = "Bearer " . $ifoodBroker->accessToken;
             $httpResponse = $this->httpClient->get($this->broker->merchantApi . $ifoodBroker->merchant_id . "/status", $this->requestOptions);
-            
-            $jsonMerchants = $this->parseMerchantsResponse($httpResponse->getBody()->getContents());
 
-            foreach($jsonMerchants as $jsonMerchant){
-                return $jsonMerchant;
-            }
+            $jsonMerchant = $this->parseMerchantsResponse($httpResponse->getBody()->getContents());
 
+            return $jsonMerchant;
         }catch(\Exception $exception){
             throw $exception;
             //return false;
