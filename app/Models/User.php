@@ -80,6 +80,16 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->adminRestaurants()->count() > 0;
     }
 
+    public function stepRoles(){
+        return Role::join("model_has_roles", "roles.id", "=", "model_has_roles.role_id")
+        ->join("users", "users.id", "=", "model_has_roles.model_id")
+        ->where("users.id", $this->id)
+        ->where("roles.guard_name", "production-line")
+        ->select("roles.id")
+        ->selectRaw("(SELECT pl.name FROM production_lines pl WHERE pl.user_id = 54 AND pl.is_active = 1 AND pl.role_id = roles.id) AS description")
+        ->get();
+    }    
+
     public function recoverUserRestaurant(){
         try{
             $recoverUserRestaurant = new RecoverUserRestaurant();

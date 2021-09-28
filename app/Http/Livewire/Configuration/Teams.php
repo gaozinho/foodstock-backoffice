@@ -47,6 +47,7 @@ class Teams extends Component
         $this->roles = Role::join("production_lines", "production_lines.role_id", "=", "roles.id")
             ->where("production_lines.user_id", auth()->user()->user_id ?? auth()->user()->id)
             ->where("production_lines.is_active", 1)
+            //->where("production_lines.production_line_id", null)
             ->where("roles.guard_name", "production-line")
             ->select("roles.id", "production_lines.name")
             ->get();
@@ -81,6 +82,7 @@ class Teams extends Component
         $this->loadData();
         $this->user = User::findOrFail($id);
         $this->selectedRoles = $this->user->roles()->pluck("id", "id")->toArray();
+        //dd($this->selectedRoles);
         $this->selectedRestaurants = $this->user->restaurants()->pluck("id", "id")->toArray();
         $this->resetErrorBag();
         $this->resetValidation();

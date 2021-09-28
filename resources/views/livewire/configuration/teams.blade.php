@@ -189,9 +189,12 @@
                                     <span class="badge badge-warning">{{$restaurant->name}}</span> 
                                 @endforeach
                                 <br />
-                                @foreach($restaurantUser->roles as $role)
+                                @foreach($restaurantUser->stepRoles() as $role)
                                     <span class="badge badge-danger">{{$role->description}}</span> 
                                 @endforeach
+                                @foreach($restaurantUser->roles()->where("roles.guard_name", "panel")->get() as $role)
+                                    <span class="badge badge-danger">{{$role->description}}</span> 
+                                @endforeach                                
                                 </div>
                             </a>
                         @empty
