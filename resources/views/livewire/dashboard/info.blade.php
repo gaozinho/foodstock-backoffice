@@ -11,12 +11,14 @@
     </div>
 
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8 mb-3">
             <livewire:graph.production-dash />
         </div>
-        <div class="col-md-4">
+        @role('admin')
+        <div class="col-md-4 mb-3">
             <livewire:report.base-panel key="{{now()}}" />
         </div>        
+        @endrole
     </div>
     @role('admin')
         <div class="row mt-3">

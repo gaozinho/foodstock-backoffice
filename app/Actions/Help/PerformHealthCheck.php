@@ -87,7 +87,6 @@ class PerformHealthCheck
             }
 
         }catch(\Exception $e){
-            dd($e);
             Log::error("Error on health check", [
                 "message" => $e->getMessage()
             ]);
