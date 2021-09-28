@@ -7,7 +7,7 @@
         <div class="card-body">
             <div class="row">
                 @if(count($productionMovements) == 0)
-                <div class="col-md-3">
+                <div class="col-md-12">
                     Não há pedidos em sua linha de produção neste momento.
                 </div>                
                 @endif
@@ -32,7 +32,7 @@
                 @endforeach
             </div>
         </div>
-    </div>
+    </div>  
 </div>
 @push('scripts')
     <script>

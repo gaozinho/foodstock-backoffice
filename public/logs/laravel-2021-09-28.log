@@ -1001,3 +1001,23 @@
 #75 D:\\Projetos\\foodstock\\foodstock-backoffice\\server.php(21): require_once('D:\\\\Projetos\\\\foo...')
 #76 {main}
 "} 
+[2021-09-28 03:11:41] local.ERROR: Error on health check {"message":"Server error: `GET https://merchant-api.ifood.com.br/merchant/v1.0/merchants/460921d1-0c4c-4f38-9241-7ddfefeeb8c8/status` resulted in a `504 Gateway Time-out` response:
+{
+  \"message\":\"The upstream server is timing out\"
+}
+"} 
+[2021-09-28 03:13:14] local.ERROR: Error on health check {"message":"Server error: `GET https://merchant-api.ifood.com.br/merchant/v1.0/merchants/460921d1-0c4c-4f38-9241-7ddfefeeb8c8/status` resulted in a `504 Gateway Time-out` response:
+{
+  \"message\":\"The upstream server is timing out\"
+}
+"} 
+[2021-09-28 03:14:02] local.ERROR: Error on health check {"message":"Server error: `GET https://merchant-api.ifood.com.br/merchant/v1.0/merchants/460921d1-0c4c-4f38-9241-7ddfefeeb8c8/status` resulted in a `504 Gateway Time-out` response:
+{
+  \"message\":\"The upstream server is timing out\"
+}
+"} 
+[2021-09-28 03:15:17] local.ERROR: Error on health check {"message":"Server error: `GET https://merchant-api.ifood.com.br/merchant/v1.0/merchants/460921d1-0c4c-4f38-9241-7ddfefeeb8c8/status` resulted in a `504 Gateway Time-out` response:
+{
+  \"message\":\"The upstream server is timing out\"
+}
+"} 

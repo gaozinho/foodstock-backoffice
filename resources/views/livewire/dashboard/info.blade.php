@@ -11,7 +11,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-8 mb-3">
+        <div class="col mb-3">
             <livewire:graph.production-dash />
         </div>
         @role('admin')
@@ -21,7 +21,7 @@
         @endrole
     </div>
     @role('admin')
-        <div class="row mt-3">
+        <div class="row mb-3">
             <div class="col-md-6 mb-3">
                 <livewire:graph.orders-week />
             </div>
