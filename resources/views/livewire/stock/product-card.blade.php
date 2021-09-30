@@ -1,12 +1,14 @@
 <div class="order-card">
     <a href="{{ route('products.edit', $product->id) }}">
-        <h4><span class="badge badge-{{($product->current_stock > 0 && $product->current_stock < $product->minimun_stock) ? 'warning' : (($product->current_stock < 0) ? 'danger' : 'success')}} text-wrap w-100 text-left">{{$product->name}}</span></h4>
+        <h4><span class="badge badge-{{($product->current_stock > 0 && $product->current_stock < $product->minimun_stock) ? 'warning' : (($product->current_stock <= 0) ? 'danger' : 'success')}} text-wrap w-100 text-left">
+            {{$product->current_stock > 0 ? str_pad($product->current_stock, 3, "0", STR_PAD_LEFT) : $product->current_stock}} &bull; {{$product->name}}
+        </span></h4>
     </a>
     <div class="input-group input-group-sm mb-2">
         <div class="input-group-prepend">
             <button class="btn btn-outline-secondary minus btn-sm" type="button"><i class="fas fa-minus"></i></button>
         </div>
-        <input type="text" wire:keydown.enter="moveStock" class="form-control current_stock text-right" wire:model.defer="product.current_stock" value="{{$product->current_stock}}">
+        <input type="text" wire:keydown.enter="moveStock" class="form-control current_stock text-right" wire:model.defer="add_to_current_stock" value="">
         <div class="input-group-append">
             <button class="btn btn-outline-secondary plus btn-sm" type="button"><i class="fas fa-plus"></i></button>
         </div>

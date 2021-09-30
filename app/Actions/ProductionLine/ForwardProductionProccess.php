@@ -23,26 +23,18 @@ class ForwardProductionProccess
         $order = null;
         try{
             $order = Order::findOrFail($orderNumber);
-            $productionMovement = null;
-
-            if(is_object($productionLine)){
-                $productionMovement = $this->getCurrentMovementByOrderIdAndStep($order->id, $productionLine->step);
-            }else{
-                $productionMovement = $this->getCurrentMovementByOrderId($order->id);
-            }
+            $productionMovement = $this->getCurrentMovementByOrderId($order->id);
             
             if(!is_object($productionMovement)) return false;
 
             //Finaliza passo atual
-            if($productionMovement->step_finished != 1){
-                $productionMovement->step_finished = 1;
-                $productionMovement->finished_by = auth()->user()->id;
-                $productionMovement->finished_at = date("Y-m-d H:i:s");
-                $productionMovement->save();
-            }
+            $productionMovement->step_finished = 1;
+            $productionMovement->finished_by = $productionMovement->finished_by ?? auth()->user()->id;
+            $productionMovement->finished_at = $productionMovement->finished_at ?? date("Y-m-d H:i:s");
+            
+            $productionMovement->save();
 
             $currentProductionLine = ProductionLine::findOrFail($productionMovement->production_line_id);
-
             if($currentProductionLine->ready == 1){ //Avisa que prato está pronto
                 $this->ready($order->id); //Retiradoa pedido do ifood
             }
@@ -54,11 +46,6 @@ class ForwardProductionProccess
             
             $productionLine = ProductionLine::findOrFail($productionMovement->next_step_id);
             $productionLineNextStep = $this->nextStep($user_id, $productionLine->step);
-            
-            //Se outra pessoa já finalizou este passo, não faz nada
-            if($productionMovement->step_finished == 1){
-                return $productionMovement;
-            }
 
             //Cria próximo passo
             return ProductionMovement::firstOrCreate([

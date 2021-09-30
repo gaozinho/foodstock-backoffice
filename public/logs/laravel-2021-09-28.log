@@ -3542,3 +3542,7 @@
 #77 D:\\Projetos\\foodstock\\foodstock-backoffice\\server.php(21): require_once('D:\\\\Projetos\\\\foo...')
 #78 {main}
 "} 
+[2021-09-28 21:18:46] local.ERROR: Maximum execution time of 60 seconds exceeded {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Maximum execution time of 60 seconds exceeded at D:\\Projetos\\foodstock\\foodstock-backoffice\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php:46)
+[stacktrace]
+#0 {main}
+"} 

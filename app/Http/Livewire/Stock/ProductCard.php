@@ -10,9 +10,11 @@ class ProductCard extends BaseConfigurationComponent
 {
 
     public $product;
+    public $add_to_current_stock;
 
     protected $rules = [
         'product.current_stock' => 'required|integer',
+        'add_to_current_stock' => 'min:0|max:9999|integer',
     ];    
 
     public function render()
@@ -21,22 +23,22 @@ class ProductCard extends BaseConfigurationComponent
     }
 
     public function moveStock(){
-        if(!is_numeric($this->product->current_stock)){
-            $this->product->current_stock = $this->product->getOriginal('current_stock');
+        $this->product->refresh();
+
+        if(!is_numeric($this->add_to_current_stock)){
             $this->simpleAlert('error', 'O valor informado é inválido.');
         }else{
-            $prevCurrent_stock = $this->product->getOriginal('current_stock');
-            $current_stock = intval($this->product->current_stock);
+
+            $prevCurrent_stock = $this->product->current_stock;
+            $current_stock = intval($this->add_to_current_stock);
             $movement_type = 0; //Retira
             $quantity = 0;
     
-            if($current_stock > $prevCurrent_stock){ //Add
+            if($current_stock >= 0){ //Add
                 $movement_type = 1;
-                $quantity = $current_stock - $prevCurrent_stock;
-            }else if($current_stock < $prevCurrent_stock){ //Remove
-                $quantity = $prevCurrent_stock - $current_stock;
             }
-    
+
+            $this->product->current_stock += $current_stock;
             $this->product->save();
     
             StockMovement::create([
@@ -46,11 +48,13 @@ class ProductCard extends BaseConfigurationComponent
                 'name' => $this->product->name, 
                 'unit_price' => $this->product->unitPrice, 
                 'movement_type' => $movement_type, 
-                'quantity' => abs($quantity), 
+                'quantity' => abs($current_stock), 
                 'unit' => $this->product->unit,
             ]);
 
             $this->simpleAlert('success', 'Atualizado com sucesso.');
         }
+
+        $this->add_to_current_stock = "";
     }
 }

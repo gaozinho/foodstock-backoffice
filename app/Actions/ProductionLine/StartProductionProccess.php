@@ -89,8 +89,12 @@ class StartProductionProccess
     }
 
     protected function placeOrderOnProductionLine(OrderSummary $orderSummary, ProductionMovement $productionMovement){
+        
+        //Verificar se há estoque nos itens monitorados. Caso não exista, não avança. Deixa na primeira etapa.
+        if(!$this->stockIsOk($productionMovement->order_summary_id)) return;
 
         $smallestStep = $this->getSmallestStep($productionMovement->order_summary_id);
+
 
         $orderSummary->initial_step = $smallestStep;
         $orderSummary->save();
@@ -139,6 +143,15 @@ class StartProductionProccess
         ->where("order_has_products.order_summary_id", $order_summary_id)
         ->where("initial_step", ">", 0)
         ->min("products.initial_step");
+    }
+
+    protected function stockIsOk($order_summary_id){
+        //Algum produto com estoque zero??? Se sim, returna falso
+        return Product::join("order_has_products", "products.id", "=", "order_has_products.product_id")
+            ->where("order_has_products.order_summary_id", $order_summary_id)
+            ->where("products.monitor_stock", 1)
+            ->where("products.current_stock", "<", 0)
+            ->count() == 0;
     }
 
     protected function firstStep($restaurant_id){ 

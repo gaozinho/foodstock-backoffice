@@ -46,6 +46,14 @@ class ProductionLinePanel extends Component
         //'user.password.required' => 'O CNPJ informado é inválido.'
     ]; 
 
+    public function getUserName($id){
+        $user = User::find($id);
+        if(is_object($user)){
+            return $user->name;
+        }
+        return "Indefinido";
+    }
+
     public function mount($role_name)
     {
 
@@ -136,7 +144,7 @@ class ProductionLinePanel extends Component
         $orderSummary =  OrderSummary::join("production_movements", "production_movements.order_summary_id", "order_summaries.id")
             ->where("order_summaries.id", $order_summary_id)
             ->whereIn("order_summaries.restaurant_id", $this->restaurantIds)
-            ->select(['order_summaries.*', 'production_movements.paused'])
+            ->select(['order_summaries.*', 'production_movements.paused', 'production_movements.paused_by'])
             ->orderBy("production_movements.id", "desc")
             ->firstOrFail();
         $orderSummary->orderBabelized = new OrderBabelized($orderSummary->order_json);

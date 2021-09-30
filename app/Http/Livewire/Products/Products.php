@@ -36,6 +36,7 @@ class Products extends BaseConfigurationComponent
     public $restaurant;
     public $restaurant_ids = [];
     public $productModels;
+    
 
     protected $rules = [
         'product.category_id' => 'nullable|integer',
@@ -55,6 +56,7 @@ class Products extends BaseConfigurationComponent
         'product.initial_step' => 'nullable|numeric|min:0',
         'productModels.*.initial_step' => 'nullable',
         'productModels.*.monitor_stock' => 'nullable',
+        
     ];
 
     protected $messages = [

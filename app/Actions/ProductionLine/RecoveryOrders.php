@@ -52,7 +52,7 @@ class RecoveryOrders
             ->where("production_movements.step_finished", 0)
             ->whereIn("production_movements.production_line_id", $currentProductionLines->pluck("id"))
             ->orderBy("order_summaries.created_at")
-            ->select(['order_summaries.*', 'production_movements.production_line_id', 'production_movements.current_step_number', 'production_movements.paused'])
+            ->select(['order_summaries.*', 'production_movements.user_id', 'production_movements.production_line_id', 'production_movements.current_step_number', 'production_movements.paused', 'production_movements.paused_by'])
             ->selectRaw("restaurants.name as restaurant")
             //->selectRaw("brokers.name as broker")            
             ->get();

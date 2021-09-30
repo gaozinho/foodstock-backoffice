@@ -59,6 +59,8 @@ class IntegrationController extends BaseController
             $orders = Order::where("restaurant_id", $input["restaurant_id"])->get();
         }else if(isset($input["order_id"])){
             $orders = Order::where("id", $input["order_id"])->get();
+        }else if(isset($input["created_at"])){
+            $orders = Order::where("created_at", ">", $input["created_at"])->get();
         }
 
         foreach($orders as $order){

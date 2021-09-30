@@ -30,12 +30,22 @@
                             @else
                                 {{\Carbon\Carbon::parse($orderSummary->created_at)->diffForhumans()}}
                             @endif
-                        {!!$babelized->brokerName() ? $babelized->brokerName() . ' &bull;' : ''!!} {{$orderSummary->restaurant}}</small>
+                            {!!$babelized->brokerName() ? $babelized->brokerName() . ' &bull;' : ''!!} {{$orderSummary->restaurant}}
+                            @if($orderSummary->paused == 1 && intval($orderSummary->paused_by) > 0)
+                               @php
+                                    $name = "Indefinido";
+                                    $user = \App\Models\User::find($orderSummary->user_id);
+                                    if(is_object($user)){
+                                        $name = $user->name;
+                                    }
+                                @endphp
+                                &bull; Pausado por {{$name}}   
+                             @endif
+                        </small>
                     </div>
                     <div class="col-sm-12 col-md-6">
                         <small>
                             @if($babelized->schedule)
-                                
                                 <small><i class="fas fa-lg fa-clock text-danger"></i> {{date("d/m H:i", strtotime($babelized->schedule->start))}} ~ {{date("H:i", strtotime($babelized->schedule->end))}}</small>
                             @endif
                         </small>

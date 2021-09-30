@@ -64,7 +64,9 @@
         }
 
         function incrementValue(e, increment){
-            e.val(parseInt(e.val(), 0) + increment);
+            var value = e.val();
+            if(isNaN(parseInt(value))) value = 0;
+            e.val(parseInt(value, 0) + increment);
             e[0].dispatchEvent(new Event('input'));
             return e;
         }
