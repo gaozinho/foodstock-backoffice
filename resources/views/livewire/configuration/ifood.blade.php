@@ -1,16 +1,16 @@
 <div class="card border">
     <div class="card-header" id="broker-{{$restaurant->id}}">
         <div class="row align-items-center">
-            <div class="col-auto">
-                @if ($ifood->logo != '' && Storage::exists('public/' . $ifood->logo))
-                    <img src="{{ asset('storage/' . $ifood->logo) }}" style="width:75px">
+            <div class="col-auto mb-2 mb-md-0">
+                @if ($ifood->logo != '')
+                    <img src="{{ asset('images/' . $ifood->logo) }}" style="width:75px">
                 @else
                     <span class="h3 card-title">
                         {{ $ifood->name }}
                     </span>
                 @endif            
             </div>
-            <div class="col-auto">
+            <div class="col-auto mb-2 mb-md-0">
                 @if ($ifoodBroker->id > 0 && $ifoodBroker->validated)
                         <span class="text-success"><i class="fas fa-lg fa-check"></i> {{$restaurant->name}} está conectado ao {{ $ifood->name }}.</span>
                         @if ($ifoodBroker->enabled == 0)
@@ -20,14 +20,14 @@
                         <span class="text-danger"><i class="fas fa-lg fa-exclamation-triangle"></i> {{$restaurant->name}} ainda não está está conectado ao {{ $ifood->name }}.</span>
                 @endif                
             </div>
-            <div class="col-auto">
+            <div class="col text-left text-md-right">
                 @if ($ifoodBroker->id > 0 && $ifoodBroker->validated)
-                    <button class="btn btn-secondary" type="button" data-toggle="collapse"
+                    <button class="btn btn-sm btn-secondary btn-sm" type="button" data-toggle="collapse"
                         data-target="#collapsebroker-{{$restaurant->id}}" aria-expanded="true" aria-controls="collapsebroker-{{$restaurant->id}}">
                         Revisar configurações
                     </button>                  
                 @else
-                    <button class="btn btn-success" type="button" data-toggle="collapse"
+                    <button class="btn btn-success btn-sm" type="button" data-toggle="collapse"
                         data-target="#collapsebroker-{{$restaurant->id}}" aria-expanded="true" aria-controls="collapsebroker-{{$restaurant->id}}">
                         Conectar agora
                     </button>             

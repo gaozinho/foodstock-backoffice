@@ -3,11 +3,13 @@
 namespace App\Actions\Help;
 
 use App\Models\IfoodBroker;
+use App\Models\NeemoBroker;
 use App\Models\RappiBroker;
 use App\Models\ProductionLine;
 use App\Actions\ProductionLine\RecoverUserRestaurant;
 use App\Integrations\IfoodIntegrationDistributed;
 use Illuminate\Support\Facades\Log;
+use App\Integrations\NeemoIntegration;
 
 class PerformHealthCheck
 {
@@ -35,20 +37,6 @@ class PerformHealthCheck
     public function integrationOk(){
         if(!$this->deliveryOk()) return false;
 
-        $restaurants = (new RecoverUserRestaurant())->recoverAll(auth()->user()->id);
-
-        foreach($restaurants as $restaurant){
-            $this->brokersOk[$restaurant->name] = [
-                "IFOOD" => IfoodBroker::where("restaurant_id", $restaurant->id)->where("validated", 1)->count() > 0,
-                //"RAPPI" => RappiBroker::where("restaurant_id", $this->restaurant->id)->where("validated", 1)->count() > 0
-            ];
-        }
-
-        foreach($this->brokersOk as $restaurantName => $broker){
-            foreach($broker as $success){
-                if(!$success) return false;
-            }
-        }
 
         return true;
     }
@@ -61,16 +49,19 @@ class PerformHealthCheck
         $merchantsInfo = [];
         try{
             $ifoodIntegrationDistributed = new IfoodIntegrationDistributed(); 
+            $neemoIntegration = new NeemoIntegration();
 
             $restaurants = (new RecoverUserRestaurant())->recoverAll(auth()->user()->id);
 
             foreach($restaurants as $restaurant){
                 $availableData = $ifoodIntegrationDistributed->merchantAvailable($restaurant->id);
-
+            
                 //$availableReason = $availableData->message->title . " - " . $availableData->message->subtitle;
 
                 if(is_object($availableData)){
-                    $merchantsInfo["IFOOD"][$restaurant->name] = [
+                    $merchantsInfo["IFOOD"][] = [
+                        "validated" => IfoodBroker::where("restaurant_id", $restaurant->id)->where("validated", 1)->count() > 0,
+                        "restaurant" => $restaurant->name, 
                         "available" => ($availableData->status == "AVAILABLE"), 
                         "reason" => ($availableData->status == "AVAILABLE") ? "Loja aberta" : "Loja fechada" // $availableData->message->title . (isset($availableData->message->subtitle) && !empty($availableData->message->subtitle) ? " - " . $availableData->message->subtitle : "")
                     ];
@@ -79,21 +70,28 @@ class PerformHealthCheck
                     foreach($availableData as $data){
                         $info[] = $data->message->title . " para " . $data->operation;
                     }
-                    $merchantsInfo["IFOOD"][$restaurant->name] = [
+                    $merchantsInfo["IFOOD"][] = [
+                        "validated" => IfoodBroker::where("restaurant_id", $restaurant->id)->where("validated", 1)->count() > 0,
+                        "restaurant" => $restaurant->name, 
                         "available" => ($data->available == "AVAILABLE"), 
                         "reason" => implode(", ", $info) 
                     ];
                 }
+
+                //NEEMO
+                $neemoInfo = $neemoIntegration->validateRestaurant($restaurant->id);
+                $merchantsInfo["NEEMO"][] = [
+                    "validated" => NeemoBroker::where("restaurant_id", $restaurant->id)->where("validated", 1)->count() > 0,
+                    "restaurant" => $restaurant->name, 
+                    "available" => $neemoInfo["success"], 
+                    "reason" => $neemoInfo["message"]
+                ];                
             }
 
         }catch(\Exception $e){
             Log::error("Error on health check", [
                 "message" => $e->getMessage()
             ]);
-            $merchantsInfo[""][""] = [
-                "available" => false, 
-                "reason" => "Nenhuma integração configurada"
-            ];
         }
 
         return $merchantsInfo;

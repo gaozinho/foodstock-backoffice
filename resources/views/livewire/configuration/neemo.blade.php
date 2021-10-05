@@ -1,16 +1,16 @@
 <div class="card border">
     <div class="card-header" id="broker-{{$restaurant->id}}">
         <div class="row align-items-center">
-            <div class="col-auto">
-                @if ($neemo->logo != '' && Storage::exists('public/' . $neemo->logo))
-                    <img src="{{ asset('storage/' . $neemo->logo) }}" style="width: 75px">
+            <div class="col-auto mb-2 mb-md-0">
+                @if ($neemo->logo != '')
+                    <img src="{{ asset('images/' . $neemo->logo) }}" style="width: 75px">
                 @else
                     <span class="h3 card-title">
                         {{ $neemo->name }}
                     </span>
                 @endif            
             </div>
-            <div class="col-auto">
+            <div class="col-auto mb-2 mb-md-0">
                 @if ($neemoBroker->id > 0 && $neemoBroker->validated)
                         <span class="text-success"><i class="fas fa-lg fa-check"></i> {{$restaurant->name}} está conectado ao {{ $neemo->name }}.</span>
                         @if ($neemoBroker->enabled == 0)
@@ -20,14 +20,14 @@
                         <span class="text-danger"><i class="fas fa-lg fa-exclamation-triangle"></i> {{$restaurant->name}} ainda não está está conectado ao {{ $neemo->name }}.</span>
                 @endif                
             </div>
-            <div class="col-auto">
+            <div class="col text-left text-md-right">
                 @if ($neemoBroker->id > 0 && $neemoBroker->validated)
-                    <button class="btn btn-secondary" type="button" data-toggle="collapse"
+                    <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse"
                         data-target="#collapsebroker-{{$neemoBroker->id}}-{{$restaurant->id}}" aria-expanded="true" aria-controls="collapsebroker-{{$restaurant->id}}">
                         Revisar configurações
                     </button>                  
                 @else
-                    <button class="btn btn-success" type="button" data-toggle="collapse"
+                    <button class="btn btn-success btn-sm" type="button" data-toggle="collapse"
                         data-target="#collapsebroker-{{$neemoBroker->id}}-{{$restaurant->id}}" aria-expanded="true" aria-controls="collapsebroker-{{$restaurant->id}}">
                         Conectar agora
                     </button>             

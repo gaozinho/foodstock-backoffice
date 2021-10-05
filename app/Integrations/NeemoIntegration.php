@@ -33,6 +33,19 @@ class NeemoIntegration
         }
     }
 
+    public function validateRestaurant($restaurant_id)
+    {
+        try{
+            $neemoBroker = NeemoBroker::where("restaurant_id", $restaurant_id)->first();
+            if(!is_object($neemoBroker))  return ["success" => false, "message" => "Não configurado"];
+            else if($neemoBroker->validated != 1) return ["success" => false, "message" => "Token inválido"];
+            return ["success" => $this->validateToken($neemoBroker->accessToken), "message" => "Integrado"];
+        }catch(\Exception $exception){
+            if(env('APP_DEBUG')) throw $exception;
+            return ["success" => false, "message" => $exception->getMessage()];
+        }
+    }    
+
     protected function parseHttpResponse($httpResponse){
         $json = json_decode($httpResponse->getBody()->getContents());
         return $json;
