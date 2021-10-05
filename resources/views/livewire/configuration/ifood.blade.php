@@ -3,7 +3,7 @@
         <div class="row align-items-center">
             <div class="col-auto">
                 @if ($ifood->logo != '' && Storage::exists('public/' . $ifood->logo))
-                    <img src="{{ asset('storage/' . $ifood->logo) }}" style="height:40px">
+                    <img src="{{ asset('storage/' . $ifood->logo) }}" style="width:75px">
                 @else
                     <span class="h3 card-title">
                         {{ $ifood->name }}
