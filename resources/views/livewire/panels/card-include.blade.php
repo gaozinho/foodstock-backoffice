@@ -26,7 +26,7 @@
                             @if($orderSummary->canceled == 1)
                                 <span class="text-danger">CANCELADO</span>
                             @else
-                                {{\Carbon\Carbon::parse($orderSummary->created_at)->diffForhumans()}}
+                                {{\Carbon\Carbon::parse($babelized->createdDate)->diffForhumans()}}
                             @endif
                             {!!$babelized->brokerName() ? $babelized->brokerName() . ' &bull;' : ''!!} {{$orderSummary->restaurant}}
                             @if($orderSummary->paused == 1 && intval($orderSummary->paused_by) > 0)

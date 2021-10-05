@@ -42,7 +42,7 @@
             @endif    
         @endif
         
-        @if(isset($orderSummaryDetail->orderBabelized->benefits) && count($orderSummaryDetail->orderBabelized->benefits) > 0)
+        @if(isset($orderSummaryDetail->orderBabelized->benefits) && is_array($orderSummaryDetail->orderBabelized->benefits))
             <div class="alert alert-info py-1 px-3 mt-1 mb-0">
                 @foreach($orderSummaryDetail->orderBabelized->benefits as $benefit)
                     <div class="row">
@@ -50,6 +50,7 @@
                             Subsídio: {{$benefit->target}} :: @money($benefit->value)
                             @if($benefit->description != null)<br /><small>{{$benefit->description}}</small> @endif
                         </div>
+                        @if(is_array($benefit->sponsorshipValues))
                         <div class="col-md-12 small">
                             <ul class="mb-0">
                             @foreach($benefit->sponsorshipValues as $sponsorshipValue)
@@ -60,6 +61,7 @@
                             @endforeach
                             </ul>
                         </div>
+                        @endif
                     </div>
                 @endforeach
 

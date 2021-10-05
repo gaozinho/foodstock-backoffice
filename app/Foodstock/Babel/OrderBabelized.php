@@ -58,9 +58,12 @@ class OrderBabelized extends OrderBabel implements OrderBabelInterface
         if(isset($this->orderJson->benefits)){
             foreach($this->orderJson->benefits as $benefit){
                 $benefitBabel = new BenefitBabel($benefit->targetId ?? null, $benefit->description ?? null, $benefit->value, $benefit->target);
-                foreach($benefit->sponsorshipValues as $sponsorshipValue){
-                    $benefitBabel->addSponsorshipValues(new SponsorshipValueBabel($sponsorshipValue->description, $sponsorshipValue->name, $sponsorshipValue->value));
+                if(is_array($benefit->sponsorshipValues)){
+                    foreach($benefit->sponsorshipValues as $sponsorshipValue){
+                        $benefitBabel->addSponsorshipValues(new SponsorshipValueBabel($sponsorshipValue->description, $sponsorshipValue->name, $sponsorshipValue->value));
+                    }
                 }
+
                 $benefits[] = $benefitBabel;
             }
         }
@@ -104,7 +107,7 @@ class OrderBabelized extends OrderBabel implements OrderBabelInterface
     }     
 
     public function shortOrderNumber(){
-        return substr($this->orderJson->shortOrderNumber ?? null, 0, 4);
+        return substr($this->orderJson->shortOrderNumber ?? null, -4);
     }
 
     public function createdDate(){

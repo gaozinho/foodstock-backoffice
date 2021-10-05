@@ -5,6 +5,7 @@ namespace App\Actions\ProductionLine;
 use App\Models\OrderSummary;
 use App\Models\Order;
 use App\Models\IfoodBroker;
+use App\Models\NeemoBroker;
 use App\Models\ProductionMovement;
 use App\Models\ProductionLine;
 use App\Models\ProductionLineVersion;
@@ -14,6 +15,7 @@ use App\Foodstock\Babel\OrderBabelized;
 use App\Events\FinishedProccess;
 use App\Events\ReadyToPickup;
 use App\Enums\OrderType;
+use App\Enums\BrokerType;
 
 class ForwardProductionProccess
 {
@@ -115,10 +117,21 @@ class ForwardProductionProccess
         $orderSummary->finalized_at = date("Y-m-d H:i:s");
         $orderSummary->save();
 
-        FinishedProccess::dispatch(
-            $babelized, 
-            IfoodBroker::where("restaurant_id", $orderSummary->restaurant_id)->firstOrFail()
-        );
+        $broker = $orderSummary->broker()->first();
+
+        if($broker->id == BrokerType::Ifood){
+            FinishedProccess::dispatch(
+                $babelized, 
+                IfoodBroker::where("restaurant_id", $orderSummary->restaurant_id)->firstOrFail()
+            );
+        }else if($broker->id == BrokerType::Rappi){
+            //TODO
+        }else if($broker->id == BrokerType::Neemo){
+            FinishedProccess::dispatch(
+                $babelized, 
+                NeemoBroker::where("restaurant_id", $orderSummary->restaurant_id)->firstOrFail()
+            );
+        }
     }
 
     protected function firstStep($user_id){

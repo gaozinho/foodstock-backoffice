@@ -51,6 +51,18 @@ class DispatchOrderOnBroker implements ShouldQueue
                 ];
                 $httpClient = new Client(["verify" => false]);
                 $httpResponse = $httpClient->post($action, $payload);
+            }else if(get_class($event->oneBroker) == "App\Models\NeemoBroker"){
+                $action = env('INTEGRATION_NEEMO_DISPATCH_URI');
+                $payload = [
+                    'headers' => [
+                        'Authorization' => 'Bearer '. env('INTEGRATION_TOKEN'),
+                        'Accept' => 'application/json',
+                        'Content-Type' => 'application/x-www-form-urlencoded',
+                    ],
+                    "form_params" => ["neemo_broker_id" => $event->oneBroker->id, "neemo_order_id" => $event->orderBabelized->brokerId]
+                ];
+                $httpClient = new Client(["verify" => false]);
+                $httpResponse = $httpClient->post($action, $payload);
             }
         }catch(\Exception $e){
             
