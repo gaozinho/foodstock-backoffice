@@ -3,7 +3,9 @@
 namespace App\Actions\ProductionLine;
 
 use App\Foodstock\Babel\IfoodOrderBabel;
+use App\Foodstock\Babel\NeemoOrderBabel;
 use App\Models\Order;
+use App\Enums\BrokerType;
 
 class GenerateOrderJson
 {
@@ -14,8 +16,12 @@ class GenerateOrderJson
     public function __construct(Order $order)
     {
         $this->order = $order;
-        if($this->order->broker_id == 1){ //TODO - trocar o 1 pelo ifood
+        if($this->order->broker_id == BrokerType::Ifood){
             $this->orderBabel = new IfoodOrderBabel($this->order->json);
+        }else if($this->order->broker_id == BrokerType::Neemo){
+            $this->orderBabel = new NeemoOrderBabel($this->order->json);
+        }else{
+            throw new \Exception("Invalid broker type.");
         }        
     }
     public function babelizedOrder(){

@@ -14,6 +14,7 @@ use App\Actions\ProductionLine\ForwardProductionProccess;
 use App\Actions\ProductionLine\PauseProductionProccess;
 use App\Actions\ProductionLine\RecoverUserRestaurant;
 use App\Actions\ProductionLine\FinishOrder;
+use App\Models\ProductionMovement;
 
 use App\Foodstock\Babel\OrderBabelized;
 
@@ -38,6 +39,8 @@ class ProductionLinePanel extends Component
     public $role_name;
     public $total_orders = 0;
     public $cancellation_code = "501";
+    public $production_line_id = 0; //A tela estava apontada neste passo
+
     //public $orderInfo = false;
 
     public $orderBabelized;
@@ -185,7 +188,7 @@ class ProductionLinePanel extends Component
         $userId = auth()->user()->user_id ?? auth()->user()->id;
         $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
         
-        (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $userId, $this->productionLine);
+        (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $userId, $production_line_id);
         $this->emit('openOrderModal');
         $this->loadData();
     }
@@ -193,16 +196,30 @@ class ProductionLinePanel extends Component
     public function moveForwardFromCurrentStep($order_summary_id, $production_line_id = null){
         $userId = auth()->user()->user_id ?? auth()->user()->id;
         $currentStep = $this->productionLine->step;
+        $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
         $forwardProductionProccess = new ForwardProductionProccess();
 
-        $nextProductionLineStep = $forwardProductionProccess->nextStep($userId, $currentStep);
 
-        if(is_object($nextProductionLineStep)){
-            $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
-            do{
-                $productionMovement = $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $userId, $this->productionLine);
-            }while($productionMovement->current_step_number < $nextProductionLineStep->step);
+
+        //Valida se o pedido ainda está neste passo
+        $currentMovement = $forwardProductionProccess->getCurrentMovementByOrderId($this->orderSummaryDetail->order_id);
+        if(intval($production_line_id) > 0 && $production_line_id != $currentMovement->production_line_id){
+            //dd("Mexeram no meu queijo.");
+            $productionMovement = ProductionMovement::where("order_id", $this->orderSummaryDetail->order_id)
+                ->where("production_line_id", $production_line_id)
+                ->first();
+            $this->alert("error", sprintf("A etapa %s já foi concluída por %s.", $productionMovement->productionLine->name, (is_object($productionMovement->finishedBy) ? $productionMovement->finishedBy->name : 'Sistema')), ['timer' =>  8000]);  
+        }else{
+            $nextProductionLineStep = $forwardProductionProccess->nextStep($userId, $currentStep);
+            if(is_object($nextProductionLineStep)){
+                $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
+                do{
+                    $productionMovement = $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $userId);
+                }while($productionMovement->current_step_number < $nextProductionLineStep->step);
+            }
         }
+
+
         
         $this->emit('moveForward');
         $this->loadData();
@@ -210,11 +227,12 @@ class ProductionLinePanel extends Component
 
     public function orderDetail($order_summary_id, $production_line_id){
 
+        $this->production_line_id = $production_line_id; //Armazena o passo onde estava
         $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
         $this->orderProductionLine = ProductionLine::findOrFail($production_line_id);
         
         if($this->orderProductionLine->next_on_click == 1){ //Se passa para próximo passo no clique
-            (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $this->orderProductionLine->user_id, $this->productionLine);
+            (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $this->orderProductionLine->user_id, $production_line_id);
             $this->emit('moveForward');
         }else{
             $this->emit('openOrderModal');
@@ -257,12 +275,40 @@ class ProductionLinePanel extends Component
         $this->emit('moveForward');
     }
 
+    //Pula um passo no processo
     public function nextStep($order_summary_id){
         $userId = auth()->user()->user_id ?? auth()->user()->id;
         $forwardProductionProccess = new ForwardProductionProccess();
-        $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $userId, $this->productionLine);
+
+        //Valida se o pedido ainda está neste passo
+        $currentMovement = $forwardProductionProccess->getCurrentMovementByOrderId($this->orderSummaryDetail->order_id);
+
+        if(intval($this->production_line_id) > 0 && $this->production_line_id != $currentMovement->production_line_id){
+            //dd("Mexeram no meu queijo.");
+            $productionMovement = ProductionMovement::where("order_id", $this->orderSummaryDetail->order_id)
+                ->where("production_line_id", $this->production_line_id)
+                ->first();
+            $this->alert("error", sprintf("A etapa %s já foi concluída por %s.", $productionMovement->productionLine->name, $productionMovement->user->name), ['timer' =>  8000]);  
+        }else{
+            $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $userId);
+        }
+
+        
         $this->loadData();
         $this->emit('closeOrderModal');
+    }
+
+    public function isWhereItShouldBe($order_id, $current_production_line_id, $real_production_line_id){
+        //Valida se o pedido ainda está neste passo
+        $forwardProductionProccess = new ForwardProductionProccess();
+        $currentMovement = $forwardProductionProccess->getCurrentMovementByOrderId($order_id);
+        if(intval($real_production_line_id) > 0 && $real_production_line_id != $current_production_line_id){
+            //dd("Mexeram no meu queijo.");
+            $productionMovement = ProductionMovement::where("order_id", $order_id)
+                ->where("production_line_id", $real_production_line_id)
+                ->first();
+            $this->alert("error", sprintf("A estapa %s já foi concluída por %s.", $productionMovement->productionLine->name, $productionMovement->user->name), ['timer' =>  8000]);  
+        }
     }
 
     public function pause($order_summary_id){

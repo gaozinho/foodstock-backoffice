@@ -1,6 +1,4 @@
 <div class="mb-2 col-xl-3 col-lg-3 col-md-4 col-6">
-    
-
     <div class="card-painel card-margin">
         @if($selectable)
         <div class="card-header pl-2 pt-2 pb-0">

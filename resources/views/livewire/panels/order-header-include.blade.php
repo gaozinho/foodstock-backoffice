@@ -5,8 +5,7 @@
             <span class="text-muted">
                 <small>{{is_object($orderSummaryDetail->broker) ? $orderSummaryDetail->broker->name : ''}}
                 {{\Carbon\Carbon::parse($orderSummaryDetail->orderBabelized->createdDate)->format("d/m H:i")}}
-                ({{\Carbon\Carbon::parse($orderSummaryDetail->created_at)->diffForhumans()}})</small>
-
+                ({{\Carbon\Carbon::parse($orderSummaryDetail->orderBabelized->createdDate)->diffForhumans()}})</small>
                 
                 @if($orderSummaryDetail->orderBabelized->schedule)
                 <small>
@@ -66,7 +65,7 @@
 
             </div>
         @endif
-        @if(isset($orderSummaryDetail->orderBabelized->payments))
+        @if(isset($orderSummaryDetail->orderBabelized->payments) && is_array($orderSummaryDetail->orderBabelized->payments))
             <div class="alert alert-info py-1 px-3 mt-1 mb-0">
                 <div class="row">
                     <div class="col-md-12 small">

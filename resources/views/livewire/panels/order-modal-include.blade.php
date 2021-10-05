@@ -16,7 +16,7 @@
                             <button type="button" data-dismiss="modal" class="mt-2 btn btn-secondary">Fechar <i class="fas fa-times"></i></button>
                         </div>
                         <div>
-                            <button type="button" name="nextStep" value="nextStep" wire:click="nextStep({{ $orderSummaryDetail->id }})" class="mt-2 btn btn-lg btn-danger text-uppercase">
+                            <button type="button" name="nextStep" value="nextStep" wire:click="nextStep({{ $orderSummaryDetail->id }}, {{$production_line_id}})" class="mt-2 btn btn-lg btn-danger text-uppercase">
                                 <i wire:loading wire:target="nextStep" class="fas fa-cog fa-spin"></i> Tirar do painel <i class="fas fa-trash-alt"></i></button>
                         </div>
 
@@ -32,7 +32,7 @@
                             
                         </div>
                         <div>
-                            <button type="button" name="nextStep" value="nextStep" wire:click="nextStep({{ $orderSummaryDetail->id }})" class="mt-2 btn btn-lg btn-success text-uppercase">
+                            <button type="button" name="nextStep" value="nextStep" wire:click="nextStep({{ $orderSummaryDetail->id}}, {{$production_line_id}})" class="mt-2 btn btn-lg btn-success text-uppercase">
                                 <i wire:loading wire:target="nextStep" class="fas fa-cog fa-spin"></i> {{ $productionLine->name }} OK <i class="fas fa-step-forward"></i></button>
                         </div>
 

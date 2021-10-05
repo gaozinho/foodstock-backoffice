@@ -81,7 +81,7 @@ class ForwardProductionProccess
             ->orderBy('current_step_number', 'desc')->first();
     }
 
-    private function getCurrentMovementByOrderId($order_id){
+    public function getCurrentMovementByOrderId($order_id){
         return ProductionMovement::where("order_id", $order_id)->orderBy('current_step_number', 'desc')->first();
     }
 

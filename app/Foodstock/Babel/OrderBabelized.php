@@ -35,18 +35,20 @@ class OrderBabelized extends OrderBabel implements OrderBabelInterface
         $payments = $this->orderJson->payments;
         $paymentMethods = $payments->methods;
         $paymentBabel = new PaymentBabel($payments->pending, $payments->prepaid);
-        foreach($paymentMethods as $method){
-            $paymentBabel->addMethod(new PaymentMethodBabel(
-                    $method->wallet_name, 
-                    $method->method, 
-                    $method->prepaid, 
-                    $method->currency, 
-                    $method->type, 
-                    $method->value, 
-                    $method->cash_changeFor, 
-                    $method->card_brand
-                )
-            );
+        if(is_array($paymentMethods)){
+            foreach($paymentMethods as $method){
+                $paymentBabel->addMethod(new PaymentMethodBabel(
+                        $method->wallet_name, 
+                        $method->method, 
+                        $method->prepaid, 
+                        $method->currency, 
+                        $method->type, 
+                        $method->value, 
+                        $method->cash_changeFor, 
+                        $method->card_brand
+                    )
+                );
+            }
         }
         return $paymentBabel;
     }
@@ -102,7 +104,7 @@ class OrderBabelized extends OrderBabel implements OrderBabelInterface
     }     
 
     public function shortOrderNumber(){
-        return $this->orderJson->shortOrderNumber ?? null;
+        return substr($this->orderJson->shortOrderNumber ?? null, 0, 4);
     }
 
     public function createdDate(){

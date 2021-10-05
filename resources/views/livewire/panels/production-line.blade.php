@@ -64,7 +64,7 @@
                             @php
                                 $clickAction = "";
                                 if($productionLine->next_on_click == 1){
-                                    $clickAction = 'wire:click="moveForwardFromCurrentStep(' . $orderSummary->id . ')"';
+                                    $clickAction = 'wire:click="moveForwardFromCurrentStep(' . $orderSummary->id . ', ' . $orderSummary->production_line_id . ')"';
                                 }else{
                                     $clickAction = 'wire:click="orderDetailAndMoveForward(' . $orderSummary->id . ')"';
                                 }
