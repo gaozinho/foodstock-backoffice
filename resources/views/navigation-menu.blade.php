@@ -146,4 +146,13 @@
             </div>
         </div>
     </div>
+           <div class="page-progress" wire:ignore>
+            <script>
+                function startProgress(seconds, progressEnclosure){
+                    return $(progressEnclosure).progressBarTimer({ 
+                        autoStart: true, smooth: false, timeLimit: seconds, completeStyle: 'bg-primary', warningStyle: 'bg-primary', baseStyle: 'bg-primary'
+                    });
+                }         
+            </script>
+        </div> 
 </div>

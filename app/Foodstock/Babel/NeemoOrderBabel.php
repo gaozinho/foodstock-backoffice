@@ -21,7 +21,8 @@ class NeemoOrderBabel extends OrderBabel implements OrderBabelInterface
     public function items(){
         $items = [];
         foreach($this->orderJson->Order->ItemOrder as $item){
-            $itemBabel = new ItemBabel($item->title, $item->quantity, $item->price, $item->total, $item->ref ?? null, $item->notes ?? null);
+            $title = $item->title . (isset($item->name) && $item->name != "" ? " - " . $item->name : "");
+            $itemBabel = new ItemBabel($title, $item->quantity, $item->price, $item->total, $item->variacao_ref ?? $item->ref, $item->notes ?? null);
             if(isset($item->ComplementCategories)){
                 foreach($item->ComplementCategories as $category){
                     if(isset($category->Complements)){

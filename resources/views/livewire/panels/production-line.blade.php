@@ -1,4 +1,5 @@
 <div>
+
     <div class="row justify-content-between align-items-center">
         <div class="col">
             <h2 class="mt-3 mb-0 pb-0">{{ $productionLine->name }} 
@@ -111,24 +112,39 @@
     <script>
         function reloadPage(){
             return setInterval(() => { 
-                Livewire.emit('loadData');
+                try{
+                    progress = startProgress(30, ".page-progress");
+                    progress.reset();
+                    progress.start();
+                    Livewire.emit('loadData');
+                }catch(e){
+                    location.reload();
+                }
              }, 30000);
         }
 
         $(document).ready(function() {
 
+            var progress = startProgress(30, ".page-progress");
             var reloadDataInterval = reloadPage();
             
             $('#order-modal').on('hide.bs.modal', function (e) {
                 reloadDataInterval = reloadPage();
+                progress = startProgress(30, ".page-progress");
+                progress.reset();
+                progress.start();                
             });
 
             $('#order-modal').on('show.bs.modal', function (e) {
                 clearInterval(reloadDataInterval);
+                progress = startProgress(30, ".page-progress");
+                progress.stop();
             });            
 
             Livewire.on('openOrderModal', function(){
                 clearInterval(reloadDataInterval);
+                progress = startProgress(30, ".page-progress");
+                progress.stop();
                 $(".loading").LoadingOverlay("hide");
                 $('#order-modal').modal();
             })
@@ -141,6 +157,9 @@
                 $('#order-modal').modal('hide');
                 $('.modal-backdrop').remove();
                 reloadDataInterval = reloadPage();
+                progress = startProgress(30, ".page-progress");
+                progress.reset();
+                progress.start();                
             })       
 
             Livewire.on('loadingData', function(){
@@ -150,4 +169,5 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
-@endpush
+    <script src="{{ asset('js/jquery.progressBarTimer.js') }}" type="text/javascript" charset="utf-8"></script>
+@endpush 

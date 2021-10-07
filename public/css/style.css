@@ -1,3 +1,7 @@
+.dash-progress .progress, .page-progress .progress{
+  height: 1px !important;
+} 
+
 .order-card{
     cursor: pointer;
 }

@@ -1,9 +1,13 @@
 <div>
     <div class="card card-painel">
         <div class="card-header">
+            
             <span class="h4">Linha de produção</span><br />
             <small>Acompanhe a quantidade de pedidos em cada etapa do processo em tempo real.</small>
         </div>
+
+        @livewire('util.progressbar', ['livewireListener' => 'render_dash', 'progressEnclosure' => '.dash-progress', 'seconds' => 60])
+
         <div class="card-body">
             <div class="row">
                 @if(count($productionMovements) == 0)
@@ -35,17 +39,5 @@
     </div>  
 </div>
 @push('scripts')
-    <script>
-        function reloadPageDash(){
-            return setInterval(() => { 
-                //if (document.hasFocus()){
-                    Livewire.emit('render_dash');
-                //}
-            }, 60000);
-        }
-
-        $(document).ready(function() {
-            reloadPageDash();
-        });
-    </script>
+    <script src="{{ asset('js/jquery.progressBarTimer.js') }}" type="text/javascript" charset="utf-8"></script>
 @endpush    
