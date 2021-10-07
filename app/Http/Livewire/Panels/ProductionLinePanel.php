@@ -186,9 +186,30 @@ class ProductionLinePanel extends Component
 
     public function orderDetailAndMoveForward($order_summary_id, $production_line_id = null){
         $userId = auth()->user()->user_id ?? auth()->user()->id;
+        $currentStep = $this->productionLine->step;
         $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
         
-        (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $userId, $production_line_id);
+        //(new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $userId, $production_line_id);
+
+        $forwardProductionProccess = new ForwardProductionProccess();
+        //Valida se o pedido ainda está neste passo
+        $currentMovement = $forwardProductionProccess->getCurrentMovementByOrderId($this->orderSummaryDetail->order_id);
+        if(intval($production_line_id) > 0 && $production_line_id != $currentMovement->production_line_id){
+            //dd("Mexeram no meu queijo.");
+            $productionMovement = ProductionMovement::where("order_id", $this->orderSummaryDetail->order_id)
+                ->where("production_line_id", $production_line_id)
+                ->first();
+            $this->alert("error", sprintf("A etapa %s já foi concluída por %s.", $productionMovement->productionLine->name, (is_object($productionMovement->finishedBy) ? $productionMovement->finishedBy->name : 'Sistema')), ['timer' =>  8000]);  
+        }else{
+            $nextProductionLineStep = $forwardProductionProccess->nextStep($userId, $currentStep);
+            if(is_object($nextProductionLineStep)){
+                $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
+                do{
+                    $productionMovement = $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $userId);
+                }while($productionMovement->current_step_number < $nextProductionLineStep->step);
+            }
+        }
+
         $this->emit('openOrderModal');
         $this->loadData();
     }
@@ -289,8 +310,7 @@ class ProductionLinePanel extends Component
                 ->where("production_line_id", $this->production_line_id)
                 ->first();
 
-            dd($productionMovement, $currentMovement);
-            $this->alert("error", sprintf("A etapa %s já foi concluída por %s.", $productionMovement->productionLine->name, $productionMovement->finishedBy()->name), ['timer' =>  8000]);  
+            $this->alert("error", sprintf("A etapa %s já foi concluída por %s.", $productionMovement->productionLine->name, (is_object($productionMovement->finishedBy) ? $productionMovement->finishedBy->name : 'Sistema')), ['timer' =>  8000]);  
         }else{
             $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $userId);
         }
