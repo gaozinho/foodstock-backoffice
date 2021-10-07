@@ -126,9 +126,16 @@
 
         function reloadPage(){
             return setInterval(() => { 
-                Livewire.emit('loadData');
+                try{
+                    progress = startProgress(60, ".page-progress");
+                    progress.reset();
+                    progress.start();
+                    Livewire.emit('loadData');
+                }catch(e){
+                    location.reload();
+                }
              }, 60000);
-        }
+        }        
 
         function fullScreen(){
             $(".full-screen").hide();
@@ -169,10 +176,14 @@
                 fullScreen();
             });
 
+            var progress = startProgress(60, ".page-progress");
             var reloadDataInterval = reloadPage();
 
             $('#order-modal').on('hide.bs.modal', function (e) {
                 reloadDataInterval = reloadPage();
+                progress = startProgress(60, ".page-progress");
+                progress.reset();
+                progress.start();                    
             });
 
             $('#order-modal').on('show.bs.modal', function (e) {
@@ -193,4 +204,6 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+    <script src="{{ asset('js/jquery.progressBarTimer.js') }}" type="text/javascript" charset="utf-8"></script>
+
 @endpush

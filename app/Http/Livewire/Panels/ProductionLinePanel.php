@@ -288,7 +288,9 @@ class ProductionLinePanel extends Component
             $productionMovement = ProductionMovement::where("order_id", $this->orderSummaryDetail->order_id)
                 ->where("production_line_id", $this->production_line_id)
                 ->first();
-            $this->alert("error", sprintf("A etapa %s já foi concluída por %s.", $productionMovement->productionLine->name, $productionMovement->user->name), ['timer' =>  8000]);  
+
+            dd($productionMovement, $currentMovement);
+            $this->alert("error", sprintf("A etapa %s já foi concluída por %s.", $productionMovement->productionLine->name, $productionMovement->finishedBy()->name), ['timer' =>  8000]);  
         }else{
             $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $userId);
         }
@@ -307,7 +309,7 @@ class ProductionLinePanel extends Component
             $productionMovement = ProductionMovement::where("order_id", $order_id)
                 ->where("production_line_id", $real_production_line_id)
                 ->first();
-            $this->alert("error", sprintf("A estapa %s já foi concluída por %s.", $productionMovement->productionLine->name, $productionMovement->user->name), ['timer' =>  8000]);  
+            $this->alert("error", sprintf("A etapa %s já foi concluída por %s.", $productionMovement->productionLine->name, $productionMovement->user->name), ['timer' =>  8000]);  
         }
     }
 
