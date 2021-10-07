@@ -67,7 +67,7 @@
                                 if($productionLine->next_on_click == 1){
                                     $clickAction = 'wire:click="moveForwardFromCurrentStep(' . $orderSummary->id . ', ' . $orderSummary->production_line_id . ')"';
                                 }else{
-                                    $clickAction = 'wire:click="orderDetailAndMoveForward(' . $orderSummary->id . ')"';
+                                    $clickAction = 'wire:click="orderDetailAndMoveForward(' . $orderSummary->id . ', ' . $orderSummary->production_line_id . ')"';
                                 }
 
                                 $babelized = new App\Foodstock\Babel\OrderBabelized($orderSummary->order_json);
@@ -79,7 +79,7 @@
                             @php
                                 $clickAction = "";
                                 if($productionLine->next_on_click == 1 && $productionLine->step == $orderSummary->current_step_number){
-                                    $clickAction = 'wire:click="orderDetailAndMoveForward(' . $orderSummary->id . ')"';
+                                    $clickAction = 'wire:click="orderDetailAndMoveForward(' . $orderSummary->id . ', ' . $orderSummary->production_line_id . ')"';
                                 }
                                                                    
                                 $cardColor = "";
@@ -139,6 +139,7 @@
                 clearInterval(reloadDataInterval);
                 progress = startProgress(30, ".page-progress");
                 progress.stop();
+                progress.reset();
             });            
 
             Livewire.on('openOrderModal', function(){
