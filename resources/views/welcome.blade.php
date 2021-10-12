@@ -160,11 +160,46 @@
                             </ul>
                         </div>
                     </div>
-
-
-
                 </div>
             </div>
+
+
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-lg-4 mb-5 ftco-animate">
+                        <figure><img src="{{ asset('images/landing/tela-painel.png') }}" class="img-fluid"></figure>
+                        <div class="p-3">
+                            <h3 class="h4">Painel do delivery</h3>
+                            <ul class="list-unstyled ftco-list-check text-left">
+                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Use em sua TV, tablet ou celular! Não se preocuple, o entregador também pode acessar pelo QR Code.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 mb-5 ftco-animate">
+                        <figure><img src="{{ asset('images/landing/tela-estoque.png') }}" class="img-fluid"></figure>
+                        <div class="p-3">
+                            <h3 class="h4">Fique de olho no estoque</h3>
+                            <ul class="list-unstyled ftco-list-check text-left">
+                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Painel em tempo real para acompanhamento do estoque</span></li>
+                            </ul>
+                        </div>
+                    </div>                    
+
+                    <div class="col-lg-4 mb-5 ftco-animate">
+                        <figure><img src="{{ asset('images/landing/tela-integracoes.png') }}"  class="img-fluid"></figure>
+                        <div class="p-3">
+                            <h3 class="h4">Integrações</h3>
+                            <ul class="list-unstyled ftco-list-check text-left">
+                                <li class="d-flex mb-2"><span class="oi oi-check mr-3 text-primary"></span> <span>Configure você mesmo as integrações com marketplaces</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </section>
 
         <section class="ftco-section bg-light ftco-slant ftco-slant-white" id="section-pricing">
