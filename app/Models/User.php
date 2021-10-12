@@ -97,8 +97,5 @@ class User extends Authenticatable implements MustVerifyEmail
         }catch(\Exception $e){
             return null;
         }
-
     }
-   
-
 }

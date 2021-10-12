@@ -3,36 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
-
 use App\Actions\Report\ProductionSpentTimeReport;
-
-Route::get('/report', function () {
-   $productionSpentTime = new ProductionSpentTimeReport();
-
-   //return $productionSpentTime->displayExcelReport([61, 67, 66, 54, 62], '2021-09-26');
-
-   return $productionSpentTime->displayPdfReport([61, 67, 66, 54, 62], '2021-09-26');
-
-
-});
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/email/verify', function () {
-   return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice');
-
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-   $request->fulfill();
-   return redirect('/home');
-})->middleware(['auth', 'signed'])->name('verification.verify');
-
-Route::post('/email/verification-notification', function (Request $request) {
-   $request->user()->sendEmailVerificationNotification();
-   return back()->with('message', 'Verification link sent!');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 use App\Http\Livewire\Configuration\{
     Brokers, Restaurants, ProductionLines, WizardSuccess, Teams
@@ -52,6 +23,28 @@ use App\Http\Livewire\Keyboard\NumericKeyboard;
 use App\Http\Livewire\Dashboard\Welcome;
 use App\Http\Livewire\Dashboard\Info;
 use App\Http\Livewire\Stock\Panel;
+
+use App\Http\Controllers\PrivacyPolicyController;
+
+Route::get('/privacy-policy', [PrivacyPolicyController::class, 'show'])->name('policy.show');
+
+Route::get('/', function () {
+   return view('welcome');
+});
+
+Route::get('/email/verify', function () {
+  return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+  $request->fulfill();
+  return redirect('/home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', function (Request $request) {
+  $request->user()->sendEmailVerificationNotification();
+  return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 Route::get('/home', Info::class)->name('dashboard')->middleware(['auth', 'verified']);
 Route::get('/dashboard', Info::class)->name('dashboard')->middleware(['auth', 'verified']);
@@ -82,7 +75,6 @@ Route::group(['middleware' => ['role:admin|estoque', 'verified']], function (){
 });
 
 Route::get('/panel/deliveryman/qrcode', Qrcode::class)->name('panels.public-delivery-qrcode.index')->middleware('auth');
-
 Route::get('/panel/production-line/{role_name}', ProductionLinePanel::class)->name('panels.production-line-panel.index')->middleware('auth');
 Route::get('/panel/delivery', DeliveryPanel::class)->name('panels.delivery-panel.index')->middleware('auth');
 Route::get('/panel/deliveryman/{user_id}', DeliverymanPanel::class)->name('panels.public-delivery-panel.index');

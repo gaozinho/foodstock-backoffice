@@ -5,6 +5,8 @@ namespace App\Actions\Fortify;
 use App\Models\Team;
 use App\Models\User;
 use App\Models\Invite;
+use App\Models\LgpdTerm;
+use App\Models\LgpdUserAcceptance;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -15,6 +17,8 @@ class CreateNewUser implements CreatesNewUsers
 {
     use PasswordValidationRules;
 
+
+
     /**
      * Create a newly registered user.
      *
@@ -23,13 +27,19 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input)
     {
+        $messages = [
+            'terms.required' => 'Para prosseguir leia e aceite os termos de uso e privacidade.',
+            'invitation.required' => 'Informe o convite para prosseguir.',
+        ];
+
+
         $validator = Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'invitation' => ['required', 'string', 'max:255', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['required', 'accepted'] : '',
-        ]);
+        ], $messages);
 
         $invite = Invite::where("code", $input["invitation"])->where("used", 0)->first();
 
@@ -46,12 +56,24 @@ class CreateNewUser implements CreatesNewUsers
         $invite->used = 1;
         $invite->save();
 
+
         return DB::transaction(function () use ($input) {
-            return tap(User::create([
+
+            $newUser = User::create([
                 'name' => $input['name'],
                 'email' => $input['email'],
                 'password' => Hash::make($input['password']),
-            ]), function (User $user) {
+            ]);
+
+            $lgpd = LgpdTerm::where("publishing_date", "<", date("Y-m-d H:m:s"))->orderBy("publishing_date", "desc")->first();
+            LgpdUserAcceptance::create([
+                "user_id" => $newUser->id,
+                "lgpd_term_id" => $lgpd->id
+            ]);
+    
+
+
+            return tap($newUser, function (User $user) {
                 $this->createTeam($user);
             });
         });

@@ -55,7 +55,7 @@
         <div class="row">
             <div class="col-md text-left">
                 <p>&copy; foodStock :: <a
-                        href="#">Política de uso e privacidade</a></p>
+                        href="{{route('policy.show')}}">Política de uso e privacidade</a></p>
                         <p>Versão BETA {{env('APP_VERSION')}}</>
             </div>
         </div>

@@ -27,7 +27,7 @@
 
                             <div>
                                 <x-jet-button type="submit">
-                                    {{ __('Enviar e-mail de verificação') }}
+                                    {{ __('Reenviar e-mail de verificação') }}
                                 </x-jet-button>
                             </div>
                         </form>
