@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
- * @property integer $parent_id
  * @property integer $restaurant_id
  * @property integer $category_id
  * @property string $name
@@ -44,7 +43,7 @@ class Product extends Model
     /**
      * @var array
      */
-    protected $fillable = ['parent_id', 'user_id', 'restaurant_id', 'category_id', 'name', 'description', 'minimun_stock', 'current_stock', 'monitor_stock', 'external_code', 'unit', 'ean', 'unit_price', 'index', 'created_at', 'updated_at', 'image', 'serving', 'enabled', 'deleted', 'initial_step'];
+    protected $fillable = ['json_string', 'user_id', 'restaurant_id', 'name', 'description', 'minimun_stock', 'current_stock', 'monitor_stock', 'external_code', 'unit', 'ean', 'unit_price', 'index', 'created_at', 'updated_at', 'image', 'serving', 'enabled', 'deleted', 'initial_step'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -52,14 +51,6 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo('App\Models\Category');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function product()
-    {
-        return $this->belongsTo('App\Models\Product', 'parent_id');
     }
 
     /**

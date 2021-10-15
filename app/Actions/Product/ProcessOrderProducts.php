@@ -47,7 +47,7 @@ class ProcessOrderProducts
         return $final;
     }
 
-    private function processItems(OrderSummary $orderSummary, $item, $parent_id = null){
+    private function processItems(OrderSummary $orderSummary, $item){
 
         $product = null;
         //$restaurants = array_values($this->getRestaurantsByRestaurant($orderSummary->restaurant_id));
@@ -109,7 +109,7 @@ class ProcessOrderProducts
                     'enabled' => 1, 
                     'deleted' => 0, 
                     'initial_step' => 1,
-                    'parent_id' => $parent_id,
+                    //'parent_id' => $parent_id,
                     'user_id' => $restaurant->user_id
                 ]);
                 $product->external_code = isset($item->externalCode) && $item->externalCode != "" ? $item->externalCode : $this->generateExternalCode($product->id);

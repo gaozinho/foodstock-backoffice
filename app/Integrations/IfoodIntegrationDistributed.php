@@ -4,6 +4,8 @@ namespace App\Integrations;
 use App\Models\IfoodBroker;
 use App\Integrations\IfoodIntegration;
 use GuzzleHttp\Exception\ClientException;
+use App\Enums\IfoodApi;
+
 
 class IfoodIntegrationDistributed extends IfoodIntegration
 {
@@ -133,6 +135,75 @@ class IfoodIntegrationDistributed extends IfoodIntegration
             return false;
         }        
     }
+
+    public function getProducts($restaurant_id, $limit, $page){
+        try{
+            $ifoodBroker = IfoodBroker::where("restaurant_id", $restaurant_id)->firstOrFail();
+
+            if($this->tokenIsExpired(strtotime($ifoodBroker->expiresIn))){
+                $this->refreshToken($ifoodBroker->id);
+                $ifoodBroker = IfoodBroker::findOrFail($ifoodBroker->id);
+            }
+            
+            $this->requestOptions["headers"]["Authorization"] = "Bearer " . $ifoodBroker->accessToken;
+
+            $endpoint = sprintf(IfoodApi::MerchantProducts, $ifoodBroker->merchant_id, $limit, $page);
+
+            $httpResponse = $this->httpClient->get($endpoint, $this->requestOptions);
+            $jsonMerchant = $this->parseMerchantsResponse($httpResponse->getBody()->getContents());
+
+            return $jsonMerchant;
+        }catch(\Exception $exception){
+            if(env('APP_DEBUG')) throw $exception;
+            return false;
+        }        
+    }
+
+    public function getCatalogs($restaurant_id){
+        try{
+            $ifoodBroker = IfoodBroker::where("restaurant_id", $restaurant_id)->firstOrFail();
+
+            if($this->tokenIsExpired(strtotime($ifoodBroker->expiresIn))){
+                $this->refreshToken($ifoodBroker->id);
+                $ifoodBroker = IfoodBroker::findOrFail($ifoodBroker->id);
+            }
+            
+            $this->requestOptions["headers"]["Authorization"] = "Bearer " . $ifoodBroker->accessToken;
+
+            $endpoint = sprintf(IfoodApi::MerchantCatalogs, $ifoodBroker->merchant_id);
+
+            $httpResponse = $this->httpClient->get($endpoint, $this->requestOptions);
+            $jsonMerchant = $this->parseMerchantsResponse($httpResponse->getBody()->getContents());
+
+            return $jsonMerchant;
+        }catch(\Exception $exception){
+            if(env('APP_DEBUG')) throw $exception;
+            return false;
+        }        
+    }
+
+    public function getCategories($restaurant_id, $catalog_id){
+        try{
+            $ifoodBroker = IfoodBroker::where("restaurant_id", $restaurant_id)->firstOrFail();
+
+            if($this->tokenIsExpired(strtotime($ifoodBroker->expiresIn))){
+                $this->refreshToken($ifoodBroker->id);
+                $ifoodBroker = IfoodBroker::findOrFail($ifoodBroker->id);
+            }
+            
+            $this->requestOptions["headers"]["Authorization"] = "Bearer " . $ifoodBroker->accessToken;
+
+            $endpoint = sprintf(IfoodApi::MerchantCategories, $ifoodBroker->merchant_id, $catalog_id);
+
+            $httpResponse = $this->httpClient->get($endpoint, $this->requestOptions);
+            $jsonMerchant = $this->parseMerchantsResponse($httpResponse->getBody()->getContents());
+
+            return $jsonMerchant;
+        }catch(\Exception $exception){
+            if(env('APP_DEBUG')) throw $exception;
+            return false;
+        }        
+    }       
 
     public function merchantAvailable($restaurant_id){
         $ifoodBroker = null;

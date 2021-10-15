@@ -19,10 +19,10 @@ class BaseConfigurationComponent extends Component
         return redirect()->route($next);
     }
 
-    public function simpleAlert($type, $message){
+    public function simpleAlert($type, $message, $time = 3000){
         $this->alert($type, $message, [
             'position' =>  'top-end', 
-            'timer' =>  3000,  
+            'timer' =>  $time,  
             'toast' =>  true, 
             'text' =>  '', 
             'confirmButtonText' =>  'Ok', 

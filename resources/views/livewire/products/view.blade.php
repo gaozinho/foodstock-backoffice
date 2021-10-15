@@ -57,7 +57,6 @@
                                     <label>Monitorando estoque</label>
                                 </div>
                             </div>
-
                             <div class="pretty p-switch p-fill">
                                 <input wire:model='stock_alert' name="stock_alert" type="checkbox" value="1"
                                     {{ old('enabled', $stock_alert == 1) ? 'checked' : '' }} />
@@ -65,7 +64,6 @@
                                     <label>Abaixo do mínimo</label>
                                 </div>
                             </div>
-
                             <div class="pretty p-switch p-fill">
                                 <input wire:model='stock_zero' name="stock_zero" type="checkbox" value="1"
                                     {{ old('enabled', $stock_zero == 1) ? 'checked' : '' }} />
@@ -73,7 +71,6 @@
                                     <label>Sem estoque</label>
                                 </div>
                             </div>
-
                             <div class="pretty p-switch p-fill">
                                 <input wire:model='enabled' name="enabled" type="checkbox" value="1"
                                     {{ old('enabled', $enabled == 1) ? 'checked' : '' }} />
@@ -88,11 +85,6 @@
                                     <h3>Nenhum produto.</h3>
                             </div>
                         @else
-
-
-                                                                                               
-
-
                         <table class="table table-hover table-bordered pagination-products">
                             <thead class="thead">
                                 <tr>
@@ -193,14 +185,12 @@
                                                             <label></label>
                                                         </div>
                                                 </div>
-                                            @if($row->monitor_stock == 1)
-                                            <div style="line-height: 1">
-                                                <small>Atual: {{ $row->current_stock }}<br/>Min: {{ $row->minimun_stock }}</small>
+                                                @if($row->monitor_stock == 1)
+                                                <div style="line-height: 1">
+                                                    <small>Atual: {{ $row->current_stock }}<br/>Min: {{ $row->minimun_stock }}</small>
+                                                </div>
+                                                @endif                                                
                                             </div>
-                                            @endif                                                
-                                            </div>
-
-
                                         </td>                                                                          
                                         <!--
                                         <td width="1%" nowrap class="text-right" style="line-height: 0.9">
@@ -223,7 +213,6 @@
                             </tbody>
                         </table>
                         {!! $products->appends(request()->query())->links() !!}
-
                         <script>
                             $(document).ready(function() {
 
@@ -233,8 +222,6 @@
                             });
                         </script>
                         @endif
-
-
                     </div>
                 </div>
             </div>
@@ -242,9 +229,48 @@
                 <div class="card">
                     <div class="card-body">
                         <h5>
+                            Importe produtos do seu cardápio
+                        </h5>
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <p>
+                                    Nós importamos para você os seus produtos. Assim você não precisar recadastrá-los.
+                                </p>                            
+                                @if($importIfoodRunning)
+                                    <script>
+                                        function chechImportIfood(){
+                                            return setInterval(() => { 
+                                                try{
+                                                    Livewire.emit('checkImportIfood');
+                                                }catch(e){
+                                                    location.reload();
+                                                }
+                                            }, 30000);
+                                        }
+
+                                        $(document).ready(function() {
+                                            chechImportIfood();
+                                        });   
+                                    </script>                                   
+                                    <a class="btn btn-secondary btn-sm">
+                                        <img src="{{ asset('images/ifood-white.png') }}" style="width: 40px">
+                                        <i class="fas fa-cog fa-spin"></i>
+                                        Importando produtos. Aguarde!
+                                    </a>                                        
+                                @else
+                                    <a wire:click="confirmImportIfood" class="btn btn-danger btn-sm">
+                                        <img src="{{ asset('images/ifood-white.png') }}" style="width: 40px">
+                                        <i wire:loading wire:target="confirmImportIfood" class="fas fa-cog fa-spin"></i>
+                                        Importar produtos
+                                    </a>
+                                @endif     
+
+                                                 
+                            </div>
+                        </div>
+                        <h5>
                             Como gerenciar seus produtos
                         </h5>
-
                         <p>
                             Para uma integração de sucesso com os <i>marketplaces</i> o segredo é manter os "códigos externos" (ou "SKU" ou "códigos PDV") cadastrados corretamente no foodStock.
                         </p>
@@ -274,47 +300,46 @@
                 </div>
             </div>
         </div>
-
         @include('livewire.products.edit')
-
     @endif
 </div>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
+@push('scripts')
+    <script>
+        $(document).ready(function() {
 
-<script>
-    $(document).ready(function() {
+            $('.sort-column, .pretty').on('click', function(e) {
+                $(".pagination-products").LoadingOverlay("show");
+            });
 
-        $('.sort-column, .pretty').on('click', function(e) {
-            $(".pagination-products").LoadingOverlay("show");
+            Livewire.on('paginationLoaded', function() {
+                $(".pagination-products").LoadingOverlay("hide");
+            })
+
+            Livewire.on('tableUpdating', function() {
+                $(".pagination-products").LoadingOverlay("show");
+            })
         });
+    </script>
 
-        Livewire.on('paginationLoaded', function() {
-            $(".pagination-products").LoadingOverlay("hide");
+    <script>
+        window.addEventListener('gotoTop', event => {
+            window.scrollTo({
+                top: 15,
+                left: 15,
+                behaviour: 'smooth'
+            });
         })
+    </script>
 
-        Livewire.on('tableUpdating', function() {
-            $(".pagination-products").LoadingOverlay("show");
-        })
-    });
-</script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
 
-<script>
-    window.addEventListener('gotoTop', event => {
-        window.scrollTo({
-            top: 15,
-            left: 15,
-            behaviour: 'smooth'
-        });
-    })
-</script>
+    <!-- Editor visual textarea -->
+    <script src="{{ asset('node_modules/tinymce/tinymce.min.js') }}"></script>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
+    <!-- Máscaras nos campos -->
+    <script src="{{ asset('node_modules/cleave.js/cleave.min.js') }}"></script>
 
-<!-- Editor visual textarea -->
-<script src="{{ asset('node_modules/tinymce/tinymce.min.js') }}"></script>
-
-<!-- Máscaras nos campos -->
-<script src="{{ asset('node_modules/cleave.js/cleave.min.js') }}"></script>
-
-<!-- Loading -->
-<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+    <!-- Loading -->
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+@endpush 

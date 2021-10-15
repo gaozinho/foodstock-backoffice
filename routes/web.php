@@ -32,6 +32,23 @@ Route::get('/', function () {
    return view('welcome');
 });
 
+Route::get('/productz', function () {
+   ini_set('max_execution_time', '300');
+   $integration = new \App\Integrations\IfoodIntegrationDistributed();
+
+   $brokerProducts = new App\Actions\Product\Ifood\BrokerProducts();
+   
+   $page = 1;
+   $results = [];
+   do{
+      $products = $integration->getProducts(11, 1000, $page);
+      $results[] = $brokerProducts->process($products, 11);
+      $page++;
+   }while($products->count > 0);
+   dd($results);
+
+});
+
 Route::get('/email/verify', function () {
   return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');

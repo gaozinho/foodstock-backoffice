@@ -6,25 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property integer $id
- * @property integer $catalog_id
  * @property integer $restaurant_id
- * @property integer $user_id
  * @property integer $broker_id
  * @property string $name
- * @property string $external_code
- * @property boolean $enabled
- * @property string $created_at
- * @property string $updated_at
  * @property int $sequence
  * @property int $index
+ * @property string $created_at
+ * @property string $updated_at
  * @property Broker $broker
- * @property Catalog $catalog
  * @property Restaurant $restaurant
- * @property User $user
+ * @property Category[] $categories
  * @property Item[] $items
- * @property Product[] $products
  */
-class Category extends Model
+class Catalog extends Model
 {
     /**
      * The "type" of the auto-incrementing ID.
@@ -36,7 +30,7 @@ class Category extends Model
     /**
      * @var array
      */
-    protected $fillable = ['catalog_id', 'restaurant_id', 'user_id', 'broker_id', 'name', 'external_code', 'enabled', 'created_at', 'updated_at', 'sequence', 'index'];
+    protected $fillable = ['restaurant_id', 'broker_id', 'name', 'sequence', 'index', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -49,25 +43,17 @@ class Category extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function catalog()
-    {
-        return $this->belongsTo('App\Models\Catalog');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function restaurant()
     {
         return $this->belongsTo('App\Models\Restaurant');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function user()
+    public function categories()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->hasMany('App\Models\Category');
     }
 
     /**
@@ -76,13 +62,5 @@ class Category extends Model
     public function items()
     {
         return $this->hasMany('App\Models\Item');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function products()
-    {
-        return $this->hasMany('App\Models\Product');
     }
 }
