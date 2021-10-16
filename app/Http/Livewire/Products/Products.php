@@ -102,35 +102,53 @@ class Products extends BaseConfigurationComponent
 		$keyWord = '%'.$this->keyWord .'%';
         $this->emit('paginationLoaded');
 
-        $products = Product::where("deleted", 0)->where("user_id", $this->user_id);
+        $products = Product::leftJoin("items", "products.id", "=", "items.product_id")
+            ->where("products.deleted", 0)
+            ->where("products.user_id", $this->user_id)
+            ->selectRaw("distinct products.*")
+            ->selectRaw("(	
+                CASE WHEN items.id IS NULL THEN 
+                (
+                    SELECT GROUP_CONCAT(distinct (SELECT p3.name FROM products p3 WHERE p3.id = i2.product_id) SEPARATOR ', ') 
+                    FROM products p2
+                    INNER JOIN options o2 ON p2.id = o2.product_id
+                    INNER JOIN option_groups og2 ON og2.id = o2.option_group_id
+                    INNER JOIN items_has_option_groups iog2 ON iog2.option_group_id = og2.id
+                    INNER JOIN items i2 ON i2.id = iog2.item_id
+                    WHERE p2.id = products.id
+                )
+                ELSE 
+                    NULL 
+                END
+            ) AS parents");
         
         if(!empty($this->keyWord)){
             $products->where(function($query) use ($keyWord){
-                $query->orWhere('name', 'LIKE', $keyWord)
-                    ->orWhere('description', 'LIKE', $keyWord);
+                $query->orWhere('products.name', 'LIKE', $keyWord)
+                    ->orWhere('products.description', 'LIKE', $keyWord);
             });
         }
 
         if($this->monitor_stock == 1 || request()->monitor_stock == 1){
-            $products->where('monitor_stock', 1);
+            $products->where('products.monitor_stock', 1);
         }
         
         if($this->enabled == 1 || request()->enabled == 1){
-            $products->where('enabled', 0);
+            $products->where('products.enabled', 0);
         }  
 
         if($this->stock_alert == 1 || request()->stock_alert == 1){
-            $products->whereRaw('current_stock <= minimun_stock');
+            $products->whereRaw('products.current_stock <= products.minimun_stock');
         }
         
         if($this->stock_zero == 1 || request()->stock_zero == 1){
-            $products->whereRaw('current_stock <= 0');
+            $products->whereRaw('products.current_stock <= 0');
         }          
 
         if(!empty($this->sort)){
             $products->orderBy($this->sort, !empty($this->direction) ? $this->direction : "ASC");
         }else{
-            $products->orderBy("name", "ASC");
+            $products->orderBy("products.name", "ASC");
         }
 
         $pagination = $products->paginate($this->pageSize);

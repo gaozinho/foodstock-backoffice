@@ -140,7 +140,8 @@
                                         <td width="1%">
                                             {{ $loop->iteration + ($products->currentPage() - 1) * $pageSize }}</td>
                                         <td>
-                                            <a href="javascripf:;" data-toggle="modal" data-target="#updateModal" class="text-dark" wire:click="edit({{ $row->id }})">
+                                            <a href="javascripf:;" data-toggle="modal" data-target="#updateModal" class="text-dark" wire:click="edit({{ $row->id }})">                                         
+                                                
                                                 @if ($row->enabled)
                                                     {{ $row->name }}
                                                 @else
@@ -150,14 +151,20 @@
                                                 @if ($row->monitor_stock)
                                                     <i class="fas fa-eye"></i>
                                                 @endif
+
+                                                @if ($row->parents)
+                                                <div class="p-0" style="line-height: 1">
+                                                    <b><small> {{ \Illuminate\Support\Str::limit($row->parents, 70, $end = '...') }}</small></b>
+                                                </div>   
+                                                @endif                                                    
                                                 
-                                                <br />
-                                                @if(!empty($row->external_code))
-                                                    <span class="text-muted"><small>Código externo: <b>{{ strtoupper($row->external_code) }}</b></small></span>
-                                                @endif
+                                                <div class="p-0" style="line-height: 1">
+                                                    @if(!empty($row->external_code))
+                                                        <span class="text-muted"><small>Código externo: <b>{{ strtoupper($row->external_code) }}</b></small></span>
+                                                    @endif
 
-                                                <span class="text-muted"><small> Leva produção para: <b>{!!$row->initial_step == 0 ? "indeterminado" : '<span class="text-success">' . $row->initial_step . ' ' . $row->productionLineName() . '</span>'!!}</b></small></span>
-
+                                                    <span class="text-muted"><small> Leva produção para: <b>{!!$row->initial_step == 0 ? "indeterminado" : '<span class="text-success">' . $row->initial_step . ' ' . $row->productionLineName() . '</span>'!!}</b></small></span>
+                                                </div>
 
                                             </a>
                                             <i wire:loading wire:target="productModels.{{$key}}.initial_step" class="fas fa-cog fa-spin"></i>

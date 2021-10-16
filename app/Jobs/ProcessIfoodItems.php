@@ -73,10 +73,10 @@ class ProcessIfoodItems implements ShouldQueue
              
                 $catalogs = $integration->getCatalogs($restaurant->id);
                 (new BrokerCatalog($restaurant))->processCatalogs($catalogs);
+                //break;
             }
             //DB::commit();
             
-
         }catch(\Exception $e){
             //DB::rollBack();
             $this->fail($e);
