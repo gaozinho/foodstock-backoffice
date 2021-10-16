@@ -44,13 +44,16 @@
                         </div>
                         <div class="row">
 
-                            
+                            @php
+                            /*
                             <div class="col-xs-12 col-sm-4 col-md-4">
                                 <div class="form-group">
                                     <strong>Categoria</strong>
                                     {!! Form::select('category_id', ['' => 'Escolha'] + $categories, $product->category_id, ['wire:model.defer' => 'product.category_id', 'class' => 'form-control', 'onClick'=>"this.select();"]) !!}
                                 </div>
                             </div>
+                            */
+                            @endphp
                             <div class="col-xs-12 col-sm-4 col-md-4">
                                 <div class="form-group">
                                     <strong>Unidade</strong>
@@ -94,16 +97,24 @@
                         </div>
 
                         <div class="form-group">
-                            <strong>Foto do produto <i wire:loading wire:target="image" class="fas fa-cog fa-spin"></i></strong>
-                            <div>
-                                <input type="file" wire:model="image" accept=".jpg,.jpeg,.png" />
-                                @error('image') 
-                                    <div class="alert alert-danger mt-2">
-                                        {{ $message }} A imagem possui formato inválido ou ultrapassa o limite de tamanho.
+                            @if(intval($product->broker_id) > 0)
+                                <strong>Foto do produto <i wire:loading wire:target="image" class="fas fa-cog fa-spin"></i></strong>
+                                @if(filter_var($product->image, FILTER_VALIDATE_URL))
+                                    <div>
+                                        <img src="{{$product->image}}" style="width: 100px" class="img-thumbnail">
                                     </div>
-                                @enderror
-                            </div>
-                            <div class="text-muted"><small>Máximo 2 Megabytes</small></div>
+                                @endif
+                            @else
+                                <div>
+                                    <input type="file" wire:model="image" accept=".jpg,.jpeg,.png" />
+                                    @error('image') 
+                                        <div class="alert alert-danger mt-2">
+                                            {{ $message }} A imagem possui formato inválido ou ultrapassa o limite de tamanho.
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="text-muted"><small>Máximo 2 Megabytes</small></div>                            
+                            @endif
                         </div>
 
                         <div class="form-group">

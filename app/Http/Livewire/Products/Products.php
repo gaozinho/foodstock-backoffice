@@ -96,6 +96,7 @@ class Products extends BaseConfigurationComponent
     {
 
         $this->user_id = auth()->user()->user_id ?? auth()->user()->id;
+        
 
         $this->importIfoodRunning = Cache::get('importIfood-' . $this->user_id, false);
 
@@ -106,6 +107,7 @@ class Products extends BaseConfigurationComponent
             ->where("products.deleted", 0)
             ->where("products.user_id", $this->user_id)
             ->selectRaw("distinct products.*")
+            ->distinct("products.id")
             ->selectRaw("(	
                 CASE WHEN items.id IS NULL THEN 
                 (
@@ -234,7 +236,7 @@ class Products extends BaseConfigurationComponent
     public function save($continue)
     {
 
-        $this->product->category_id = empty($this->product->category_id) ? null : $this->product->category_id;
+        //$this->product->category_id = empty($this->product->category_id) ? null : $this->product->category_id;
         $this->product->unit = empty($this->product->unit) ? null : $this->product->unit;
         $this->product->initial_step = intval($this->product->initial_step) == 0 ? 0 : intval($this->product->initial_step);
         $this->product->unit_price = intval($this->product->unit_price) == 0 ? null : $this->product->unit_price;
@@ -372,18 +374,24 @@ class Products extends BaseConfigurationComponent
 
 
     public function loadBaseData(){
+        $this->user_id = auth()->user()->user_id ?? auth()->user()->id;
+
+        /*
         $this->categories = Category::where("user_id", $this->user_id)
             ->orWhere("user_id", null)
             ->where("enabled", 1)
             ->orderBy("name")
             ->select("id", "name")
             ->get()->pluck("name", "id")->toArray();
+        */
+
         $this->productionLines = ProductionLine::where("user_id", $this->user_id)
             ->where("is_active", 1)
             ->where("production_line_id", null)
             ->orderBy("step")
             ->select("step", "name")
             ->pluck("name", "step")->toArray();
+
 
     }    
 

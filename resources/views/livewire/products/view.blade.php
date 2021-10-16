@@ -142,6 +142,10 @@
                                         <td>
                                             <a href="javascripf:;" data-toggle="modal" data-target="#updateModal" class="text-dark" wire:click="edit({{ $row->id }})">                                         
                                                 
+                            @if(filter_var($row->image, FILTER_VALIDATE_URL))
+                                <img src="{{$row->image}}" style="height: 60px" class="img-thumbnail float-right ml-1">
+                            @endif
+
                                                 @if ($row->enabled)
                                                     {{ $row->name }}
                                                 @else
