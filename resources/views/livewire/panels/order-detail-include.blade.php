@@ -9,7 +9,7 @@
             <div>
                 <div class="row pb-2">
                     <div class="col-2 col-lg-1 col-sm-1">
-                        <h6 class="m-0">{{ $item->quantity }}</h6>
+                        <h4 class="m-0">{{ $item->quantity }}x</h4>
                     </div>
                     <div class="col-7 col-lg-8 col-sm-8 small">{{ $item->name }}
                         @if ($item->observations) <span
@@ -20,7 +20,7 @@
                         <div class="col-12 small">
                             <div>
                                 <div class="row">
-                                    <div class="col-7 offset-2">{{ $subitem->quantity }} {{ $subitem->name }}
+                                    <div class="col-7 offset-2"><span class="h5">{{ $subitem->quantity }}x</span> {{ $subitem->name }}
                                         @if ($subitem->observations) <span
                                                 class="px-1 bg-warning text-dark">{{ $subitem->observations }}</span>
                                         @endif
