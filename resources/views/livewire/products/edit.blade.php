@@ -50,38 +50,6 @@
                                 </div>
                             </div>
                         </div>                        
-                        <div class="row">
-
-                            @php
-                            /*
-                            <div class="col-xs-12 col-sm-4 col-md-4">
-                                <div class="form-group">
-                                    <strong>Categoria</strong>
-                                    {!! Form::select('category_id', ['' => 'Escolha'] + $categories, $product->category_id, ['wire:model.defer' => 'product.category_id', 'class' => 'form-control', 'onClick'=>"this.select();"]) !!}
-                                </div>
-                            </div>
-                            */
-                            @endphp
-                            <div class="col-xs-12 col-sm-4 col-md-4">
-                                <div class="form-group">
-                                    <strong>Unidade</strong>
-                                    <select name="unit" class="form-control" wire:model.defer="product.unit">
-                                        <option value="">Escolha</option>
-                                        <option value="UNIDADE">UNIDADE</option>
-                                        <option value="PEÇA">PEÇA</option>
-                                        <option value="PEDAÇO">PEDAÇO</option>
-                                        <option value="PACOTE">PACOTE</option>
-                                    </select>
-
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-sm-4 col-md-4">
-                                <div class="form-group">
-                                    <strong>Preço</strong> 
-                                    {!! Form::text('unit_price', str_replace('.', ',', $product->unit_price ), ['wire:model.defer' => 'product.unit_price', 'class' => 'form-control unit_price text-right', 'onClick'=>"this.select();"]) !!}
-                                </div>
-                            </div>
-                        </div>
 
                         <div wire:ignore>
                             <script>

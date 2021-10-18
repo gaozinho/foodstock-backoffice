@@ -97,7 +97,6 @@
                                     </th>
                                 </tr>
                                 <tr>
-                                    <td>#</td>
                                     <th>
                                         <div class="row justify-content-between">
                                             <div class="col-6">
@@ -116,7 +115,6 @@
                                             </div>
                                         </div>
                                     </th>
-                                    <th>Preço</th>
                                     <th>Inicia em</th>
                                     <th>Monitorar</th>
                                     <th>Ações</th>
@@ -137,19 +135,17 @@
                                     @endphp
 
                                     <tr class="{{ $classMonitor }} loading">
-                                        <td width="1%">
-                                            {{ $loop->iteration + ($products->currentPage() - 1) * $pageSize }}</td>
                                         <td>
                                             <a href="javascripf:;" data-toggle="modal" data-target="#updateModal" class="text-dark" wire:click="edit({{ $row->id }})">                                         
                                                 
-                            @if(filter_var($row->image, FILTER_VALIDATE_URL))
-                                <img src="{{$row->image}}" style="height: 60px" class="img-thumbnail float-right ml-1">
-                            @endif
+                                                @if(filter_var($row->image, FILTER_VALIDATE_URL))
+                                                    <img src="{{$row->image}}" style="height: 60px" class="img-thumbnail float-right ml-1">
+                                                @endif
 
                                                 @if ($row->enabled)
-                                                    {{ $row->name }}
+                                                    {{ strlen($row->foodstock_name) > 0 ? $row->foodstock_name : $row->name }}
                                                 @else
-                                                    <del>{{ $row->name }}</del>
+                                                    <del>{{ strlen($row->foodstock_name) > 0 ? $row->foodstock_name : $row->name }}</del>
                                                 @endif
 
                                                 @if ($row->monitor_stock)
@@ -173,9 +169,6 @@
                                             </a>
                                             <i wire:loading wire:target="productModels.{{$key}}.initial_step" class="fas fa-cog fa-spin"></i>
                                             <i wire:loading wire:target="productModels.{{$key}}.monitor_stock" class="fas fa-cog fa-spin"></i>
-                                        </td>
-                                        <td width="1%" nowrap class="text-right">
-                                            <small>@money($row->unit_price)</small>
                                         </td>
                                         <td>
                                             <select id="productModels.{{$key}}.initial_step" name="initial_step" class="form-control form-control-sm" wire:model='productModels.{{$key}}.initial_step'>

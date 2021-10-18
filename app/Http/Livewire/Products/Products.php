@@ -133,7 +133,8 @@ class Products extends BaseConfigurationComponent
         if(!empty($this->keyWord)){
             $products->where(function($query) use ($keyWord){
                 $query->orWhere('products.name', 'LIKE', $keyWord)
-                    ->orWhere('products.description', 'LIKE', $keyWord);
+                ->orWhere('products.description', 'LIKE', $keyWord)
+                ->orWhere('products.foodstock_name', 'LIKE', $keyWord);
             });
         }
 
