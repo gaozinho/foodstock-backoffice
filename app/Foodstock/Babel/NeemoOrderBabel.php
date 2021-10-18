@@ -66,7 +66,15 @@ class NeemoOrderBabel extends OrderBabel implements OrderBabelInterface
     }     
     
     public function schedule(){
-        return false;
+        try{
+            if(isset($this->orderJson->Order->is_scheduled) && $this->orderJson->Order->is_scheduled){
+                return new ScheduleBabel(date("Y-m-d H:i:s", strtotime($this->orderJson->Order->scheduled_at)), date("Y-m-d H:i:s", strtotime($this->orderJson->Order->scheduled_at))); 
+            }
+        }catch(\Exception $e){
+            return false;
+        }
+
+        return false;        
     }     
 
     public function subtotal(){
