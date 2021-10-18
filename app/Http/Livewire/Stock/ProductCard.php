@@ -57,4 +57,16 @@ class ProductCard extends BaseConfigurationComponent
 
         $this->add_to_current_stock = "";
     }
+
+    public function formatParent($parents){
+
+        $parentsArray = [];
+        if($parents != null) $parentsArray = explode(", ", $parents);
+        
+        if(count($parentsArray) > 0){
+            return $parentsArray;
+        } 
+        else return $parentsArray;
+    }
+
 }

@@ -303,7 +303,6 @@ class Products extends BaseConfigurationComponent
                 $this->product->image = $this->image->store('products', 'public');
             }
 
-            
             $this->product->save();
 			//session()->flash('success', 'Produto atualizado com sucesso.');
             $this->simpleAlert('success', 'Produto atualizado com sucesso.');

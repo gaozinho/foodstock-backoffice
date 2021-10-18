@@ -53,8 +53,10 @@
         </div>
     </div>
 </div>
+
 @push('scripts')
     <script src="{{ asset('js/jquery.progressBarTimer.min.js') }}" type="text/javascript" charset="utf-8"></script>
+
     <script>
 
         function reloadPage(){
@@ -109,6 +111,6 @@
             });          
         });
     </script>
-        <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 
 @endpush
