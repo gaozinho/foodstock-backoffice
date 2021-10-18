@@ -25,6 +25,8 @@ use App\Models\Category;
 use App\Models\Option;
 use App\Models\OptionGroup;
 
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Support\Facades\DB;
 
 class ProcessIfoodItems implements ShouldQueue
@@ -57,12 +59,7 @@ class ProcessIfoodItems implements ShouldQueue
     public function handle()
     {
         try{
-
- 
-
             //DB::beginTransaction();
-
-
             $integration = new IfoodIntegrationDistributed();
             $brokerProducts = new BrokerProducts();
             $restaurants = Restaurant::where("user_id", "=", $this->user->id)->where("enabled", 1)->orderBy("created_at", "desc")->get();  
@@ -72,11 +69,18 @@ class ProcessIfoodItems implements ShouldQueue
                 OptionGroup::where("broker_id", BrokerType::Ifood)->where("restaurant_id", $restaurant->id)->delete();
              
                 $catalogs = $integration->getCatalogs($restaurant->id);
-                (new BrokerCatalog($restaurant))->processCatalogs($catalogs);
-                //break;
+                $brokerCatalog = new BrokerCatalog($restaurant);
+                $brokerCatalog->processCatalogs($catalogs);
+                try{
+                    $brokerCatalog->postProcessParents($this->user->id, $restaurant->id, BrokerType::Ifood);
+                }catch(\Exception $e1){
+                    Log::error("Error processing parents", [
+                        "message" => $e1->getMessage(),
+                        "trace" => $e1->getTraceAsString()
+                    ]);
+                }
             }
             //DB::commit();
-            
         }catch(\Exception $e){
             //DB::rollBack();
             $this->fail($e);

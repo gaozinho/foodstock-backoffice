@@ -107,7 +107,8 @@ class Products extends BaseConfigurationComponent
             ->where("products.deleted", 0)
             ->where("products.user_id", $this->user_id)
             ->selectRaw("distinct products.*")
-            ->distinct("products.id")
+            ->distinct("products.id");
+            /*
             ->selectRaw("(	
                 CASE WHEN items.id IS NULL THEN 
                 (
@@ -123,6 +124,7 @@ class Products extends BaseConfigurationComponent
                     NULL 
                 END
             ) AS parents");
+            */
         
         if(!empty($this->keyWord)){
             $products->where(function($query) use ($keyWord){

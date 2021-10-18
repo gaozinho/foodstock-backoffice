@@ -43,7 +43,7 @@ class Product extends Model
     /**
      * @var array
      */
-    protected $fillable = ['json_string', 'user_id', 'restaurant_id', 'name', 'description', 'minimun_stock', 'current_stock', 'monitor_stock', 'external_code', 'unit', 'ean', 'unit_price', 'index', 'created_at', 'updated_at', 'image', 'serving', 'enabled', 'deleted', 'initial_step'];
+    protected $fillable = ['json_string', 'user_id', 'restaurant_id', 'name', 'description', 'minimun_stock', 'current_stock', 'monitor_stock', 'external_code', 'unit', 'ean', 'unit_price', 'index', 'created_at', 'updated_at', 'image', 'serving', 'enabled', 'deleted', 'initial_step', 'parents'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

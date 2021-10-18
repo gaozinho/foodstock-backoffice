@@ -16,6 +16,7 @@ use App\Models\OptionGroup;
 use App\Models\DietaryRestriction;
 
 use App\Actions\Product\Ifood\BrokerProducts;
+use Illuminate\Support\Facades\DB;
 
 class BrokerCatalog
 {
@@ -128,6 +129,24 @@ class BrokerCatalog
                 "index" => $option->index,
             ]);            
         }
-            
+    }
+
+    public function postProcessParents($user_id, $restaurant_id, $broker_id){
+        $sql = "UPDATE products AS p
+        INNER JOIN (
+            SELECT p2.id, p2.name, GROUP_CONCAT(DISTINCT (SELECT p3.name FROM products p3 WHERE p3.id = i2.product_id) SEPARATOR ', ') AS parents 
+            FROM products p2
+            INNER JOIN OPTIONS o2 ON p2.id = o2.product_id
+            INNER JOIN option_groups og2 ON og2.id = o2.option_group_id
+            INNER JOIN items_has_option_groups iog2 ON iog2.option_group_id = og2.id
+            INNER JOIN items i2 ON i2.id = iog2.item_id
+            WHERE p2.user_id = ? AND p2.broker_id = ? AND p2.restaurant_id = ?
+            GROUP BY p2.id
+            ORDER BY p2.name
+        ) AS p4 ON p.id = p4.id
+        SET p.parents = p4.parents
+        WHERE p.user_id = ? AND p.broker_id = ? AND p.restaurant_id = ?";
+        DB::statement("SET SESSION group_concat_max_len=15000");
+        DB::update($sql, [$user_id, $broker_id, $restaurant_id, $user_id, $broker_id, $restaurant_id]);
     }
 }
