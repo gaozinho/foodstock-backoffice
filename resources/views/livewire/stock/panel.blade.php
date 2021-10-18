@@ -61,9 +61,17 @@
 
         function reloadPage(){
             return setInterval(() => { 
-                Livewire.emit('loadData');
+                try{
+                    progress = startProgress(30, ".page-progress");
+                    progress.reset();
+                    progress.start();
+                    Livewire.emit('loadData');
+                }catch(e){
+                    location.reload();
+                }
              }, 30000);
         }
+
 
         function incrementValue(e, increment){
             var value = e.val();
@@ -87,7 +95,8 @@
 
         $(document).ready(function() {
 
-            var reloadDataInterval = reloadPage();
+            var progress = startProgress(30, ".page-progress");
+            var reloadDataInterval = reloadPage();            
 
             var i = 0, timeOut = 0;
 
@@ -112,5 +121,6 @@
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+    <script src="{{ asset('js/jquery.progressBarTimer.js') }}" type="text/javascript" charset="utf-8"></script>
 
 @endpush
