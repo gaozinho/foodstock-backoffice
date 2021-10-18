@@ -43,6 +43,14 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <strong>Nome no foodStock <small><span class="text-muted">Este nome será mantido para identificar seu produto no foodStock.</span></small></strong>
+                                    {!! Form::text('foodstock_name', $product->foodstock_name, ['wire:model.defer' => 'product.foodstock_name', 'class' => 'form-control', 'onClick'=>"this.select();"]) !!}
+                                </div>
+                            </div>
+                        </div>                        
+                        <div class="row">
 
                             @php
                             /*

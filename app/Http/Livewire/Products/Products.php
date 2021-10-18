@@ -53,6 +53,7 @@ class Products extends BaseConfigurationComponent
     protected $rules = [
         //'product.category_id' => 'nullable|integer',
         'product.name' => 'max:255|required',
+        'product.foodstock_name' => 'min:4|max:255',
         'product.description' => 'max:500|nullable',
         'product.minimun_stock' => 'required|integer|min:0',
         'product.current_stock' => 'required|integer',
