@@ -11,8 +11,10 @@ use App\Models\ProductionLine;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use App\Exports\ProductsExport;
+use  App\Actions\Help\PerformHealthCheck;
 //use App\Actions\ProductionLine\RecoverUserRestaurant;
 use App\Http\Livewire\Configuration\BaseConfigurationComponent;
+use App\Actions\ProductionLine\RecoverUserRestaurant;
 //use App\Integrations\IfoodIntegrationDistributed;
 //use App\Actions\Product\Ifood\BrokerProducts;
 use App\Jobs\ProcessIfoodItems;
@@ -42,13 +44,14 @@ class Products extends BaseConfigurationComponent
     public $restaurant_ids = [];
     public $productModels;
     public $user_id;
+    public $check;
 
     //Job de importação de cardápio
     public $importIfoodRunning = false;
     
 
     protected $rules = [
-        'product.category_id' => 'nullable|integer',
+        //'product.category_id' => 'nullable|integer',
         'product.name' => 'max:255|required',
         'product.description' => 'max:500|nullable',
         'product.minimun_stock' => 'required|integer|min:0',
@@ -69,7 +72,7 @@ class Products extends BaseConfigurationComponent
     ];
 
     protected $messages = [
-        'product.category_id.required' => 'Escolha a categoria.',
+        //'product.category_id.required' => 'Escolha a categoria.',
         'product.unit.required' => 'Escolha a unidade.',
         'product.unit_price.required' => 'Informe o preço.',
         'product.initial_step.required' => 'Informe para onde este produto leva sua produção.',
@@ -94,10 +97,10 @@ class Products extends BaseConfigurationComponent
 
     public function render()
     {
+        $this->check = (new PerformHealthCheck())->restaurantsConfigureds();
 
         $this->user_id = auth()->user()->user_id ?? auth()->user()->id;
         
-
         $this->importIfoodRunning = Cache::get('importIfood-' . $this->user_id, false);
 
 		$keyWord = '%'.$this->keyWord .'%';
@@ -300,6 +303,7 @@ class Products extends BaseConfigurationComponent
                 $this->product->image = $this->image->store('products', 'public');
             }
 
+            
             $this->product->save();
 			//session()->flash('success', 'Produto atualizado com sucesso.');
             $this->simpleAlert('success', 'Produto atualizado com sucesso.');

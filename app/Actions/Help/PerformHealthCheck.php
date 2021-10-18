@@ -45,6 +45,15 @@ class PerformHealthCheck
         return ProductionLine::where("user_id", auth()->user()->id)->count() > 0;
     }
 
+    public function restaurantsConfigureds(){
+        $restaurants = (new RecoverUserRestaurant())->recoverAll(auth()->user()->user_id ?? auth()->user()->id);
+        $check = [];
+        foreach($restaurants as $restaurant){
+            $check[$restaurant->name] = ($restaurant->enabled == 1);
+        }
+        return $check;
+    }
+
     public function merchantsAvailable(){
         $merchantsInfo = [];
         try{

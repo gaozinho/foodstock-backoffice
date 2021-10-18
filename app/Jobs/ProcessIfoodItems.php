@@ -59,7 +59,7 @@ class ProcessIfoodItems implements ShouldQueue
     public function handle()
     {
         try{
-            //DB::beginTransaction();
+            DB::beginTransaction();
             $integration = new IfoodIntegrationDistributed();
             $brokerProducts = new BrokerProducts();
             $restaurants = Restaurant::where("user_id", "=", $this->user->id)->where("enabled", 1)->orderBy("created_at", "desc")->get();  
@@ -80,9 +80,9 @@ class ProcessIfoodItems implements ShouldQueue
                     ]);
                 }
             }
-            //DB::commit();
+            DB::commit();
         }catch(\Exception $e){
-            //DB::rollBack();
+            DB::rollBack();
             $this->fail($e);
         }finally{
             Cache::forget('importIfood-' . $this->user->id);

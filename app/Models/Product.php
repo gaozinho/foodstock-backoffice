@@ -45,13 +45,6 @@ class Product extends Model
      */
     protected $fillable = ['json_string', 'user_id', 'restaurant_id', 'name', 'description', 'minimun_stock', 'current_stock', 'monitor_stock', 'external_code', 'unit', 'ean', 'unit_price', 'index', 'created_at', 'updated_at', 'image', 'serving', 'enabled', 'deleted', 'initial_step', 'parents'];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function category()
-    {
-        return $this->belongsTo('App\Models\Category');
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

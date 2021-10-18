@@ -268,12 +268,25 @@
                                         <i class="fas fa-cog fa-spin"></i>
                                         Importando produtos. Aguarde!
                                     </a>                                        
-                                @else
-                                    <a wire:click="confirmImportIfood" class="btn btn-danger btn-sm">
-                                        <img src="{{ asset('images/ifood-white.png') }}" style="width: 40px">
-                                        <i wire:loading wire:target="confirmImportIfood" class="fas fa-cog fa-spin"></i>
-                                        Importar produtos
-                                    </a>
+                                @else 
+                                    @php
+                                        $restaurants = [];
+                                        foreach($check as $key => $value){
+                                            $restaurants[] = $key;
+                                        }
+                                    @endphp
+                                    @if(count($check) > 0)
+                                        <a wire:click="confirmImportIfood" class="btn btn-danger btn-sm">
+                                            <img src="{{ asset('images/ifood-white.png') }}" style="width: 40px">
+                                            <i wire:loading wire:target="confirmImportIfood" class="fas fa-cog fa-spin"></i>
+                                            Importar produtos {{implode(", ", $restaurants)}}
+                                        </a>
+                                    @else
+                                        Você ainda não configurou seu delivery.
+                                        <a href="{{route('configuration.broker.index')}}" class="btn btn-danger btn-sm">
+                                            Configurar deliver
+                                        </a>
+                                    @endif
                                 @endif     
 
                                                  
