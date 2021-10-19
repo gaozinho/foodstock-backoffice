@@ -24,7 +24,7 @@ class OrdersWeek extends Component
     {
         $weekMap = [0 => 'DOM', 1 => 'SEG', 2 => 'TER', 3 => 'QUA', 4 => 'QUI', 5 => 'SEX', 6 => 'SAB'];
         
-        $restaurant_ids = is_array($this->selectedRestaurants) ? $this->selectedRestaurants : (new RecoverUserRestaurant())->recoverAllIds(auth()->user()->id)->toArray();
+        $restaurant_ids = is_array($this->selectedRestaurants) ? $this->selectedRestaurants : (new RecoverUserRestaurant())->recoverAllIds(auth()->user()->user_id ?? auth()->user()->id)->toArray();
 
         $lineChartModel = FederatedDayOrder::whereIn("restaurant_id", $restaurant_ids)
             ->whereBetween("date", [Carbon::now()->subDays(6)->toDateString(), Carbon::now()->toDateString()])

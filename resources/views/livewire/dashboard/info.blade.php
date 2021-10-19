@@ -14,13 +14,13 @@
         <div class="col mb-3">
             <livewire:graph.production-dash />
         </div>
-        @role('admin')
+        @role('admin|financeiro')
         <div class="col-md-4 mb-3">
             <livewire:report.base-panel key="{{now()}}" />
         </div>        
         @endrole
     </div>
-    @role('admin')
+    @role('admin|financeiro')
         <div class="row mb-3">
             <div class="col-md-6 mb-3">
                 <livewire:graph.orders-week />

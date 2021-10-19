@@ -14,7 +14,7 @@ use App\Actions\ProductionLine\RecoverUserRestaurant;
 class SalesDaysUserReport
 {
 
-    public $title = 'Vendas apuradas no dia (somente produtos)';
+    public $title = 'Vendas apuradas no dia';
     public $meta = [];
     public $reportTitle = "FOODSTOCK - Vendas apuradas - %s";
 
