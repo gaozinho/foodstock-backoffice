@@ -21,7 +21,7 @@ class SalesDaysUserReport
     public $columns = [
             'Produto' => 'name',
             'Quantidade' => 'quantity',
-            'Total' => 'total',
+            'Total (R$)' => 'total',
         ];
 
     private function getQueryBuilder($user_id, $created_at){
@@ -38,7 +38,7 @@ class SalesDaysUserReport
 
         return response()->streamDownload(function () use ($queryBuilder) {
             echo PdfReport::of($this->title, $this->meta, $queryBuilder, $this->columns)
-                ->editColumns(['Quantidade', 'Total'], [
+                ->editColumns(['Quantidade', 'Total (R$)'], [
                     'class' => 'right'
                 ])
                 ->stream();
