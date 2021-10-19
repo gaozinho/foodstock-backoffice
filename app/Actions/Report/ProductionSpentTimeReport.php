@@ -51,6 +51,7 @@ class ProductionSpentTimeReport
     {
         $this->meta["Data apurada"] = date_format(date_create($created_at), "d/m/Y");
         $this->meta["Emitido em"] = date("d/m/Y H:i");
+        $this->meta["Emitido por"] = 'FOODSTOCK.COM.BR';
         $queryBuilder = $this->getQueryBuilder($restaurant_ids, $created_at);
         return ExcelReport::of($this->title, $this->meta, $queryBuilder, $this->columns)
             ->editColumns(['Pedidos atendidos', 'Tempo médio'], [

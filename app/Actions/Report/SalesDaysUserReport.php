@@ -32,6 +32,7 @@ class SalesDaysUserReport
     {
         $this->meta["Data apurada"] = date_format(date_create($created_at), "d/m/Y");
         $this->meta["Emitido em"] = date("d/m/Y H:i");
+        $this->meta["Emitido por"] = 'FOODSTOCK.COM.BR';
         $queryBuilder = $this->getQueryBuilder($user_id, $created_at);
 
 
