@@ -18,6 +18,9 @@
         <li class="list-group-item">
             <livewire:report.production-time key="{{now()}}" :selectDate="$selectDate" />
         </li>
+        <li class="list-group-item">
+            <livewire:report.sales-per-day-users key="{{now()}}" :selectDate="$selectDate" />
+        </li>        
     </ul>
 
 </div>

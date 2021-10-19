@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Report;
 
 use Livewire\Component;
 use App\Actions\Report\ProductionSpentTimeReport;
+use App\Actions\ProductionLine\RecoverUserRestaurant;
 
 class ProductionTime extends Component
 {
@@ -25,13 +26,15 @@ class ProductionTime extends Component
     }
 
     public function pdf($date){
+        $restaurant_ids = (new RecoverUserRestaurant())->recoverAllIds(auth()->user()->id)->toArray();
         $this->productionSpentTime = new ProductionSpentTimeReport();
-        return $this->productionSpentTime->displayPdfReport([61, 67, 66, 54, 62], $this->dateParse($date));
+        return $this->productionSpentTime->displayPdfReport($restaurant_ids, $this->dateParse($date));
     }
 
     public function excel($date){
+        $restaurant_ids = (new RecoverUserRestaurant())->recoverAllIds(auth()->user()->id)->toArray();
         $this->productionSpentTime = new ProductionSpentTimeReport();
-        return $this->productionSpentTime->displayExcelReport([61, 67, 66, 54, 62], $this->dateParse($date));
+        return $this->productionSpentTime->displayExcelReport($restaurant_ids, $this->dateParse($date));
     }    
 
     public function render()

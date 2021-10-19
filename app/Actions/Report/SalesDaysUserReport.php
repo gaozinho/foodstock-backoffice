@@ -7,39 +7,37 @@ use ExcelReport;
 use CSVReport;
 
 use App\Models\User;
-use App\Models\ProductionSpentTime;
+use App\Models\SalesDaysUser;
 use Illuminate\Support\Facades\DB;
 use App\Actions\ProductionLine\RecoverUserRestaurant;
 
-class ProductionSpentTimeReport
+class SalesDaysUserReport
 {
 
-    public $title = 'Produtividade da equipe';
+    public $title = 'Vendas apuradas no dia';
     public $meta = [];
-    public $reportTitle = "FOODSTOCK - Produtividade da equipe - %s";
+    public $reportTitle = "FOODSTOCK - Vendas apuradas - %s";
 
     public $columns = [
-            'Responsável' => 'responsavel',
-            'Etapa' => 'nome_etapa',
-            'Pedidos atendidos' => 'total_pedidos',
-            'Tempo médio' => 'avg_spent',
+            'Produto' => 'name',
+            'Quantidade' => 'quantity',
+            'Total' => 'total',
         ];
 
-    private function getQueryBuilder($restaurant_ids, $created_at){
-        return ProductionSpentTime::select("*")->where("created_at", $created_at)->whereIn("restaurant_id", $restaurant_ids);
+    private function getQueryBuilder($user_id, $created_at){
+        return SalesDaysUser::select("*")->where("date", $created_at)->where("user_id", $user_id);
     }
 
-    public function displayPdfReport($restaurant_ids, $created_at)
+    public function displayPdfReport($user_id, $created_at)
     {
         $this->meta["Data apurada"] = date_format(date_create($created_at), "d/m/Y");
         $this->meta["Emitido em"] = date("d/m/Y H:i");
-        $this->meta["Emitido por"] = 'FOODSTOCK.COM.BR';
-        $queryBuilder = $this->getQueryBuilder($restaurant_ids, $created_at);
+        $queryBuilder = $this->getQueryBuilder($user_id, $created_at);
 
 
         return response()->streamDownload(function () use ($queryBuilder) {
             echo PdfReport::of($this->title, $this->meta, $queryBuilder, $this->columns)
-                ->editColumns(['Pedidos atendidos', 'Tempo médio'], [
+                ->editColumns(['Quantidade', 'Total'], [
                     'class' => 'right'
                 ])
                 ->stream();
@@ -47,13 +45,14 @@ class ProductionSpentTimeReport
 
     }
 
-    public function displayExcelReport($restaurant_ids, $created_at)
+    public function displayExcelReport($user_id, $created_at)
     {
         $this->meta["Data apurada"] = date_format(date_create($created_at), "d/m/Y");
         $this->meta["Emitido em"] = date("d/m/Y H:i");
-        $queryBuilder = $this->getQueryBuilder($restaurant_ids, $created_at);
+        $this->meta["Emitido por"] = 'FOODSTOCK.COM.BR';
+        $queryBuilder = $this->getQueryBuilder($user_id, $created_at);
         return ExcelReport::of($this->title, $this->meta, $queryBuilder, $this->columns)
-            ->editColumns(['Pedidos atendidos', 'Tempo médio'], [
+            ->editColumns(['Quantidade', 'Total'], [
                 'class' => 'right'
             ])
             ->setOrientation('portrait')

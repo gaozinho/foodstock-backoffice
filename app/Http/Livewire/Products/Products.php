@@ -306,6 +306,7 @@ class Products extends BaseConfigurationComponent
             }
 
             $this->product->save();
+
 			//session()->flash('success', 'Produto atualizado com sucesso.');
             $this->simpleAlert('success', 'Produto atualizado com sucesso.');
             $this->dispatchBrowserEvent('gotoTop');
