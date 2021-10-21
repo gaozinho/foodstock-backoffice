@@ -19,6 +19,7 @@ class SalesDaysUserReport
     public $reportTitle = "FOODSTOCK - Vendas apuradas - %s";
 
     public $columns = [
+            'CÓD' => 'external_code',
             'Produto' => 'name',
             'Quantidade' => 'quantity',
             'Total (R$)' => 'total',

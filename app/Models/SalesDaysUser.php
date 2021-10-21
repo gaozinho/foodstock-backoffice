@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class SalesDaysUser extends Model
 {
 
-    protected $fillable = ['user_id', 'product_id', 'name', 'quantity', 'total', 'date'];
+    protected $fillable = ['user_id', 'external_code', 'product_id', 'name', 'quantity', 'total', 'date'];
 
 }
