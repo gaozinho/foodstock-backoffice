@@ -14,7 +14,7 @@ use App\Actions\ProductionLine\RecoverUserRestaurant;
 class SalesDaysUserReport
 {
 
-    public $title = 'Vendas apuradas no dia (apenas produtos)';
+    public $title = 'Vendas apuradas no dia';
     public $meta = [];
     public $reportTitle = "FOODSTOCK - Vendas apuradas - %s";
 
@@ -22,11 +22,15 @@ class SalesDaysUserReport
             'CÓD' => 'external_code',
             'Produto' => 'name',
             'Quantidade' => 'quantity',
-            'Total (R$)' => 'total',
+            //'Total (R$)' => 'total',
         ];
 
     private function getQueryBuilder($user_id, $created_at){
-        return SalesDaysUser::select("*")->where("date", $created_at)->where("user_id", $user_id);
+        return SalesDaysUser::select("*")
+            ->where("date", $created_at)
+            ->where("user_id", $user_id)
+            ->orderBy("external_code")
+            ->orderByRaw("IFNULL(foodstock_name, name)");
     }
 
     public function displayPdfReport($user_id, $created_at)
@@ -39,7 +43,7 @@ class SalesDaysUserReport
 
         return response()->streamDownload(function () use ($queryBuilder) {
             echo PdfReport::of($this->title, $this->meta, $queryBuilder, $this->columns)
-                ->editColumns(['Quantidade', 'Total (R$)'], [
+                ->editColumns(['Quantidade'], [
                     'class' => 'right'
                 ])
                 ->stream();
@@ -54,7 +58,7 @@ class SalesDaysUserReport
         $this->meta["Emitido por"] = 'FOODSTOCK.COM.BR';
         $queryBuilder = $this->getQueryBuilder($user_id, $created_at);
         return ExcelReport::of($this->title, $this->meta, $queryBuilder, $this->columns)
-            ->editColumns(['Quantidade', 'Total'], [
+            ->editColumns(['Quantidade'], [
                 'class' => 'right'
             ])
             ->setOrientation('portrait')

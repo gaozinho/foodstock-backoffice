@@ -48,6 +48,8 @@ class Products extends BaseConfigurationComponent
 
     //Job de importação de cardápio
     public $importIfoodRunning = false;
+
+    public $formatedQueryString;
     
 
     protected $rules = [
@@ -66,18 +68,19 @@ class Products extends BaseConfigurationComponent
     }   
 
     public function mount($id = 0){
+        $this->formatedQueryString = $this->formatInitialQueryString();
         if(intval($id) > 0) $this->edit($id);
         $this->sort = request()->query('sort');
         $this->direction = request()->query('direction');
+        $this->keyWord = request()->query('keyWord');
         $this->loadBaseData();
     }
 
     public function render()
     {
-        $this->check = (new PerformHealthCheck())->restaurantsConfigureds();
 
+        $this->check = (new PerformHealthCheck())->restaurantsConfigureds();
         $this->user_id = auth()->user()->user_id ?? auth()->user()->id;
-        
         $this->importIfoodRunning = Cache::get('importIfood-' . $this->user_id, false);
 
 		$keyWord = '%'.$this->keyWord .'%';
@@ -93,7 +96,8 @@ class Products extends BaseConfigurationComponent
             $products->where(function($query) use ($keyWord){
                 $query->orWhere('products.name', 'LIKE', $keyWord)
                 ->orWhere('products.description', 'LIKE', $keyWord)
-                ->orWhere('products.foodstock_name', 'LIKE', $keyWord);
+                ->orWhere('products.foodstock_name', 'LIKE', $keyWord)
+                ->orWhere('products.external_code', 'LIKE', $keyWord);
             });
         }
 
@@ -103,15 +107,18 @@ class Products extends BaseConfigurationComponent
         
         if($this->enabled == 1 || request()->enabled == 1){
             $products->where('products.enabled', 0);
+            
         }  
 
         if($this->stock_alert == 1 || request()->stock_alert == 1){
             $products->whereRaw('products.current_stock <= products.minimun_stock');
+            $this->queryString["stock_alert"] = 1;
         }
         
         if($this->stock_zero == 1 || request()->stock_zero == 1){
             $products->whereRaw('products.current_stock <= 0');
-        }          
+            $this->queryString["stock_zero"] = 1;
+        }
 
         if(!empty($this->sort)){
             $products->orderBy($this->sort, !empty($this->direction) ? $this->direction : "ASC");
@@ -122,9 +129,24 @@ class Products extends BaseConfigurationComponent
         $pagination = $products->paginate($this->pageSize);
         $this->productModels = $pagination->items();
 
+        //$this->formatedQueryString = $this->formatInitialQueryString();
+
         return view('livewire.products.view', [
             'products' => $pagination,
         ]);
+    }
+
+    public function formatInitialQueryString(){
+        $queryString = [];
+        if(request()->enabled == "1") $queryString["enabled"] = $this->enabled = request()->enabled;
+        if(request()->stock_alert == "1") $queryString["stock_alert"] = $this->stock_alert = request()->stock_alert;
+        if(request()->stock_zero == "1") $queryString["stock_zero"] = $this->stock_zero = request()->stock_zero;
+        if(strlen(request()->keyWord) > 0) $queryString["keyWord"] = $this->keyWord = request()->keyWord;
+        if(request()->monitor_stock == "1") $queryString["monitor_stock"] = $this->monitor_stock = request()->monitor_stock;   
+        if(strlen(request()->sort) > 0) $queryString["sort"] = $this->sort = request()->sort;   
+        if(strlen(request()->direction) > 0) $queryString["direction"] = $this->direction = request()->direction;   
+        return $queryString; 
+        //return http_build_query($this->queryString,'?','&');
     }
 
     public function updatedProductModels($value, $index){
@@ -137,6 +159,7 @@ class Products extends BaseConfigurationComponent
 
     // FILTROS DA PAGINAÇÃO ##############
     public function updatingKeyWord($value){
+        $this->addToQuerystring(["keyWord" => $value]);
         $this->emit('tableUpdating');
         $this->resetPage();
     }

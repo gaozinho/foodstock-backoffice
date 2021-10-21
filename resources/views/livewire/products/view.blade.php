@@ -132,9 +132,8 @@
 
                                 <tr class="{{ $classMonitor }} loading">
                                     <td>
+                                        <a onclick="formatEditLink('{{route('products.edit', ['id' => $row->id])}}')" href="javascript:;"  class="text-dark">
                                         
-                                        <a href="{{route('products.edit', ['id' => $row->id])}}"  class="text-dark">                                         
-                                            
                                             @if(filter_var($row->image, FILTER_VALIDATE_URL))
                                                 <img src="{{$row->image}}" style="height: 60px" class="img-thumbnail float-right ml-1">
                                             @endif
@@ -199,7 +198,7 @@
                                     </td>
                                     -->
                                     <td width="1%" nowrap class="text-right">
-                                        <a href="{{route('products.edit', ['id' => $row->id])}}" title="Editar">
+                                        <a onclick="formatEditLink('{{route('products.edit', ['id' => $row->id])}}')" href="javascript:;" title="Editar">
                                             <i class="fa fa-edit"></i>
                                         </a>&nbsp;
                                         <a href="javascripf:;" class="text-danger"
@@ -303,6 +302,14 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
 @push('scripts')
     <script>
+
+        function formatEditLink(baseLink){
+            var queryString = window.location.href.slice(window.location.href.indexOf('?') + 1);
+            console.log(window.location.href.indexOf('?'), queryString);
+            if(window.location.href.indexOf('?') < 0) window.location.href = baseLink;
+            else  window.location.href = baseLink + "?" + queryString;
+        }
+
         $(document).ready(function() {
 
             $('.sort-column, .pretty').on('click', function(e) {

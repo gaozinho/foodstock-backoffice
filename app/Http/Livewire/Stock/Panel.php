@@ -29,7 +29,10 @@ class Panel extends Component
             ->where(function($query) use ($user_id){
                 $query->where("stock_panels.user_id", $user_id)
                     ->orWhere("stock_panels.user_id", null);
-            })->orderBy("stock_panels.name")->get();
+            })->orderBy("stock_panels.name")
+            ->select("stock_panels.*")
+            ->distinct("stock_panels.id")
+            ->get();
 
         $products = Product::where("products.deleted", 0)
             ->where('products.monitor_stock', 1)

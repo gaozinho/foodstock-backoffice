@@ -3,7 +3,7 @@
         <div class="col-lg-12 col-sm-12">
             <div class="form-row">
                 <div class="col-auto">
-                    <a href="{{route('products.index')}}" class="btn btn-primary text-uppercase"><i class="fas fa-arrow-left"></i> Voltar</a>
+                    <a onclick="formatEditLink('{{route('products.index')}}')" href="javascript:;" class="btn btn-primary text-uppercase"><i class="fas fa-arrow-left"></i> Voltar</a>
                 </div>
             </div>
         </div>
@@ -251,7 +251,7 @@
 
                             <div class="row justify-content-between">
                                 <div class="col-6">
-                                <a href="{{route('products.index')}}"
+                                <a onclick="formatEditLink('{{route('products.index')}}')" href="javascript:;"
                                     class="btn pr-4 pl-4 font-weight-bold btn-secondary text-uppercase"><i
                                         class="fas fa-arrow-left"></i>
                                     Cancelar</a>
@@ -319,9 +319,12 @@
 @push('scripts')
 
     <script>
-    function bindSelect2(){
-   
-    }
+        function formatEditLink(baseLink){
+            var queryString = window.location.href.slice(window.location.href.indexOf('?') + 1);
+            console.log(window.location.href.indexOf('?'), queryString);
+            if(window.location.href.indexOf('?') < 0) window.location.href = baseLink;
+            else  window.location.href = baseLink + "?" + queryString;
+        }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>        
 @endpush 
