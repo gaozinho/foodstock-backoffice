@@ -84,4 +84,9 @@ class Product extends Model
         $item = $this->productionLine();
         return is_object($item) ? $item->name : "";
     }    
+
+    public function stockPanels()
+    {
+        return $this->belongsToMany('App\Models\StockPanel', 'stock_panels_has_products');
+    }    
 }

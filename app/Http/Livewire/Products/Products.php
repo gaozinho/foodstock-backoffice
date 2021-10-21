@@ -51,32 +51,8 @@ class Products extends BaseConfigurationComponent
     
 
     protected $rules = [
-        //'product.category_id' => 'nullable|integer',
-        'product.name' => 'max:255|required',
-        'product.foodstock_name' => 'min:4|max:255',
-        'product.description' => 'max:500|nullable',
-        'product.minimun_stock' => 'required|integer|min:0',
-        'product.current_stock' => 'required|integer',
-        'product.monitor_stock' => 'required|boolean',
-        'product.external_code' => 'max:50|nullable',
-        'product.unit' => 'max:10|nullable',
-        'product.ean' => 'max:255|nullable',
-        'product.unit_price' => 'nullable|numeric|min:0',
-        'product.index' => 'nullable|integer',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        'product.serving' => 'max:20|nullable',
-        'product.enabled' => 'required|boolean',
-        'product.initial_step' => 'nullable|numeric|min:0',
         'productModels.*.initial_step' => 'nullable',
         'productModels.*.monitor_stock' => 'nullable',
-        
-    ];
-
-    protected $messages = [
-        //'product.category_id.required' => 'Escolha a categoria.',
-        'product.unit.required' => 'Escolha a unidade.',
-        'product.unit_price.required' => 'Informe o preço.',
-        'product.initial_step.required' => 'Informe para onde este produto leva sua produção.',
     ];
 
     // PAGINAÇÃO ######################
@@ -112,23 +88,6 @@ class Products extends BaseConfigurationComponent
             ->where("products.user_id", $this->user_id)
             ->selectRaw("distinct products.*")
             ->distinct("products.id");
-            /*
-            ->selectRaw("(	
-                CASE WHEN items.id IS NULL THEN 
-                (
-                    SELECT GROUP_CONCAT(distinct (SELECT p3.name FROM products p3 WHERE p3.id = i2.product_id) SEPARATOR ', ') 
-                    FROM products p2
-                    INNER JOIN options o2 ON p2.id = o2.product_id
-                    INNER JOIN option_groups og2 ON og2.id = o2.option_group_id
-                    INNER JOIN items_has_option_groups iog2 ON iog2.option_group_id = og2.id
-                    INNER JOIN items i2 ON i2.id = iog2.item_id
-                    WHERE p2.id = products.id
-                )
-                ELSE 
-                    NULL 
-                END
-            ) AS parents");
-            */
         
         if(!empty($this->keyWord)){
             $products->where(function($query) use ($keyWord){
@@ -226,96 +185,6 @@ class Products extends BaseConfigurationComponent
         $this->emit('paginationLoaded');
     }    
 
-    // EDIÇÃO ####################
-	
-    public function cancel()
-    {
-        $this->resetInput();
-        $this->saveMode = false;
-    }
-	
-    private function resetInput()
-    {		
-		$this->image = null;
-		$this->product = new Product();
-    }
-
-    public function save($continue)
-    {
-
-        //$this->product->category_id = empty($this->product->category_id) ? null : $this->product->category_id;
-        $this->product->unit = empty($this->product->unit) ? null : $this->product->unit;
-        $this->product->initial_step = intval($this->product->initial_step) == 0 ? 0 : intval($this->product->initial_step);
-        $this->product->unit_price = intval($this->product->unit_price) == 0 ? null : $this->product->unit_price;
-
-		if(intval($this->product->id) > 0){
-			$this->update($continue);
-		}else{
-			$this->store($continue);
-		}
-
-        $this->resetInput();
-        $this->saveMode = false;
-	}
-
-    public function create()
-    {
-        $this->resetValidation();
-        $this->loadBaseData();
-        $this->product = new Product();
-        $this->product->enabled = 0;
-        $this->product->monitor_stock = 0;
-        $this->product->minimun_stock = 0;
-        $this->product->current_stock = 0;
-        $this->product->unit_price = 0;
-        $this->product->initial_step = 1;
-		$this->saveMode = true;
-    }
-
-    public function store()
-    {
-        try {
-            $this->product->user_id = $this->user_id;
-			$this->validate();
-			is_object($this->image) ? $this->product->image = $this->image->store('products', 'public') : null;
-            $this->product->save();
-			//session()->flash('success', 'Produto salvo com sucesso.');
-            $this->simpleAlert('success', 'Produto salvo com sucesso.');
-            $this->dispatchBrowserEvent('gotoTop');
-        } catch (Exception $exception) {
-            if(env('APP_DEBUG')) throw $exception;
-            session()->flash('error', 'Ops... ocorreu em erro ao tentar salvar o Product.');
-        }
-    }
-
-    public function edit($id)
-    {
-        $this->resetValidation();
-        $this->loadBaseData();
-        $this->product = Product::where("id", $id)->firstOrFail();
-		$this->nome = $this->product->nome;
-		$this->saveMode = true;
-    }
-
-    public function update($continue)
-    {
-        try {
-			$this->validate();
-            if(is_object($this->image)){
-                $this->product->image = $this->image->store('products', 'public');
-            }
-
-            $this->product->save();
-
-			//session()->flash('success', 'Produto atualizado com sucesso.');
-            $this->simpleAlert('success', 'Produto atualizado com sucesso.');
-            $this->dispatchBrowserEvent('gotoTop');
-        } catch (Exception $exception) {
-            if(env('APP_DEBUG')) throw $exception;
-            session()->flash('error', 'Ops... ocorreu em erro ao tentar salvar o Product.');
-        }
-    }
-
     public function destroy($id)
     {
         try {
@@ -354,53 +223,25 @@ class Products extends BaseConfigurationComponent
             'confirmButtonText' => 'Sim',
             'onConfirmed' => 'disable'
         ]);
-    }
-
-    
-    public function removeImagem(){
-        Storage::delete("public/" . $this->product->image);
-        $this->product->image = "";
-    }    
-
-    public function downloadImagem(){
-		return Storage::download("public/" . $this->product->image, ($this->product->name . "." . pathinfo($this->product->image, PATHINFO_EXTENSION)));
-    }       
+    } 
 
     public function hydrate()
     {
         $this->resetErrorBag();
         $this->resetValidation();
     }   
-    
-    protected function prepareForValidation($attributes)
-    {
-        $attributes["product"]->unit_price = floatval(str_replace(',', '.', $attributes["product"]->unit_price));
-        return $attributes;
-    }  
 
     // UTILIDADES ############
 
 
     public function loadBaseData(){
         $this->user_id = auth()->user()->user_id ?? auth()->user()->id;
-
-        /*
-        $this->categories = Category::where("user_id", $this->user_id)
-            ->orWhere("user_id", null)
-            ->where("enabled", 1)
-            ->orderBy("name")
-            ->select("id", "name")
-            ->get()->pluck("name", "id")->toArray();
-        */
-
         $this->productionLines = ProductionLine::where("user_id", $this->user_id)
             ->where("is_active", 1)
             ->where("production_line_id", null)
             ->orderBy("step")
             ->select("step", "name")
             ->pluck("name", "step")->toArray();
-
-
     }    
 
     public function report() 

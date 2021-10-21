@@ -5,10 +5,11 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\RegisterController;
 use App\Http\Controllers\API\IntegrationController;
+use App\Http\Controllers\API\StockPanelController;
 
 //Route::post('register', [RegisterController::class, 'register']);
 Route::post('login', [RegisterController::class, 'login']);
-
+Route::post('stock-panel', [StockPanelController::class, 'create']);
 
 Route::middleware('auth:api')->group( function () {
     Route::post('logout', [RegisterController::class, 'logout']);
@@ -19,3 +20,4 @@ Route::middleware('auth:api')->group( function () {
     Route::post('order/conclude-production', [IntegrationController::class, 'concludeProduction']);
     Route::get('order/check/{order_id}', [IntegrationController::class, 'checkIfCreated']);
 });
+

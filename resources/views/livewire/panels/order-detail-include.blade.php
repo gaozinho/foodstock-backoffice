@@ -20,12 +20,12 @@
                         <div class="col-12 small">
                             <div>
                                 <div class="row">
-                                    <div class="col-7 offset-2"><span class="h5">{{ $subitem->quantity }}x</span> {{ $subitem->name }}
+                                    <div class="col-7 offset-2"><span class="h5">{{ $subitem->quantity * $item->quantity }}x</span> {{ $subitem->name }}
                                         @if ($subitem->observations) <span
                                                 class="px-1 bg-warning text-dark">{{ $subitem->observations }}</span>
                                         @endif
                                     </div>
-                                    <div class="col-3 text-right">@money($subitem->totalPrice)</div>
+                                    <div class="col-3 text-right">@money($subitem->totalPrice * $item->quantity)</div>
                                 </div>
                             </div>
                         </div>

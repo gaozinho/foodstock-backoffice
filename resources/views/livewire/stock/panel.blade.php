@@ -12,11 +12,19 @@
                 <span class="badge badge-success">OK: Acima do mínimo</span>
                 <span class="badge badge-warning" style="color: #fff; background-color: #ff8e09">Atenção: Abaixo do mínimo</span>
                 <span class="badge badge-danger">Cuidado: Negativo</span>
-                
             </span>
         </div>
     </div>
-
+    <div>
+        @foreach($stock_panels as $panel)
+            <label class="mb-0 mt-1" onclick='$(".loading").LoadingOverlay("show");'>
+                <small>
+                    <input type="checkbox" value="{{ $panel->id }}" wire:model="selected_panels.{{ $panel->id }}"  class="form-checkbox">
+                    <span class="mr-1 text-sm">{{ $panel->name }}</span>
+                </small>
+            </label>        
+        @endforeach
+    </div>    
 
     <div class="row mt-3">
         <div class="col">
@@ -35,9 +43,6 @@
                             </div>
                         @endif                
                     <div class="row">
-
-
-
                         @foreach($products as $product)
                         <div class="mb-2 col-xl-3 col-lg-3 col-md-4 col-6">
                             <div class="card-painel card-margin">
@@ -55,7 +60,15 @@
 </div>
 
 @push('scripts')
-    <script src="{{ asset('js/jquery.progressBarTimer.min.js') }}" type="text/javascript" charset="utf-8"></script>
+
+    <script>
+        $(document).ready(function() {
+            Livewire.on('stopLoading', function(){
+                $(".loading").LoadingOverlay("hide", true);
+                console.log($(".loading"));
+            })
+        });
+    </script>
 
     <script>
 
@@ -120,6 +133,7 @@
             });          
         });
     </script>
+
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
     <script src="{{ asset('js/jquery.progressBarTimer.js') }}" type="text/javascript" charset="utf-8"></script>
 

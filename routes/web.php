@@ -14,7 +14,7 @@ use App\Http\Livewire\Panels\{
 };
 
 use App\Http\Livewire\Products\{
-   Products
+   Products, EditProduct
 };
 
 use App\Http\Livewire\Deliveryman\DeliverymanPanel;
@@ -26,27 +26,11 @@ use App\Http\Livewire\Stock\Panel;
 
 use App\Http\Controllers\PrivacyPolicyController;
 
+
 Route::get('/privacy-policy', [PrivacyPolicyController::class, 'show'])->name('policy.show');
 
 Route::get('/', function () {
    return view('welcome');
-});
-
-Route::get('/productz', function () {
-   ini_set('max_execution_time', '300');
-   $integration = new \App\Integrations\IfoodIntegrationDistributed();
-
-   $brokerProducts = new App\Actions\Product\Ifood\BrokerProducts();
-   
-   $page = 1;
-   $results = [];
-   do{
-      $products = $integration->getProducts(11, 1000, $page);
-      $results[] = $brokerProducts->process($products, 11);
-      $page++;
-   }while($products->count > 0);
-   dd($results);
-
 });
 
 Route::get('/email/verify', function () {
@@ -84,7 +68,8 @@ Route::group(['middleware' => ['role:admin|equipe', 'verified']], function (){
 
 Route::group(['middleware' => ['role:admin|produtos', 'verified']], function (){
    Route::get('/products', Products::class)->name('products.index')->middleware('auth');
-   Route::get('/products/{id}', Products::class)->name('products.edit')->middleware('auth');
+   Route::get('/products/{id}', EditProduct::class)->name('products.edit')->middleware('auth');
+   Route::get('/products/create', EditProduct::class)->name('products.create')->middleware('auth');
 });
 
 Route::group(['middleware' => ['role:admin|estoque', 'verified']], function (){
@@ -98,6 +83,25 @@ Route::get('/panel/deliveryman/{user_id}', DeliverymanPanel::class)->name('panel
 Route::get('/order/keyboard', NumericKeyboard::class)->name('orders.keyboard.index')->middleware('auth');
 
 /*
+
+
+
+Route::get('/productz', function () {
+   ini_set('max_execution_time', '300');
+   $integration = new \App\Integrations\IfoodIntegrationDistributed();
+
+   $brokerProducts = new App\Actions\Product\Ifood\BrokerProducts();
+   
+   $page = 1;
+   $results = [];
+   do{
+      $products = $integration->getProducts(11, 1000, $page);
+      $results[] = $brokerProducts->process($products, 11);
+      $page++;
+   }while($products->count > 0);
+   dd($results);
+
+});
 
 //################### TESTES
 
