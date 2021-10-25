@@ -37,6 +37,7 @@ class OrdersWeek extends Component
                     $date = Carbon::createFromFormat('Y-m-d', $data->date)->dayOfWeek;
                     return $lineChartModel->addSeriesPoint("Semana atual", $weekMap[$date], $data->total);
                 }, LivewireCharts::lineChartModel()
+                    ->setColors(['#008ffb', '#e3b000', '#00e396'])
                     ->setTitle('Semana atual X Semana anterior')
                     ->multiLine()
                     //->setSmoothCurve()

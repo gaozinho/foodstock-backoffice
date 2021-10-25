@@ -12,14 +12,14 @@
                 super(message);
                 this.name = this.constructor.name;
             }
-        }  
+        }
         
         class QZError extends Error {
             constructor(message) {
                 super(message);
                 this.name = this.constructor.name;
             }
-        }              
+        }
 
         class PrintOrder {
 
@@ -170,8 +170,22 @@
                 var _this = this;
                 qz.websocket.connect().then(function(){
                     console.log("QZ Tray Connected!");
+
+
+
+                    qz.printers.details().then(function(data){
+                        console.log(data);
+                    }).catch(function(err) {
+                        console.log(err);
+                    });
+
+
                     var printerConfig = _this.printerConfig(_this.printerName, _this.encoding);
-                    qz.print(printerConfig, _this.fullPrintCommands()).catch(function(err) {
+                    qz.print(printerConfig, _this.fullPrintCommands())
+                    .then(function(data){
+                        console.log(data);
+                    })
+                    .catch(function(err) {
                         console.log(err);
                         throw new PrintError(err);
                     });                        
@@ -181,6 +195,8 @@
                 });
             }
         }
+
+
 
         var printer = new PrintOrder('MP-100S TH', 'Cp1252');
 

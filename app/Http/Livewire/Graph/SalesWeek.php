@@ -38,6 +38,7 @@ class SalesWeek extends Component
                 $amount = $data->amount;
                 return $lineChartModel->addSeriesPoint("Semana atual", $weekMap[$date], round($amount, 2));
             }, LivewireCharts::lineChartModel()
+                ->setColors(['#008ffb', '#e3b000', '#00e396'])
                 ->setTitle('Semana atual X Semana anterior')
                 ->multiLine()
                 //->setSmoothCurve()
