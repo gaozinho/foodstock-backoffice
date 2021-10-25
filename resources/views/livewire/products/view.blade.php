@@ -186,9 +186,15 @@
                                                     </div>
                                             </div>
                                             @if($row->monitor_stock == 1)
-                                            <div style="line-height: 1">
-                                                <small>Atual: {{ $row->current_stock }}<br/>Min: {{ $row->minimun_stock }}</small>
-                                            </div>
+                                                <div style="line-height: 1">
+                                                    @php
+                                                        $panels = [];
+                                                        foreach($row->stockPanels()->get() as $panel){
+                                                            $panels[] = $panel->name;
+                                                        }
+                                                    @endphp
+                                                    <small>{!! implode(" &bull; ", $panels) !!}</small>
+                                                </div>
                                             @endif                                                
                                         </div>
                                     </td>                                                                          
@@ -289,7 +295,7 @@
                         <b>Os códigos externos fazem a ligação entre a venda no <i>marketplace</i> e o estoque no foodStock.</b>
                     </p>
                     <p>
-                        Funciona assim: todo o produto deve ter um código único em todas as plataformas, por exemplo, o estrogonofe tem o código "EST012" no iFood e na Rappi. Assim, quando ocorre uma venda eu uma destas plataformas, se no foodStoque também existe o código "EST012" saberemos que o estrogonofe foi vendido e retiraremos a quantidade vendida do estoque.
+                        Funciona assim: todo o produto deve ter um código único em todas as plataformas, por exemplo, o estrogonofe tem o código "EST012" no iFood e na Rappi. Assim, quando ocorre uma venda eu uma destas plataformas, se no foodStock também existe o código "EST012" saberemos que o estrogonofe foi vendido e retiraremos a quantidade vendida do estoque.
                     </p>
                     <p>
                         Para manter a simplicidade, caso você não queira cadastrar todos os produtos um a um, nós cadastraremos para você a cada venda realizada, caso o produto (e o seu código externo) ainda não exista em nossa base. Mas recomendamos que você cadastre os produtos e os respectivos estoques.

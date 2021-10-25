@@ -82,6 +82,29 @@ Route::get('/panel/delivery', DeliveryPanel::class)->name('panels.delivery-panel
 Route::get('/panel/deliveryman/{user_id}', DeliverymanPanel::class)->name('panels.public-delivery-panel.index');
 Route::get('/order/keyboard', NumericKeyboard::class)->name('orders.keyboard.index')->middleware('auth');
 
+
+Route::post('/printer/sign-message', function (Request $request) {
+   $key = public_path() . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'key.pem';
+   $req = $request->input("request");
+   
+   
+   $privateKey = openssl_get_privatekey(file_get_contents($key));
+   
+   $signature = null;
+   openssl_sign($req, $signature, $privateKey);
+   
+   
+   if ($signature) {
+     header("Content-type: text/plain");
+     echo base64_encode($signature);
+     exit(0);
+   }
+   
+   return 'Error signing message';
+   exit(1);
+});
+
+
 /*
 
 

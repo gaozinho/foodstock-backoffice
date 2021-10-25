@@ -36,13 +36,13 @@
                                 <div class="col-xs-12 col-sm-8 col-md-8">
                                     <div class="form-group">
                                         <strong>Nome *</strong>
-                                        {!! Form::text('name', $product->name, ['wire:model.defer' => 'product.name', 'class' => 'form-control', 'onClick'=>"this.select();"]) !!}
+                                        {!! Form::text('name', $product->name, ['wire:model.defer' => 'product.name',  'wire:keydown.enter' => 'save(true)', 'class' => 'form-control', 'onClick'=>"this.select();"]) !!}
                                     </div>
                                 </div>
                                 <div class="col-xs-12 col-sm-4 col-md-4">
                                     <div class="form-group">
                                         <strong>Código PDV:</strong>
-                                        {!! Form::text('external_code', $product->external_code, ['wire:model.defer' => 'product.external_code', 'class' => 'form-control external_code', 'onClick'=>"this.select();"]) !!}
+                                        {!! Form::text('external_code', $product->external_code, ['wire:model.defer' => 'product.external_code', 'wire:keydown.enter' => 'save(true)', 'class' => 'form-control external_code', 'onClick'=>"this.select();"]) !!}
                                     </div>
                                 </div>
                             </div>
@@ -50,7 +50,7 @@
                                 <div class="col-xs-12 col-sm-12 col-md-12">
                                     <div class="form-group">
                                         <strong>Nome no foodStock <small><span class="text-muted">Este nome será mantido para identificar seu produto no foodStock.</span></small></strong>
-                                        {!! Form::text('foodstock_name', $product->foodstock_name, ['wire:model.defer' => 'product.foodstock_name', 'class' => 'form-control', 'onClick'=>"this.select();"]) !!}
+                                        {!! Form::text('foodstock_name', $product->foodstock_name, ['wire:model.defer' => 'product.foodstock_name', 'wire:keydown.enter' => 'save(true)', 'class' => 'form-control', 'onClick'=>"this.select();"]) !!}
                                     </div>
                                 </div>
                             </div>                        
@@ -169,13 +169,13 @@
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <strong>Estoque mínimo</strong>
-                                                    {!! Form::text('minimun_stock', $product->minimun_stock, ['wire:model.defer' => 'product.minimun_stock', 'class' => 'form-control text-right', 'onClick'=>"this.select();"]) !!}
+                                                    {!! Form::text('minimun_stock', $product->minimun_stock, ['wire:model.defer' => 'product.minimun_stock', 'wire:keydown.enter' => 'save(true)', 'class' => 'form-control text-right', 'onClick'=>"this.select();"]) !!}
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <strong>Estoque atual</strong>
-                                                    {!! Form::text('current_stock', $product->current_stock, ['wire:model.defer' => 'product.current_stock', 'class' => 'form-control text-right', 'onClick'=>"this.select();"]) !!}
+                                                    {!! Form::text('current_stock', $product->current_stock, ['wire:model.defer' => 'product.current_stock', 'wire:keydown.enter' => 'save(true)', 'class' => 'form-control text-right', 'onClick'=>"this.select();"]) !!}
                                                 </div>
                                             </div>
                                         </div>
@@ -224,7 +224,9 @@
                                                     }
                                                 }).on('change', function (e) {
                                                     var data = $('.form-select').select2("val");
-                                                    Livewire.emit('updatePanel', data)
+                                                    updatePanel(data);
+                                                    
+                                                    
                                                 }); 
 
                                             });
@@ -317,8 +319,11 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @push('scripts')
-
     <script>
+        function updatePanel(data){
+            Livewire.emit('updatePanel', data)
+        }
+
         function formatEditLink(baseLink){
             var queryString = window.location.href.slice(window.location.href.indexOf('?') + 1);
             console.log(window.location.href.indexOf('?'), queryString);

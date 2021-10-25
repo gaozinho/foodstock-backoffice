@@ -238,7 +238,7 @@ class Products extends BaseConfigurationComponent
     public function confirmDestroy($id)
     {
         $this->product = Product::where("id", $id)->firstOrFail();
-        $this->confirm('Deseja excluir ' . $this->product->name . '?', [
+        $this->confirm('Deseja excluir ' . ($this->product->foodstock_name ?? $this->product->name) . '?', [
             'toast' => false,
             'position' => 'center',
             'showConfirmButton' => true,
