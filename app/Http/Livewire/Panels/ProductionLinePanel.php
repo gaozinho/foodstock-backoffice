@@ -15,6 +15,7 @@ use App\Actions\ProductionLine\PauseProductionProccess;
 use App\Actions\ProductionLine\RecoverUserRestaurant;
 use App\Actions\ProductionLine\FinishOrder;
 use App\Models\ProductionMovement;
+use App\Actions\ProductionLine\RecoveryUserRoles;
 
 use App\Foodstock\Babel\OrderBabelized;
 
@@ -33,6 +34,7 @@ class ProductionLinePanel extends Component
     public $orderSummaryDetail;
     public $selectedOrderIds = [];
     public $selectable = false;
+    public $roles = [];
 
     public $restaurantIds;
     public $recoveryOrders;
@@ -60,10 +62,13 @@ class ProductionLinePanel extends Component
     public function mount($role_name)
     {
 
-        //Tenta membro de restaurante e depois o dono
-        $userId = auth()->user()->user_id ?? auth()->user()->id;
+        $user = auth()->user();
+        
 
-        if(!(auth()->user()->hasRole("admin") || auth()->user()->hasRole($role_name))){
+        //Tenta membro de restaurante e depois o dono
+        $user_id = $user->user_id ?? $user->id;
+
+        if(!($user->hasRole("admin") || $user->hasRole($role_name))){
             return redirect()->to('/dashboard');
         }
 
@@ -71,27 +76,24 @@ class ProductionLinePanel extends Component
         $this->orderSummaryDetail = new OrderSummary();
         $this->orderSummaryDetail->orderBabelized = new OrderBabelized('{}');
 
-        //MVP 1 - Um restaurante por usuário
-
         try{
-            $this->restaurantIds = (new RecoverUserRestaurant())->recoverAllIds(auth()->user()->id)->toArray();
+            $this->restaurantIds = (new RecoverUserRestaurant())->recoverAllIds($user->id)->toArray();
         }catch(\Exception $e){
             session()->flash('error', 'Você não está vinculado a um delivery. Solicite ao responsável a sua correta vinculação.');
             return redirect()->route('dashboard');
         }
 
-        //$this->restaurant = Restaurant::where("user_id", "=", auth()->user()->id)->firstOrFail();
         $recoveryOrders = new RecoveryOrders();
         
-        $this->productionLine = $recoveryOrders->getCurrentProductionLineByRoleName($userId, $role_name);
+        $this->productionLine = $recoveryOrders->getCurrentProductionLineByRoleName($user_id, $role_name);
         $this->productionLineCanPause = $this->canPause($this->productionLine);
 
         if($role_name != $this->productionLine->role->name){
             return redirect()->route('panels.production-line-panel.index', $this->productionLine->role->name);
         }
 
-        $this->stepColors = $recoveryOrders->getProductionLineColors($userId);
-        $this->legends = $this->getLegend($userId, $role_name);
+        $this->stepColors = $recoveryOrders->getProductionLineColors($user_id);
+        $this->legends = $this->getLegend($user_id, $role_name);
         
         $this->loadData();
     }
@@ -101,12 +103,13 @@ class ProductionLinePanel extends Component
     }
 
     public function loadData(){
-        $userId = auth()->user()->user_id ?? auth()->user()->id;
+        $this->roles = (new RecoveryUserRoles())->roles();
+        $user_id = auth()->user()->user_id ?? auth()->user()->id;
         
-        $restaurantIds = (new RecoverUserRestaurant())->recoverAllIds($userId)->toArray();
+        $restaurantIds = (new RecoverUserRestaurant())->recoverAllIds($user_id)->toArray();
         $recoveryOrders = new RecoveryOrders();
-        $this->orderSummaries = $recoveryOrders->recoveryByRoleName($restaurantIds, $userId, $this->role_name);
-        $this->orderSummariesPreviousStep = $recoveryOrders->recoveryPreviousByRoleName($userId, $this->role_name); 
+        $this->orderSummaries = $recoveryOrders->recoveryByRoleName($restaurantIds, $user_id, $this->role_name);
+        $this->orderSummariesPreviousStep = $recoveryOrders->recoveryPreviousByRoleName($user_id, $this->role_name); 
         $this->total_orders = count($this->orderSummaries) + count($this->orderSummariesPreviousStep);
     }
 
@@ -185,11 +188,11 @@ class ProductionLinePanel extends Component
     }    
 
     public function orderDetailAndMoveForward($order_summary_id, $production_line_id = null){
-        $userId = auth()->user()->user_id ?? auth()->user()->id;
+        $user_id = auth()->user()->user_id ?? auth()->user()->id;
         $currentStep = $this->productionLine->step;
         $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
         
-        //(new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $userId, $production_line_id);
+        //(new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $user_id, $production_line_id);
 
         $forwardProductionProccess = new ForwardProductionProccess();
         //Valida se o pedido ainda está neste passo
@@ -201,11 +204,11 @@ class ProductionLinePanel extends Component
                 ->first();
             $this->alert("error", sprintf("A etapa %s já foi concluída por %s.", $productionMovement->productionLine->name, (is_object($productionMovement->finishedBy) ? $productionMovement->finishedBy->name : 'Sistema')), ['timer' =>  8000]);  
         }else{
-            $nextProductionLineStep = $forwardProductionProccess->nextStep($userId, $currentStep);
+            $nextProductionLineStep = $forwardProductionProccess->nextStep($user_id, $currentStep);
             if(is_object($nextProductionLineStep)){
                 $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
                 do{
-                    $productionMovement = $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $userId);
+                    $productionMovement = $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $user_id);
                 }while($productionMovement->current_step_number < $nextProductionLineStep->step);
             }
         }
@@ -215,7 +218,7 @@ class ProductionLinePanel extends Component
     }
 
     public function moveForwardFromCurrentStep($order_summary_id, $production_line_id = null){
-        $userId = auth()->user()->user_id ?? auth()->user()->id;
+        $user_id = auth()->user()->user_id ?? auth()->user()->id;
         $currentStep = $this->productionLine->step;
         $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
         $forwardProductionProccess = new ForwardProductionProccess();
@@ -231,11 +234,11 @@ class ProductionLinePanel extends Component
                 ->first();
             $this->alert("error", sprintf("A etapa %s já foi concluída por %s.", $productionMovement->productionLine->name, (is_object($productionMovement->finishedBy) ? $productionMovement->finishedBy->name : 'Sistema')), ['timer' =>  8000]);  
         }else{
-            $nextProductionLineStep = $forwardProductionProccess->nextStep($userId, $currentStep);
+            $nextProductionLineStep = $forwardProductionProccess->nextStep($user_id, $currentStep);
             if(is_object($nextProductionLineStep)){
                 $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
                 do{
-                    $productionMovement = $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $userId);
+                    $productionMovement = $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $user_id);
                 }while($productionMovement->current_step_number < $nextProductionLineStep->step);
             }
         }
@@ -298,7 +301,7 @@ class ProductionLinePanel extends Component
 
     //Pula um passo no processo
     public function nextStep($order_summary_id){
-        $userId = auth()->user()->user_id ?? auth()->user()->id;
+        $user_id = auth()->user()->user_id ?? auth()->user()->id;
         $forwardProductionProccess = new ForwardProductionProccess();
 
         //Valida se o pedido ainda está neste passo
@@ -312,7 +315,7 @@ class ProductionLinePanel extends Component
 
             $this->alert("error", sprintf("A etapa %s já foi concluída por %s.", $productionMovement->productionLine->name, (is_object($productionMovement->finishedBy) ? $productionMovement->finishedBy->name : 'Sistema')), ['timer' =>  8000]);  
         }else{
-            $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $userId);
+            $forwardProductionProccess->forward($this->orderSummaryDetail->order_id, $user_id);
         }
 
         

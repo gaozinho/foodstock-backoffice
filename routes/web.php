@@ -23,6 +23,7 @@ use App\Http\Livewire\Keyboard\NumericKeyboard;
 use App\Http\Livewire\Dashboard\Welcome;
 use App\Http\Livewire\Dashboard\Info;
 use App\Http\Livewire\Stock\Panel;
+use App\Http\Livewire\Printer\OrderPrint;
 
 use App\Http\Controllers\PrivacyPolicyController;
 
@@ -83,6 +84,9 @@ Route::get('/panel/deliveryman/{user_id}', DeliverymanPanel::class)->name('panel
 Route::get('/order/keyboard', NumericKeyboard::class)->name('orders.keyboard.index')->middleware('auth');
 
 
+Route::get('/printer/order', OrderPrint::class)->name('printer.order-print');
+
+
 Route::post('/printer/sign-message', function (Request $request) {
    $key = public_path() . DIRECTORY_SEPARATOR . 'cert' . DIRECTORY_SEPARATOR . 'key.pem';
    $req = $request->input("request");
@@ -96,12 +100,10 @@ Route::post('/printer/sign-message', function (Request $request) {
    
    if ($signature) {
      header("Content-type: text/plain");
-     echo base64_encode($signature);
-     exit(0);
+     return base64_encode($signature);
    }
    
    return 'Error signing message';
-   exit(1);
 });
 
 
