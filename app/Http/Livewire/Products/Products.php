@@ -220,6 +220,7 @@ class Products extends BaseConfigurationComponent
     public function disable(){
         $product = Product::where("id", $this->product->id)->firstOrFail();
         $product->deleted = 1;
+        $product->name = $product->name . ' (APAGADO)';
         $product->minimun_stock = 0;
         $product->current_stock = 0;
         $product->monitor_stock = 0;
