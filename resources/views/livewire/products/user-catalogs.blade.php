@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-12 mb-3">
             <p>
-                Nós importamos para você os seus produtos. Assim você não precisar recadastrá-los.
+                Nós importamos para você os seus produtos. Assim você não precisa recadastrá-los. Escolha um cardápio específico ou importe todos eles de uma só vez.
             </p>
 
             <table class="table table-striped table-hover table-bordered table-sm ">
