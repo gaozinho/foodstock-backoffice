@@ -54,8 +54,16 @@ class UserCatalogs extends BaseConfigurationComponent
         $this->restaurant_id = $restaurant_id;
         $this->catalog_id = $catalog_id;
 
-        $this->confirm('Deseja importar todos os produtos do IFOOD?', [
-            'html' => 'Esta importação reorganizará TODAS as categorias dos seus produtos, de acordo com o IFOOD. Fique tranquilo, os produtos continuarão com as configurações que você fez (estoque, monitoramento etc). <br /><small>Esta operação pode demorar alguns minutos. Aguarde o completo processamento ou, se preferir, volte mais tarde e observe se o indicador <i class="fas fa-cog fa-spin"></i> ainda está em processamento.</small>',
+        $title = 'Deseja importar todos os produtos do IFOOD?';
+        $text = 'Esta importação reorganizará TODAS as categorias dos seus produtos, de acordo com o IFOOD. Fique tranquilo, os produtos continuarão com as configurações que você fez (estoque, monitoramento etc). <br /><small>Esta operação pode demorar alguns minutos. Aguarde o completo processamento ou, se preferir, volte mais tarde e observe se o indicador <i class="fas fa-cog fa-spin"></i> ainda está em processamento.</small>';
+
+        if(intval($restaurant_id) > 0){
+            $title = 'Deseja importar o cardápio escolhido?';
+            $text = 'Esta importação reorganizará TODAS as categorias deste cardápio, de acordo com o IFOOD. Fique tranquilo, os produtos continuarão com as configurações que você fez (estoque, monitoramento etc). <br /><small>Esta operação pode demorar alguns minutos. Aguarde o completo processamento ou, se preferir, volte mais tarde e observe se o indicador <i class="fas fa-cog fa-spin"></i> ainda está em processamento.</small>';
+        }
+
+        $this->confirm($title , [
+            'html' => $text,
             'toast' => false,
             'position' => 'center',
             'showConfirmButton' => true,
