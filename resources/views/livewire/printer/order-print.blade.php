@@ -1,236 +1,229 @@
-<div>
-    <h1>Teste de impressão</h1>
-</div>
+    <div class="row">
+        <div class="col-lg-8 col-md-8 margin-tb">
+
+
+            
+            <div class="card border mb-4">
+                <div class="card-body">
+                     <div class="row">
+                        <div class="col-lg-12 margin-tb">
+                            <span class="h3">Configure sua impressora</span>
+                            <p class="mb-2 mt-3" style="line-height: 1.2">Para ajudar em seu processo, o foodStock permite que você imprima seu pedido em impressoras térmicas não fiscais.</p>
+                            <p class="mb-2" style="line-height: 1.2">Atualmente é possível imprimir apenas de seu computador com o Windows instalado. A versão do foodStock acessada pelo celular ou tablet ainda não suporta impressão.</p>
+                        </div>
+
+                        <div class="col-lg-12 margin-tb mt-4" wire:ignore>
+                            <span class="h4">Parâmetros</span>
+                            <table class="table table-striped table-hover table-bordered table-sm mt-2">
+                                <tbody>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Configurado?</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Cliente QZ Tray</td>
+                                        <td>
+                                            <i class="fas fa-cog fa-spin loading"></i>
+                                            <span class="qz-tray-nok" style="display: none"><i class="fas fa-lg fa-times text-danger"></i> QZ Tray não instalado ou não inicializado. <b>Siga o passo 2 da configuração.</b></span>
+                                            <span class="qz-tray-ok" style="display: none"><i class="fas fa-lg fa-check text-success"></i> Cliente de impressão QZ Tray instalado!</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Qual sua impressora térmica?</td>
+                                        <td>
+                                            {{$printer}}
+                                            <i class="fas fa-cog fa-spin loading"></i>
+                                            <span class="mb-2 printer-available-nok" style="display: none"><i class="fas fa-lg fa-times text-danger"></i> Não conseguimos listar as impressoras disponíveis em seu computador. Verifique se sua impressora está corretamente instalada.</span>
+                                            <select class="available-printers" style="display: none" wire:model="printer">
+                                            
+                                            </select>
+                                            <div class="printer-message" style="display: none"><small>Se você não encontrar sua impressora na lista, refaça o passo-a-passo da configuração.</small></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Teste de impressão</td>
+                                        <td>
+                                            <i class="fas fa-cog fa-spin loading"></i>
+                                            <button class="btn btn-primary btn-sm print-test-ok" style="display:none" onclick="printTest()"><i class="fas fa-lg fa-print"></i> Imprimir folha de teste</button>
+                                            <div class="print-test-nok" style="display:none"><i class="fas fa-lg fa-times text-danger"></i> Indisponível</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+
+            <div class="card border mb-4">
+                <div class="card-body">
+                     <div class="row">
+                        <div class="col-lg-12 margin-tb">
+                            <h4>
+                                Para configurar sua impressora, siga os passos abaixo:
+                            </h4>
+
+                            <p>
+                                1 - Sua impressora deve estar devidamente instalada em seu computador com Windows. Verifique com o fabricante ou seu suporte técnico se esta etapa já está concluída.
+                            </p>
+                            <p>
+                                2 - É preciso instalar um programa cliente em seu computador. Este cliente é responsável por fazer a ponte entre o nosso sistema e sua impressora. <a href="{{ asset('cert/qz-tray-2.2.0.exe') }}">Baixe e instale o QZ Tray</a>. Após a instalação, reinicie o computador. Basta seguir os passos do instalador, conforme imagem abaixo.
+                                <div class="mt-2 mb-2">
+                                    <img src="{{ asset('images/printer/step1.png') }}">
+                                </div>
+                                2.1 - Depois de instalado, verifique se o QZ Tray criou um ícone na bandeja do sistema (canto inferior direito), conforme image abaixo.
+                                <div class="mt-2 mb-2">
+                                    <img src="{{ asset('images/printer/step2.png') }}">
+                                </div>
+                            </p>
+                            <p>
+                                3 - Para finalizar, <a href="{{ asset('cert/cert.pem') }}">vamos baixar e configurar a chave de criptografia</a> para uma comunicação segura entre o foodStock e sua impressora.
+                            </p>
+                            <p>
+                                3.1 - Após baixar a chave acima, clique no ícone do QZ Tray, depois em "Advanced" e depois em "Site Mamager...", conforme imagem.
+                                <div class="mt-2 mb-2">
+                                    <img src="{{ asset('images/printer/step3.png') }}">
+                                </div>
+                            </p>
+                            <p>
+                                3.2 - Na tela que aparece, clique no sinal de "+" e, em seguida em "Browse..." para adicionar a chave que você baixou no passo anterior.
+                                <div class="mt-2 mb-2">
+                                    <img src="{{ asset('images/printer/step4.png') }}">
+                                </div>
+                            </p>   
+                            <p>
+                                3.3 - Escolha o arquivo "cert.pem" que você baixou, conforme imagem abaixo.
+                                <div class="mt-2 mb-2">
+                                    <img src="{{ asset('images/printer/step5.png') }}">
+                                </div>
+                            </p>  
+                            <p>
+                                3.4 - Pronto! Estamos prontos para imprimir os seus pedidos.
+                                <div class="mt-2 mb-2">
+                                    <img src="{{ asset('images/printer/step6.png') }}">
+                                </div>
+                            </p>                                
+                        </div>
+                    </div>
+                </div>
+            </div>            
+
+
+        </div>
+        <div class="col-lg-4 col-md-4 margin-tb">
+            <div class="card">
+                <div class="card-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
 @push('scripts')
 
     <script src="{{ asset('js/qz-tray.js') }}"></script>
+    <script src="{{ asset('js/printer/qz-printer.js') }}"></script>
 
     <script>
 
-        class PrintError extends Error {
-            constructor(message) {
-                super(message);
-                this.name = this.constructor.name;
-            }
-        }
-        
-        class QZError extends Error {
-            constructor(message) {
-                super(message);
-                this.name = this.constructor.name;
-            }
-        }
+        function printDiagnostic(){
+            var printer = new PrintOrder('', 'Cp1252');
 
-        class PrintOrder {
+            printer.qzConnect().then(function(){
+                //Conexão QZ Tray OK
+                $(".qz-tray-ok").show();
+                $(".qz-tray-nok").hide();
+                $(".printer-available-nok").hide();
+                $(".available-printers").show();
 
-            config = {
-                lineWidth : 42,
-            }
+                printer.availablePrinters().then(function(data){
+                    console.log('QZ available Printer', data);
+                    $(".printer-message").show();
 
-            qzConnection = null;
-            printerConnection = null;
-            orderLines = [];
-            printerName = null;
-            encoding = null;
+                    if(data.length == 0){
+                        $('.printer-available-nok').show();
+                        $('.available-printers').hide();
+                    }
 
-            constructor(printerName, encoding, config) {
-                this.encoding = encoding;
-                this.printerName = printerName;
-                if(this.isObject(config)) this.config = config;
-            }
-
-            qzConnect(callback){
-                return qz.websocket.connect().then(callback);
-            }
-
-            printerConfig(printerName, encoding){
-                return qz.configs.create(printerName, { 
-                        encoding : encoding 
-                });
-            }
-
-            isObject(val) {
-                return typeof val === 'object'; 
-            }
-
-            addPrintCommand(textLine){
-                this.orderLines.push(textLine);
-                return this;
-            }
-
-            centeredSimpleLine(text){
-                this.alingCenter().simpleLine(text).breakLine();
-                return this;
-            }
-
-            simpleLine(text){
-                this.addPrintCommand(text).breakLine();
-                return this;
-            }
-
-            justifiedLine(itemName, quantity, value, tabItem){
-                value = this.formatMoney(value);
-                quantity = ('' + quantity).padStart(2, '0') + ' ';
-                if (typeof tabItem !== 'undefined' && tabItem === true) quantity = '   ' + quantity;
-                var whiteSpaceSize = this.config.lineWidth - (value.length + quantity.length + itemName.length);
-                var formatedString = quantity + itemName + ''.padStart(whiteSpaceSize, ' ') + value;
-                this.addPrintCommand(formatedString).breakLine();
-                return this;
-            }
-
-            formatMoney(value){
-                return 'R$' + this.formatNumber(value);
-            }
-            
-            formatNumber(value){
-                return (Math.round(value * 100) / 100).toFixed(2);
-            }
-
-            horizontalLine(){
-                this.addPrintCommand(''.padStart(this.config.lineWidth,'-')).breakLine();
-                return this;                    
-            }
-
-            startPrinter(){
-                return '\x1B' + '\x40';                
-            }
-
-            startPrint(){
-                return '\x10' + '\x14' + '\x01' + '\x00' + '\x05';
-            }
-
-            cutPaper(){
-                return '\x1B' + '\x69';                
-            }     
-            
-            finishPrint(){
-                return '\x10' + '\x14' + '\x01' + '\x00' + '\x05';              
-            }
-            
-            alingCenter(){
-                this.addPrintCommand('\x1B' + '\x61' + '\x31');
-                return this;                    
-            }
-
-            alignLeft(){
-                this.addPrintCommand('\x1B' + '\x61' + '\x30');
-                return this;
-            }
-
-            breakLine(){
-                this.addPrintCommand('\x0A');
-                return this;                    
-            }
-
-            startBold(){
-                this.addPrintCommand('\x1B' + '\x45' + '\x0D');
-                return this;
-            }
-
-            stopBold(){
-                this.addPrintCommand('\x1B' + '\x45\n');
-                return this;
-            }
-
-            addLogo(url){
-                this.addPrintCommand({
-                    type: 'raw',
-                    format: 'image',
-                    flavor: 'file',
-                    data: url,
-                    options: { language: "escp", dotDensity: 'double' },
-                }).addPrintCommand('\x1B' + '\x74' + '\x10');
-
-                return this;
-            }
-
-            fullPrintCommands(){
-                return [this.startPrinter(), this.startPrint(), ...this.orderLines, 
-                '\x0A' + '\x0A' + '\x0A' + '\x0A' + '\x0A' + '\x0A' + '\x0A',
-                '\x0A' + '\x0A' + '\x0A' + '\x0A' + '\x0A' + '\x0A' + '\x0A',
-                this.cutPaper(), this.finishPrint()];
-            }
-            
-            setCertificates(){
-                // O arquivo cert é o gerado na etapa 3 e se chama privateKey.pfx
-                qz.security.setCertificatePromise(function(resolve, reject) {
-                    $.ajax({ url: "http://localhost:8000/cert/cert.pem", cache: false, dataType: "text" }).then(resolve, reject);
-                });
-
-
-                qz.security.setSignaturePromise(function(toSign) {
-                    return function(resolve, reject) {
-                    $.post("http://localhost:8000/printer/sign-message", {request: toSign}).then(resolve, reject);
-                    };
-                });				
-            }
-            
-            print(){
-                this.setCertificates();
-                var _this = this;
-                qz.websocket.connect().then(function(){
-                    console.log("QZ Tray Connected!");
-
-
-
-                    qz.printers.details().then(function(data){
-                        console.log(data);
-                    }).catch(function(err) {
-                        console.log(err);
+                    $.each(data, function (i, item) {
+                        $('.available-printers').append($('<option>', { 
+                            value: item.name,
+                            text : item.name 
+                        }));
                     });
 
+                    $(".print-test-ok").show();
+                    $(".print-test-nok").hide(); 
+                    $(".loading").hide();
 
-                    var printerConfig = _this.printerConfig(_this.printerName, _this.encoding);
-                    qz.print(printerConfig, _this.fullPrintCommands())
-                    .then(function(data){
-                        console.log(data);
-                    })
-                    .catch(function(err) {
-                        console.log(err);
-                        throw new PrintError(err);
-                    });                        
+                    printer.qzDisconnect();
+                    
                 }).catch(function(err) {
+                    $(".loading").hide();
                     console.log(err);
-                    throw new QZError(err);
+                    printer.qzDisconnect();
                 });
-            }
+                
+
+            }).catch(function(err) {
+                //Erro ao conectar ao QZ Tray
+                console.log(err);
+                $(".loading").hide();
+                $(".qz-tray-nok").show();
+                $(".qz-tray-ok").hide();    
+                $(".printer-available-nok").show();
+                $(".available-printers").hide();  
+                $(".print-test-ok").hide(); 
+                $(".print-test-nok").show();  
+                printer.qzDisconnect();  
+            });
+
         }
 
+        $(document).ready(function() {         
+            var printerOk = printDiagnostic();
+        });
 
 
-        var printer = new PrintOrder('MP-100S TH', 'Cp1252');
+        function printTest(){
 
-        printer.alingCenter()
-                .addLogo('https://www.foodstock.com.br/images/logo.png')
-                .breakLine()
-                .startBold()
-                .simpleLine("PEDIDO 9999")
-                .stopBold()
-                .alignLeft()
-                .horizontalLine()
-                .justifiedLine("Estrogonofe", 2, 19.9, false)
-                .justifiedLine("Grande (400g)", 2, 4.9, true)
-                .horizontalLine()
-                .breakLine()
-                .startBold()
-                .simpleLine("Cliente: Wagner Gomes Gonçalves")
-                .stopBold()
-                .simpleLine("Rua Joaquina de Paula Corrêa, 910. Ap 101")
-                .simpleLine("Recanto da Lagoa - Lagoa Santa")
-                .alingCenter()
-                .breakLine()
-                .breakLine()
-                .simpleLine("NÃO É DOCUMENTO FISCAL");
 
-        try{
-            printer.print()
-        }catch (err) {
-            if(err instanceof PrintError){
-                alert("Não foi possível imprimir.");
-            }else if (err instanceof QZError){
-                alert("Não conectado ao QZ Tray.");
-            }else {
-                throw err;
+            var printer = new PrintOrder('MP-100S TH', 'Cp1252');
+
+            printer.alingCenter()
+                    .addLogo('https://www.foodstock.com.br/images/logo.png')
+                    .breakLine()
+                    .startBold()
+                    .simpleLine("PEDIDO 9999")
+                    .stopBold()
+                    .alignLeft()
+                    .horizontalLine()
+                    .justifiedLine("Estrogonofe", 2, 19.9, false)
+                    .justifiedLine("Grande (400g)", 2, 4.9, true)
+                    .horizontalLine()
+                    .breakLine()
+                    .startBold()
+                    .simpleLine("Cliente: Wagner Gomes Gonçalves")
+                    .stopBold()
+                    .simpleLine("Rua Joaquina de Paula Corrêa, 910. Ap 101")
+                    .simpleLine("Recanto da Lagoa - Lagoa Santa")
+                    .alingCenter()
+                    .breakLine()
+                    .breakLine()
+                    .simpleLine("NÃO É DOCUMENTO FISCAL");
+
+            try{
+                printer.print(function(title, text, type){
+                    Swal.fire(title, text, type);
+                });
+                
+            }catch (err) {
+                if(err instanceof PrintError){
+                    Swal.fire('Ops!', 'Não conseguimos acessar a impressora para a página de teste.', 'error');
+                }else if (err instanceof QZError){
+                    Swal.fire('Ops!', 'Não conseguimos conectar ao QZ Tray.', 'error');                    
+                }else {
+                    Swal.fire('Ops!', 'Ocorreu um erro desconhecido.', 'error');    
+                }
             }
         }
 

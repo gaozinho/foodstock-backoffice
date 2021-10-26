@@ -232,59 +232,8 @@
         <div class="col-lg-4 col-md-12 margin-tb">
             <div class="card">
                 <div class="card-body">
-                    <h5>
-                        Importe produtos do seu cardápio
-                    </h5>
-                    <div class="row">
-                        <div class="col-12 mb-3">
-                            <p>
-                                Nós importamos para você os seus produtos. Assim você não precisar recadastrá-los.
-                            </p>                            
-                            @if($importIfoodRunning)
-                                <script>
-                                    function chechImportIfood(){
-                                        return setInterval(() => { 
-                                            try{
-                                                Livewire.emit('checkImportIfood');
-                                            }catch(e){
-                                                location.reload();
-                                            }
-                                        }, 30000);
-                                    }
-
-                                    $(document).ready(function() {
-                                        chechImportIfood();
-                                    });   
-                                </script>                                   
-                                <a class="btn btn-secondary btn-sm">
-                                    <img src="{{ asset('images/ifood-white.png') }}" style="width: 40px">
-                                    <i class="fas fa-cog fa-spin"></i>
-                                    Importando produtos. Aguarde!
-                                </a>                                        
-                            @else 
-                                @php
-                                    $restaurants = [];
-                                    foreach($check as $key => $value){
-                                        $restaurants[] = $key;
-                                    }
-                                @endphp
-                                @if(count($check) > 0)
-                                    <a wire:click="confirmImportIfood" class="btn btn-danger btn-sm">
-                                        <img src="{{ asset('images/ifood-white.png') }}" style="width: 40px">
-                                        <i wire:loading wire:target="confirmImportIfood" class="fas fa-cog fa-spin"></i>
-                                        Importar produtos {{implode(", ", $restaurants)}}
-                                    </a>
-                                @else
-                                    Você ainda não configurou seu delivery.
-                                    <a href="{{route('configuration.broker.index')}}" class="btn btn-danger btn-sm">
-                                        Configurar deliver
-                                    </a>
-                                @endif
-                            @endif     
-
-                                                
-                        </div>
-                    </div>
+                    <livewire:products.user-catalogs />
+                    
                     <h5>
                         Como gerenciar seus produtos
                     </h5>

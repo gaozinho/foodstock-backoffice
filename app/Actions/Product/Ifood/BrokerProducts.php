@@ -57,6 +57,7 @@ class BrokerProducts
             $product->image = (isset($productJson->image) ? $productJson->image : (isset($productJson->imagePath) ? $productJson->imagePath : null));
             $product->json_string = json_encode($productJson);
             $product->save();
+
             return $product;
         }catch(\Exception $e1){
             //Tenta pelo nome

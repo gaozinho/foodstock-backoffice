@@ -101,7 +101,7 @@ class IfoodIntegrationDistributed extends IfoodIntegration
 
         try{
             $httpResponse = $this->httpClient->post($this->broker->authenticationApi, ["form_params" => $this->credentials]);
-            $responseToken = $this->parseTokenResponse($httpResponse->getBody()->getContents());  
+            $responseToken = $this->parseTokenResponse($httpResponse->getBody()->getContents());
             if($responseToken){
                 $ifoodBroker->accessToken = $responseToken->accessToken;
                 $ifoodBroker->refreshToken = $responseToken->refreshToken;
@@ -111,7 +111,7 @@ class IfoodIntegrationDistributed extends IfoodIntegration
                 throw new \Exception("Não foi possível conectar ao ifood. Reconfigure sua loja."); 
             }     
         }catch(ClientException $e){
-            throw new \Exception("Não foi possível conectar ao ifood. Reconfigure sua loja."); 
+            throw new \Exception("Não foi possível conectar ao ifood. Verifique a configuração de sua loja."); 
         }
   
     }
@@ -161,6 +161,7 @@ class IfoodIntegrationDistributed extends IfoodIntegration
 
     public function getCatalogs($restaurant_id){
         try{
+            
             $ifoodBroker = IfoodBroker::where("restaurant_id", $restaurant_id)->firstOrFail();
 
             if($this->tokenIsExpired(strtotime($ifoodBroker->expiresIn))){

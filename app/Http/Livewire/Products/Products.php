@@ -5,20 +5,16 @@ namespace App\Http\Livewire\Products;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Product;
-use App\Models\Category;
 use App\Models\User;
 use App\Models\ProductionLine;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use App\Exports\ProductsExport;
-use  App\Actions\Help\PerformHealthCheck;
-//use App\Actions\ProductionLine\RecoverUserRestaurant;
+
 use App\Http\Livewire\Configuration\BaseConfigurationComponent;
-use App\Actions\ProductionLine\RecoverUserRestaurant;
-//use App\Integrations\IfoodIntegrationDistributed;
-//use App\Actions\Product\Ifood\BrokerProducts;
-use App\Jobs\ProcessIfoodItems;
-use Illuminate\Support\Facades\Cache;
+
+
+
 
 class Products extends BaseConfigurationComponent
 {
@@ -26,7 +22,7 @@ class Products extends BaseConfigurationComponent
 	use WithFileUploads;
 
     protected $listeners = [
-        'disable', 'importIfood', 'checkImportIfood'
+        'disable'
     ];
 
 	protected $paginationTheme = 'bootstrap';
@@ -46,11 +42,9 @@ class Products extends BaseConfigurationComponent
     public $user_id;
     public $check;
 
-    //Job de importação de cardápio
-    public $importIfoodRunning = false;
+
 
     public $formatedQueryString;
-    
 
     protected $rules = [
         'productModels.*.initial_step' => 'nullable',
@@ -79,10 +73,9 @@ class Products extends BaseConfigurationComponent
     public function render()
     {
 
-        $this->check = (new PerformHealthCheck())->restaurantsConfigureds();
+        
         $this->user_id = auth()->user()->user_id ?? auth()->user()->id;
-        $this->importIfoodRunning = Cache::get('importIfood-' . $this->user_id, false);
-
+        
 		$keyWord = '%'.$this->keyWord .'%';
         $this->emit('paginationLoaded');
 
@@ -273,29 +266,6 @@ class Products extends BaseConfigurationComponent
         return (new ProductsExport)->filtro($this->keyWord)->download($fileName);
     }
 
-    public function confirmImportIfood()
-    {
-        $this->confirm('Deseja importar todos os produtos do IFOOD?', [
-            'html' => 'Esta importação reorganizará TODAS as categorias dos seus produtos, de acordo com o IFOOD. Fique tranquilo, os produtos continuarão com as configurações que você fez (estoque, monitoramento etc). <br /><small>Esta operação pode demorar alguns minutos. Aguarde o completo processamento ou, se preferir, volte mais tarde e observe se o indicador <i class="fas fa-cog fa-spin"></i> ainda está em processamento.</small>',
-            'toast' => false,
-            'position' => 'center',
-            'showConfirmButton' => true,
-            'cancelButtonText' => 'Não',
-            'confirmButtonText' => 'Sim',
-            'onConfirmed' => 'importIfood'
-        ]);
-    }
 
-    public function importIfood(){
-        //ini_set('max_execution_time', 300);
-        Cache::add('importIfood-' . $this->user_id, true, now()->addMinutes(5));
-        ProcessIfoodItems::dispatch(User::find($this->user_id));
-        //(new ProcessIfoodItems(User::find($this->user_id)))->handle();
-        $this->simpleAlert('success', 'A importação foi iniciada. Aguarde alguns minutos até a conclusão.', 5000);
-        $this->loadBaseData();      
-    }
-
-    public function checkImportIfood(){
-        $this->importIfoodRunning = Cache::get('importIfood-' . $this->user_id, false);
-    }
+ 
 }

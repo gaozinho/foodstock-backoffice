@@ -50,6 +50,17 @@ class BrokerCatalog
         }
     }
 
+    public function processCatalog($catalogId){
+        //$this->prepareProcessing();
+
+        //if(is_array($catalogs)){
+            //foreach($catalogs as $catalog){
+                $categories = $this->integration->getCategories($this->restaurant->id, $catalogId);
+                $this->processCategories($categories);
+            //}
+        //}
+    }    
+
     public function processCategories($categories){
         foreach($categories as $category){
             $categoryModel = Category::create([
