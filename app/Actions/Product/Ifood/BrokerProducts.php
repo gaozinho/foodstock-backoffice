@@ -31,8 +31,11 @@ class BrokerProducts
     }
 
     public function processOne($productJson, Restaurant $restaurant){
+
+        
         //Tenta pelo extenal code
         try{
+       
             if(!isset($productJson->externalCode) || empty($productJson->externalCode)){ 
                 throw new \Exception("Invalid external code");
             }
@@ -57,17 +60,20 @@ class BrokerProducts
             $product->image = (isset($productJson->image) ? $productJson->image : (isset($productJson->imagePath) ? $productJson->imagePath : null));
             $product->json_string = json_encode($productJson);
             $product->save();
-
+            if($productJson->name == "Gengibre"){
+                //dd("1", $productJson, $product);
+            }     
             return $product;
         }catch(\Exception $e1){
             //Tenta pelo nome
             try{
+                
                 $product = Product::where("name", $productJson->name)
                     ->where("user_id", $restaurant->user_id)
                     ->firstOrFail();
 
                 //Criar um external code, se não fornecido
-                $product->external_code = isset($productJson->externalCode) && $productJson->externalCode != "" ? $productJson->externalCode : $this->generateExternalCode($product->id);
+                $product->external_code = isset($productJson->externalCode) && $productJson->externalCode != "" ? $productJson->externalCode : (strlen($product->external_code) > 1 ? $product->external_code : $this->generateExternalCode($product->id));
                 $product->enabled = 1;
                 //$product->has_parent = $has_parent;
                 $product->unit_price = (is_object($productJson->price) ? $productJson->price->value : null);
@@ -79,8 +85,12 @@ class BrokerProducts
                 $product->image = (isset($productJson->image) ? $productJson->image : (isset($productJson->imagePath) ? $productJson->imagePath : null));
                 $product->json_string = json_encode($productJson);                
                 $product->save();
+                if($productJson->name == "Gengibre"){
+                    //dd("2", $productJson);
+                }                  
                 return $product;
             }catch(\Exception $e2){
+               
                 //Cria produto
                 $product = Product::create([
                     'name' => $productJson->name, 
@@ -105,6 +115,9 @@ class BrokerProducts
                 ]);
                 $product->external_code = isset($productJson->externalCode) && $productJson->externalCode != "" ? $productJson->externalCode : $this->generateExternalCode($product->id);
                 $product->save();
+                if($productJson->name == "Gengibre"){
+                    //dd("3", $productJson);
+                }                   
                 return $product;
             }
         }
