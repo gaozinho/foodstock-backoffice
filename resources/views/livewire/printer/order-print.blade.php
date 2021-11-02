@@ -58,12 +58,6 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>Teste de impressão</td>
-                                        <td>
-
-                                        </td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
