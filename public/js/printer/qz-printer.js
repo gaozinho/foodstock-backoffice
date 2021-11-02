@@ -204,7 +204,7 @@ class PrintOrder {
         _this.qzPrint(_this.printerConfig(_this.printerName, _this.encoding, _this.config.jobName), _this.fullPrintCommands())
             .then(function(){
                 console.log('QZ Print OK');
-                callback('Tudo certo!','Uma página de teste foi enviada para sua fila de impressão. Verifique se a impressão foi feita corretamente e clique com CONFIRMAR IMPRESSORA.','success');
+                callback('Tudo certo!','Uma página de teste foi enviada para sua fila de impressão. Verifique se a impressora está ligada e se a página teste foi impressa corretamente.','success');
                 //Contabilizar impressão
             })
             .catch(function(err) {

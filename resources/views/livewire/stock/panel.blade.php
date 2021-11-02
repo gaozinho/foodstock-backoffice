@@ -47,7 +47,7 @@
                         <div class="mb-2 col-xl-3 col-lg-3 col-md-4 col-6">
                             <div class="card-painel card-margin">
                                 <div class="card-body py-3 px-3">
-                                    <livewire:stock.product-card :product="$product" :wire:key="$product->id" />
+                                    @livewire('stock.product-card', ["product" => $product], key(time() . $product->id))
                                 </div>
                             </div>
                         </div>

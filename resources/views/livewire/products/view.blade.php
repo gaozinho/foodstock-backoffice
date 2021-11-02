@@ -207,7 +207,7 @@
                                         <a onclick="formatEditLink('{{route('products.edit', ['id' => $row->id])}}')" href="javascript:;" title="Editar">
                                             <i class="fa fa-edit"></i>
                                         </a>&nbsp;
-                                        <a href="javascripf:;" class="text-danger"
+                                        <a href="javascript:;" class="text-danger"
                                             wire:click="confirmDestroy({{ $row->id }})">
                                             <i wire:loading wire:target="confirmDestroy({{ $row->id }})" class="fas fa-cog fa-spin"></i>
                                             <i class="fa fa-trash"></i>
