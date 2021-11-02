@@ -15,7 +15,7 @@
                         <th>Loja/Cardápio</th>
                         <th class="text-center" style="width:1%" nowrap>Importar</th>
                     </tr>
-                    @if(count($catalogs) == 0)
+                    @if(!is_array($catalogs) || count($catalogs) == 0)
                         <tr>
                             <th colspan="3">Você não tem cardapios configurados no ifood.</th>
                         </tr>

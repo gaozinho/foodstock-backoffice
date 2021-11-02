@@ -16,6 +16,9 @@ class PrintOrder {
 
     config = {
         lineWidth : 42,
+        certificate : '',
+        signature : '',
+        jobName : 'Impressao foodStock',
     }
 
     qzConnection = null;
@@ -27,6 +30,7 @@ class PrintOrder {
     constructor(printerName, encoding, config) {
         this.encoding = encoding;
         this.printerName = printerName;
+        console.log(config);
         if(this.isObject(config)) this.config = config;
     }
 
@@ -43,9 +47,10 @@ class PrintOrder {
         return qz.print(printerConfig, body);  
     }            
 
-    printerConfig(printerName, encoding){
+    printerConfig(printerName, encoding, jobName){
         return qz.configs.create(printerName, { 
-                encoding : encoding 
+                encoding : encoding,
+                jobName : jobName
         });
     }
 
@@ -152,15 +157,16 @@ class PrintOrder {
     }
     
     setCertificates(){
+        var _config = this.config;
         // O arquivo cert é o gerado na etapa 3 e se chama privateKey.pfx
         qz.security.setCertificatePromise(function(resolve, reject) {
-            $.ajax({ url: "http://localhost:8000/cert/cert.pem", cache: false, dataType: "text" }).then(resolve, reject);
+            $.ajax({ url: _config.certificate, cache: false, dataType: "text" }).then(resolve, reject);
         });
 
 
         qz.security.setSignaturePromise(function(toSign) {
             return function(resolve, reject) {
-            $.post("http://localhost:8000/printer/sign-message", {request: toSign}).then(resolve, reject);
+            $.post(_config.signature, {request: toSign}).then(resolve, reject);
             };
         });				
     }
@@ -173,7 +179,7 @@ class PrintOrder {
         this.setCertificates();
         var _this = this;
         if (qz.websocket.isActive() === true) {
-            _this.doPrint(_this);
+            _this.doPrint(_this, callback);
         }else{
             this.qzConnect().then(function(){
                 _this.doPrint(_this, callback);
@@ -195,16 +201,16 @@ class PrintOrder {
         });
 
         if(_this.printerName == '')  throw new PrintError("Printer not defined.");
-
-        _this.qzPrint(_this.printerConfig(_this.printerName, _this.encoding), _this.fullPrintCommands())
+        _this.qzPrint(_this.printerConfig(_this.printerName, _this.encoding, _this.config.jobName), _this.fullPrintCommands())
             .then(function(){
                 console.log('QZ Print OK');
-                callback('Tudo certo!','Uma página de teste foi enviada para sua fila de impressão.','success');
+                callback('Tudo certo!','Uma página de teste foi enviada para sua fila de impressão. Verifique se a impressão foi feita corretamente e clique com CONFIRMAR IMPRESSORA.','success');
                 //Contabilizar impressão
             })
             .catch(function(err) {
                 console.log(err);
-                throw new PrintError(err);
+                callback('Ops!', 'Ocorreu um erro! Verifique se a impressoara está ligada ou se escolheu a impressora térmica correta. <small>(' + err + ')</small>', 'error');
+                //throw new PrintError(err);
             });                              
     }
 }

@@ -104,7 +104,7 @@ Route::post('/printer/sign-message', function (Request $request) {
    }
    
    return 'Error signing message';
-});
+})->name('printer.sign-message');
 
 
 /*

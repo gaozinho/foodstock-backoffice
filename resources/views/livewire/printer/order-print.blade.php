@@ -29,23 +29,39 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Qual sua impressora térmica?</td>
+                                        <td style="width:1%" nowrap>Qual sua impressora térmica?</td>
                                         <td>
-                                            {{$printer}}
+
+   
+
                                             <i class="fas fa-cog fa-spin loading"></i>
                                             <span class="mb-2 printer-available-nok" style="display: none"><i class="fas fa-lg fa-times text-danger"></i> Não conseguimos listar as impressoras disponíveis em seu computador. Verifique se sua impressora está corretamente instalada.</span>
-                                            <select class="available-printers" style="display: none" wire:model="printer">
                                             
+                                                 @if(!isset($printer->available) || $printer->available == 0)
+                                                        <div class="mt-1 print-test-ok" style="display: none"><i class="fas fa-lg fa-info-circle"></i> Escolha a impressora térmica</div>
+                                                    @else
+                                                        <div class="mt-1 print-test-ok" style="display: none"><i class="fas fa-lg fa-check text-success"></i> Impressora {{$printerName}} configurada como sua impressora térmica!</div>
+                                                    @endif                                            
+                                            
+                                            <select class="available-printers" style="display: none" wire:model="printerName">
+                                                <option value="">Escolha uma impressora</option>
                                             </select>
-                                            <div class="printer-message" style="display: none"><small>Se você não encontrar sua impressora na lista, refaça o passo-a-passo da configuração.</small></div>
+                                            <div class="printer-message" style="display: none">
+
+                                                <button class="btn btn-primary btn-sm print-test-ok mt-1" style="display:none" onclick="printTest()"><i class="fas fa-cog fa-spin loading-printer" style="display:none"></i> <i class="fas fa-lg fa-print"></i> Imprimir folha de teste</button> 
+                                                
+                                                    
+
+                                                <div><small>Se você não encontrar sua impressora na lista, refaça o passo-a-passo da configuração.</small></div>
+                                                
+                                                                                           
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Teste de impressão</td>
                                         <td>
-                                            <i class="fas fa-cog fa-spin loading"></i>
-                                            <button class="btn btn-primary btn-sm print-test-ok" style="display:none" onclick="printTest()"><i class="fas fa-lg fa-print"></i> Imprimir folha de teste</button>
-                                            <div class="print-test-nok" style="display:none"><i class="fas fa-lg fa-times text-danger"></i> Indisponível</div>
+
                                         </td>
                                     </tr>
                                 </tbody>
@@ -125,8 +141,17 @@
 
     <script>
 
+        var config = {
+            lineWidth : 42,
+            certificate : '{{ asset('cert/cert.pem') }}',
+            signature : '{{ route('printer.sign-message') }}',
+            jobName : 'Impessão de teste foodStock'
+        }
+
+        var currentPrinter = '{{strlen($printerName) > 0 ? $printerName : ''}}';
+
         function printDiagnostic(){
-            var printer = new PrintOrder('', 'Cp1252');
+            var printer = new PrintOrder('', 'Cp1252', config);
 
             printer.qzConnect().then(function(){
                 //Conexão QZ Tray OK
@@ -147,7 +172,8 @@
                     $.each(data, function (i, item) {
                         $('.available-printers').append($('<option>', { 
                             value: item.name,
-                            text : item.name 
+                            text : item.name, 
+                            selected : (currentPrinter == item.name)
                         }));
                     });
 
@@ -183,11 +209,12 @@
             var printerOk = printDiagnostic();
         });
 
-
         function printTest(){
-
-
-            var printer = new PrintOrder('MP-100S TH', 'Cp1252');
+            $(".loading-printer").show();
+            var printerName = $(".available-printers").val();
+            console.log(printerName);
+            
+            var printer = new PrintOrder(printerName, 'Cp1252', config);
 
             printer.alingCenter()
                     .addLogo('https://www.foodstock.com.br/images/logo.png')
@@ -214,16 +241,18 @@
             try{
                 printer.print(function(title, text, type){
                     Swal.fire(title, text, type);
+                    $(".loading-printer").hide();
                 });
                 
             }catch (err) {
                 if(err instanceof PrintError){
-                    Swal.fire('Ops!', 'Não conseguimos acessar a impressora para a página de teste.', 'error');
+                    //Swal.fire('Ops!', 'Não conseguimos acessar a impressora para a página de teste.', 'error');
                 }else if (err instanceof QZError){
-                    Swal.fire('Ops!', 'Não conseguimos conectar ao QZ Tray.', 'error');                    
+                    //Swal.fire('Ops!', 'Não conseguimos conectar ao QZ Tray.', 'error');                    
                 }else {
-                    Swal.fire('Ops!', 'Ocorreu um erro desconhecido.', 'error');    
+                    //Swal.fire('Ops!', 'Ocorreu um erro! Verifique se a impressoara está ligada ou se escolheu a impressora térmica correta.', 'error');    
                 }
+                $(".loading-printer").hide();
             }
         }
 
