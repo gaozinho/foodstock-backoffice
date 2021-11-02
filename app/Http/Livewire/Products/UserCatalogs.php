@@ -76,9 +76,9 @@ class UserCatalogs extends BaseConfigurationComponent
     }
 
     public function importIfood(){
-        //Cache::add('importIfood-' . $this->user_id, true, now()->addMinutes(5));
-        (new ProcessIfoodItems(User::find($this->user_id), $this->restaurant_id, $this->catalog_id))->handle();
-        //ProcessIfoodItems::dispatch(User::find($this->user_id), $this->restaurant_id, $this->catalog_id);
+        Cache::add('importIfood-' . $this->user_id, true, now()->addMinutes(5));
+        //(new ProcessIfoodItems(User::find($this->user_id), $this->restaurant_id, $this->catalog_id))->handle();
+        ProcessIfoodItems::dispatch(User::find($this->user_id), $this->restaurant_id, $this->catalog_id);
         $this->simpleAlert('success', 'A importação foi iniciada. Aguarde alguns minutos até a conclusão.', 5000); 
     }
 
