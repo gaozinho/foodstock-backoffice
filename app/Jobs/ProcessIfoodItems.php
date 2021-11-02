@@ -62,13 +62,12 @@ class ProcessIfoodItems implements ShouldQueue
      */
     public function handle()
     {
-        if(intval($this->catalog_id) > 0 && strlen($this->restaurant_id) > 0){
+        if(strlen($this->catalog_id) > 0 && intval($this->restaurant_id) > 0){
             $this->oneCatalog();
         }else{
             $this->allCatalogs();
         }
     }
-
 
     private function oneCatalog(){
         try{

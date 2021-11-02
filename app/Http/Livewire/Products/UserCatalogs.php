@@ -54,6 +54,8 @@ class UserCatalogs extends BaseConfigurationComponent
         $this->restaurant_id = $restaurant_id;
         $this->catalog_id = $catalog_id;
 
+        
+
         $title = 'Deseja importar todos os produtos do IFOOD?';
         $text = 'Esta importação reorganizará TODAS as categorias dos seus produtos, de acordo com o IFOOD. Fique tranquilo, os produtos continuarão com as configurações que você fez (estoque, monitoramento etc). <br /><small>Esta operação pode demorar alguns minutos. Aguarde o completo processamento ou, se preferir, volte mais tarde e observe se o indicador <i class="fas fa-cog fa-spin"></i> ainda está em processamento.</small>';
 
@@ -74,8 +76,9 @@ class UserCatalogs extends BaseConfigurationComponent
     }
 
     public function importIfood(){
-        Cache::add('importIfood-' . $this->user_id, true, now()->addMinutes(5));
-        ProcessIfoodItems::dispatch(User::find($this->user_id), $this->restaurant_id, $this->catalog_id);
+        //Cache::add('importIfood-' . $this->user_id, true, now()->addMinutes(5));
+        (new ProcessIfoodItems(User::find($this->user_id), $this->restaurant_id, $this->catalog_id))->handle();
+        //ProcessIfoodItems::dispatch(User::find($this->user_id), $this->restaurant_id, $this->catalog_id);
         $this->simpleAlert('success', 'A importação foi iniciada. Aguarde alguns minutos até a conclusão.', 5000); 
     }
 

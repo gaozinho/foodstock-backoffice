@@ -40,7 +40,7 @@ class BrokerCatalog
     }
 
     public function processCatalogs($catalogs){
-        //$this->prepareProcessing();
+        $this->prepareProcessing();
 
         if(is_array($catalogs)){
             foreach($catalogs as $catalog){
@@ -51,7 +51,7 @@ class BrokerCatalog
     }
 
     public function processCatalog($catalogId){
-        //$this->prepareProcessing();
+        $this->prepareProcessing();
 
         //if(is_array($catalogs)){
             //foreach($catalogs as $catalog){

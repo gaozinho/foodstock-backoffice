@@ -71,7 +71,9 @@ class ProcessOrderProducts
             }
 
             $product->enabled = 1;
-            $product->deleted = 0;            
+            $product->name = $item->name;
+            $product->deleted = 0;       
+            $product->unit_price = $item->unitPrice;
             $product->save();
         }catch(\Exception $e1){
             try{

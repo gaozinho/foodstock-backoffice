@@ -224,6 +224,7 @@ class Products extends BaseConfigurationComponent
         $product->minimun_stock = 0;
         $product->current_stock = 0;
         $product->monitor_stock = 0;
+        $product->external_code = null;
         $product->save();
         $this->render();
         $this->simpleAlert('success', 'Produto excluído com sucesso.');
