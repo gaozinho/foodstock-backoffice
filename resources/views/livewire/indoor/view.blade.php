@@ -228,6 +228,8 @@
 
         $(document).ready(function() {
 
+            $("#busca").select();
+
             $('.sort-column, .pretty').on('click', function(e) {
                 $(".pagination-products").LoadingOverlay("show");
             });
