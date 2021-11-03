@@ -17,6 +17,7 @@ use App\Http\Livewire\Products\{
    Products, EditProduct
 };
 
+use App\Http\Livewire\Indoor\Orders;
 use App\Http\Livewire\Deliveryman\DeliverymanPanel;
 use App\Http\Livewire\Deliveryman\Qrcode;
 use App\Http\Livewire\Keyboard\NumericKeyboard;
@@ -68,6 +69,7 @@ Route::group(['middleware' => ['role:admin|equipe', 'verified']], function (){
 });
 
 Route::group(['middleware' => ['role:admin|produtos', 'verified']], function (){
+   Route::get('/order/indoor', Orders::class)->name('indoor.order.index')->middleware('auth');
    Route::get('/products', Products::class)->name('products.index')->middleware('auth');
    Route::get('/products/{id}', EditProduct::class)->name('products.edit')->middleware('auth');
    Route::get('/products/create', EditProduct::class)->name('products.create')->middleware('auth');

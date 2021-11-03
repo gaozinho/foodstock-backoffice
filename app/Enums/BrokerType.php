@@ -14,4 +14,5 @@ final class BrokerType extends Enum
     const Ifood =   1;
     const Rappi =   2;
     const Neemo =   3;
+    const FoodStock =   4;
 }

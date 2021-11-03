@@ -17,7 +17,7 @@ use App\Models\FederatedSale;
 class StartProductionProccess
 {
 
-    public function start($order_id){
+    public function start($order_id, $start_at = 0){
         $order = null;
         try{
             $order = Order::findOrFail($order_id);
@@ -51,7 +51,7 @@ class StartProductionProccess
 
             }
 
-            $this->placeOrderOnProductionLine($orderSummary, $initialProductionMovement);
+            $this->placeOrderOnProductionLine($orderSummary, $initialProductionMovement, $start_at);
 
             return $initialProductionMovement;
         }catch(\Exception $e){
@@ -88,13 +88,13 @@ class StartProductionProccess
 
     }
 
-    protected function placeOrderOnProductionLine(OrderSummary $orderSummary, ProductionMovement $productionMovement){
+    protected function placeOrderOnProductionLine(OrderSummary $orderSummary, ProductionMovement $productionMovement, $start_at = 0){
         
         //Verificar se há estoque nos itens monitorados. Caso não exista, não avança. Deixa na primeira etapa.
         if(!$this->stockIsOk($productionMovement->order_summary_id)) return;
-
-        $smallestStep = $this->getSmallestStep($productionMovement->order_summary_id);
-
+        $smallestStep = 1;
+        if($start_at > 0) $smallestStep = $start_at;
+        else $smallestStep = $this->getSmallestStep($productionMovement->order_summary_id);
 
         $orderSummary->initial_step = $smallestStep;
         $orderSummary->save();

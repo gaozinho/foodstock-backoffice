@@ -90,7 +90,7 @@
                                 3 - Para finalizar, <a href="{{ asset('cert/cert.pem') }}">vamos baixar e configurar a chave de criptografia</a> para uma comunicação segura entre o foodStock e sua impressora.
                             </p>
                             <p>
-                                3.1 - Após baixar a chave acima, clique no ícone do QZ Tray, depois em "Advanced" e depois em "Site Mamager...", conforme imagem.
+                                3.1 - Após baixar a chave acima, clique no ícone do QZ Tray, depois em "Advanced" e depois em "Site Manager...", conforme imagem.
                                 <div class="mt-2 mb-2">
                                     <img src="{{ asset('images/printer/step3.png') }}">
                                 </div>
@@ -102,7 +102,7 @@
                                 </div>
                             </p>   
                             <p>
-                                3.3 - Escolha o arquivo "cert.pem" que você baixou, conforme imagem abaixo.
+                                3.3 - Escolha o arquivo "cert.pem" que você baixou e clique em "Abrir", conforme imagem abaixo.
                                 <div class="mt-2 mb-2">
                                     <img src="{{ asset('images/printer/step5.png') }}">
                                 </div>
@@ -116,9 +116,7 @@
                         </div>
                     </div>
                 </div>
-            </div>            
-
-
+            </div>
         </div>
         <div class="col-lg-4 col-md-4 margin-tb">
             <div class="card">

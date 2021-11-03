@@ -40,5 +40,13 @@
                     <i class="fas fa-fw fa-search"></i> {{ __('Encontre um pedido') }}
                 </x-jet-dropdown-link>     
             @endif
+
+            <hr class="dropdown-divider">
+
+            @hasanyrole('admin')
+                <x-jet-dropdown-link href="{{ route('indoor.order.index') }}" :active="request()->routeIs('indoor.order.index')">
+                    <i class="fas fa-fw fa-mug-hot"></i> {{ __('Incluir pedido') }}
+                </x-jet-dropdown-link>                
+            @endhasanyrole            
     </x-slot>
 </x-jet-dropdown>
