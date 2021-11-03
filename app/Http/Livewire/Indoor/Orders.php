@@ -144,8 +144,9 @@ class Orders extends BaseConfigurationComponent
         $this->clearData();
 
         (new StartProductionProccess())->start($orderModel->id, intval($this->initial_step));
-
-        $this->simpleAlert('success', 'Pedido ' . str_pad($order["shortOrderNumber"], 4, "0", STR_PAD_LEFT) . " registrado com sucesso!");
+        $message = 'Pedido ' . str_pad($order["shortOrderNumber"], 4, "0", STR_PAD_LEFT) . " registrado com sucesso!";
+        session()->flash('success', $message);
+        $this->simpleAlert('success', $message, 5000);
 
     }
 
