@@ -40,8 +40,8 @@ class Orders extends BaseConfigurationComponent
     public $restaurants;
 
     protected $rules = [
-        'friendly_number' => 'min:4|max:6|regex:/^[a-zA-Z0-9\s]+$/',
-        'initial_step' => 'min:1|max:10|numeric',
+        'friendly_number' => 'nullable|min:4|max:6|regex:/^[a-zA-Z0-9\s]+$/',
+        'initial_step' => 'min:0|max:10|numeric',
     ];    
 
     protected $messages = [
@@ -143,7 +143,7 @@ class Orders extends BaseConfigurationComponent
 
         $this->clearData();
 
-        (new StartProductionProccess())->start($orderModel->id, $this->initial_step);
+        (new StartProductionProccess())->start($orderModel->id, intval($this->initial_step));
 
         $this->simpleAlert('success', 'Pedido ' . str_pad($order["shortOrderNumber"], 4, "0", STR_PAD_LEFT) . " registrado com sucesso!");
 
@@ -191,5 +191,6 @@ class Orders extends BaseConfigurationComponent
             ->pluck("name", "step")->toArray();
         $this->restaurants = (new RecoverUserRestaurant())->recoverAll($this->user_id)->pluck("name", "id")->toArray();
         $this->restaurant_id = array_keys($this->restaurants)[0];
+        $this->initial_step = 0;
     }    
 }
