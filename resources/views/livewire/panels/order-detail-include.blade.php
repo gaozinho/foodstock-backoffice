@@ -1,5 +1,7 @@
 <div>
+    @if(count($orderSummaryDetail->orderBabelized->items) > 0)
     <div class="small mx-4 mb-3">
+    
         <div class="row pb-2">
             <div class="col-2 col-lg-1 col-sm-1 small font-weight-bold">Qtde</div>
             <div class="col-7 col-lg-8 col-sm-8 small font-weight-bold">Item</div>
@@ -49,4 +51,10 @@
             <div class="col-3 small text-right">@money($orderSummaryDetail->orderBabelized->orderAmount)</div>
         </div>
     </div>
+    @else
+        <div class="row pb-2">
+            <div class="col-12 small font-weight-bold">Não há itens neste pedido</div>
+        </div>
+    @endif
+    
 </div>

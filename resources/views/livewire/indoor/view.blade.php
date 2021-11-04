@@ -130,8 +130,6 @@
         <div class="col-lg-6 col-md-12 margin-tb">
             <div class="card" style="background-color: #eaedd2">
                 <div class="card-body">
-
-
                     <h3>
                         Novo pedido
                     </h3>
@@ -159,13 +157,21 @@
                                     </div>
                                 </div>
                             @empty
-                                Ainda não há produtos neste pedido.
+                                Não há produtos neste pedido.
                             @endforelse
-                            @if(count($orderProducts) > 0)
+                            
+                            <script>
+                                $(document).ready(function() {
+
+                                    $(".upper-on-keyup").keyup(function () {  
+                                        $(this).val($(this).val().toUpperCase());  
+                                    });
+                                });                            
+                            </script>
                             <hr class="my-2">
                             <div class="row pb-0">
                                 <div class="col-6 small">
-                                    <span class="text-muted"><small>Restaurante</small></span>
+                                    <span class="text-muted"><small>Restaurante *</small></span>
                                     <select id="restaurant_id" name="restaurant_id" class="form-control form-control-sm" wire:model.defer='restaurant_id'>
                                         @foreach($restaurants as $id => $restaurant)
                                         <option value="{{$id}}">
@@ -175,7 +181,7 @@
                                     </select>                                 
                                 </div>                            
                                 <div class="col-6 small">
-                                    <span class="text-muted"><small>Este pedido vai para</small></span>
+                                    <span class="text-muted"><small>Este pedido vai para *</small></span>
                                     <select id="initial_step" name="initial_step" class="form-control form-control-sm" wire:model.defer='initial_step'>
                                         <option value="0">Definido pelo foodStock</option>
                                         @foreach($productionLines as $id => $productionLine)
@@ -185,18 +191,23 @@
                                         @endforeach
                                     </select>
                                 </div>
-
                                 <div class="col-6 small">
-                                    <span class="text-muted"><small>Número do pedido (opcional)</small></span>
-                                    <input type="text" class="form-control form-control-sm" wire:model.defer='friendly_number' />
-                                </div>                                
-
+                                    <span class="text-muted"><small>Número do pedido</small></span>
+                                    <input type="text" class="form-control form-control-sm upper-on-keyup" wire:model.defer='friendly_number' />
+                                </div>    
+                                <div class="col-6 small">
+                                    <span class="text-muted"><small>Cliente</small></span>
+                                    <input type="text" class="form-control form-control-sm" wire:model.defer='customer_name' />
+                                </div>   
+                                <div class="col-6 small">
+                                    <span class="text-muted"><small>Endereço</small></span>
+                                    <input type="text" class="form-control form-control-sm" wire:model.defer='address' />
+                                </div>                                                                
                                 <div class="col-6 small mt-2">
                                     <button class="btn btn-primary btn-lg form-control" wire:click="saveOrder">
                                         <i wire:loading wire:target="saveOrder" class="fas fa-cog fa-spin"></i>
                                         <i class="fas fa-plus"></i> Criar pedido</button>
                                 </div>
-
                                 @error('friendly_number')
                                     <div class="col-12 small mt-3">
                                         <div class="alert alert-danger">
@@ -205,13 +216,13 @@
                                     </div>
                                 @enderror                                
                             </div>
-                            @endif
-
+                            
                         </div>
                     </div>
-
                 </div>
             </div>
+
+            
         </div>
     </div>
 </div>

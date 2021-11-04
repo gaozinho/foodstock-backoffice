@@ -19,8 +19,8 @@
             </span>
         </h4>
 
-    <p class="my-0"><i class="fas fa-user a-fw"></i> {{$orderSummaryDetail->orderBabelized->customerName()}}</p>
-    <p class="my-0"><i class="fas fa-map-marker-alt a-fw"></i> {{$orderSummaryDetail->orderBabelized->deliveryFormattedAddress}}</p>
+    <p class="my-0"><i class="fas fa-user a-fw"></i> {{$orderSummaryDetail->orderBabelized->customerName() ?? "Cliente não informado"}}</p>
+    <p class="my-0"><i class="fas fa-map-marker-alt a-fw"></i> {{$orderSummaryDetail->orderBabelized->deliveryFormattedAddress > 0 ? $orderSummaryDetail->orderBabelized->deliveryFormattedAddress : "Endereço não informado"}}</p>
     <p class="my-0"><small>Número de pedidos: {{$orderSummaryDetail->orderBabelized->ordersCountOnMerchant}} - Tipo: {{$orderSummaryDetail->orderBabelized->orderType ?? 'n/a'}}</small></p>
     @if($orderSummaryDetail->canceled == 1)
         @foreach($orderSummaryDetail->cancellationReasons()->get() as $cancellation)

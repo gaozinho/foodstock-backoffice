@@ -29,7 +29,7 @@ class DeliverymanPanel extends BaseConfigurationComponent
     public $restaurants;
 
     protected $rules = [
-        'order_id' => 'required|integer',
+        'order_id' => 'required|min:4|max:10',
     ];    
 
     public function mount($user_id)
@@ -78,8 +78,7 @@ class DeliverymanPanel extends BaseConfigurationComponent
     }
 
     public function addOrder(){
-
-        $orderSummary = OrderSummary::where("friendly_number", intval($this->order_id))
+        $orderSummary = OrderSummary::where("friendly_number", $this->order_id)
             ->where("finalized", 0)
             ->whereIn("restaurant_id", $this->restaurantIds)
             ->first();
@@ -97,7 +96,7 @@ class DeliverymanPanel extends BaseConfigurationComponent
 
     public function removeOrder($friendly_number){
 
-        if (($key = array_search(intval($friendly_number), $this->orders)) !== false) {
+        if (($key = array_search($friendly_number, $this->orders)) !== false) {
             unset($this->orders[$key]);       
         }
         $this->loadData();

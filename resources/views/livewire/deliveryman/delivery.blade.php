@@ -3,7 +3,7 @@
         <h2 class="mt-3 mb-0 pb-0">Acompanhando 
             <span class="badge badge-secondary">{{ $total_orders }}</span> pedidos
         </h2>
-        <span>{!! $restaurants !!}</span>
+        <span>Pedidos de: <b>{!! $restaurants !!}</b></span><br />
         
         <span class="legend mt-0 pt-0">Legenda:
             <span class="badge bg-danger text-white p-1">Produzindo</span> 
@@ -19,7 +19,7 @@
                     <div class="form-group">
                         <strong>Digite o número do pedido</strong>
                         <div class="input-group mb-3">
-                            <input type="text" wire:model.defer="order_id" class="form-control" placeholder="# Pedido">
+                            <input type="text" wire:model.defer="order_id" class="form-control upper-on-keyup" placeholder="# Pedido">
                             <div class="input-group-append">
                                 <button wire:click="addOrder" class="btn btn-add btn-primary" type="button">Adicionar</button>
                             </div>
@@ -51,7 +51,7 @@
                                 <div class="m-0 p-0 small text-white">
                                     <small>{{ $orderSummary->restaurant }} &bull; {{ $orderSummary->broker }}
                                     &bull; 
-                                    <span onclick='$(".loading").LoadingOverlay("show")' class="text-white" wire:click="removeOrder({{$orderSummary->friendly_number}})"><i class="fas fa-minus-circle"></i> remover</span>
+                                    <span onclick='$(".loading").LoadingOverlay("show")' class="text-white" wire:click="removeOrder('{{$orderSummary->friendly_number}}')"><i class="fas fa-minus-circle"></i> remover</span>
                                 </small></div>
                             </div>
                         </div>
@@ -70,6 +70,15 @@
              }, 60000);
         }
         $(document).ready(function() {
+
+
+
+            $(".upper-on-keyup").keyup(function () {  
+                $(this).val($(this).val().toUpperCase());  
+            });
+
+
+
             var reloadDataInterval = reloadPage();
 
             $('.btn-add').on('click', function(e) {

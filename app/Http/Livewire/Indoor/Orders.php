@@ -34,14 +34,21 @@ class Orders extends BaseConfigurationComponent
 
     public $formatedQueryString;
     public $orderProducts = [];
+    public $restaurants;
+
+    //Formulário
     public $initial_step;
     public $friendly_number;
     public $restaurant_id;
-    public $restaurants;
+    public $customer_name;
+    public $address;
 
     protected $rules = [
         'friendly_number' => 'nullable|min:4|max:6|regex:/^[a-zA-Z0-9\s]+$/',
         'initial_step' => 'min:0|max:10|numeric',
+        'restaurant_id' => 'min:1|required|numeric',
+        'customer_name' => 'nullable',
+        'address' => 'nullable'
     ];    
 
     protected $messages = [
@@ -132,8 +139,10 @@ class Orders extends BaseConfigurationComponent
         $order["orderAmount"] = $order["subtotal"] + $order["deliveryFee"];
         $order["order_id"] = $order["shortOrderNumber"] . $this->restaurant_id;
         $order["broker_id"] = BrokerType::FoodStock;
+        $order["customerName"] =  $this->customer_name;
+        $order["deliveryFormattedAddress"] = $this->address;
         if(!empty($this->friendly_number)){
-            $order["shortOrderNumber"] = $this->friendly_number;
+            $order["shortOrderNumber"] = strtoupper($this->friendly_number);
         }
 
         $json = json_encode($order);
@@ -153,6 +162,8 @@ class Orders extends BaseConfigurationComponent
     private function clearData(){
         $this->orderProducts = [];
         $this->friendly_number = "";
+        $this->customer_name = "";
+        $this->address = "";   
     }
 
     private function createEmptyOrderArray(){

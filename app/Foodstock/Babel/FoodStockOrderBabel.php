@@ -123,6 +123,6 @@ class FoodStockOrderBabel extends OrderBabel implements OrderBabelInterface
     }
 
     public function deliveryFormattedAddress(){
-       return "";
+       return $this->orderJson->deliveryFormattedAddress;;
     }    
 }
