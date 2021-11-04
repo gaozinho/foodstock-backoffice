@@ -30,7 +30,7 @@ class StartProductionProccess
                 ],[
                 'order_id' => $order->id,
                 'broker_id' => $order->broker_id,
-                'friendly_number' => substr($orderJson->shortOrderNumber, -4),
+                'friendly_number' => $orderJson->shortOrderNumber, //substr($orderJson->shortOrderNumber, -4),
                 'restaurant_id' => $order->restaurant_id,
                 'started_at' => date('Y-m-d H:i:s'),
                 'order_json' => $generateOrderJson->generateString()

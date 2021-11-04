@@ -45,7 +45,7 @@
                         <div class="card mb-2 {{$lastStepProductionLine->id == $orderSummary->production_line_id ? 'bg-success' : 'bg-danger'}}">
                             <div class="card-body p-2">
                                 <div class="text-white h4">
-                                    {{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}
+                                    {{ @friendlyNumber($orderSummary->friendly_number) }}
                                     
                                 </div>
                                 <div class="m-0 p-0 small text-white">

@@ -19,7 +19,7 @@
             onClick='$(".loading").LoadingOverlay("show")'        
         >
             <div class="order-card">
-                <h1><span class="badge badge-secondary w-100" {!!$cardColor ?? 'style="background-color: ' . $stepColors[$orderSummary->current_step_number] . '"' !!}>{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</span></h1>
+                <h1><span class="badge badge-secondary w-100" {!!$cardColor ?? 'style="background-color: ' . $stepColors[$orderSummary->current_step_number] . '"' !!}>{{ @friendlyNumber($orderSummary->friendly_number) }}</span></h1>
                 <div style="line-height: 1" class="row">
                     <div class="col-sm-12">
                         <small>

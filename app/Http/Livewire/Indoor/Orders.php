@@ -44,7 +44,7 @@ class Orders extends BaseConfigurationComponent
     public $address;
 
     protected $rules = [
-        'friendly_number' => 'nullable|min:4|max:6|regex:/^[a-zA-Z0-9\s]+$/',
+        'friendly_number' => 'nullable|min:4|max:10|regex:/^[a-zA-Z0-9\s]+$/',
         'initial_step' => 'min:0|max:10|numeric',
         'restaurant_id' => 'min:1|required|numeric',
         'customer_name' => 'nullable',

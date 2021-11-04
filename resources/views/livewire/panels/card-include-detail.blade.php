@@ -13,7 +13,7 @@
             <div class="order-card">
                 <div class="order-card-title-wrapper">
                     <div class="order-card-date-primary" {!!$cardColor ?? 'style="background-color: ' . $stepColors[$orderSummary->current_step_number] . '"' !!}>
-                        <span class="order-card-date-day text-white">{{ str_pad($orderSummary->friendly_number, 4, "0", STR_PAD_LEFT) }}</span>
+                        <span class="order-card-date-day text-white">{{@friendlyNumber($orderSummary->friendly_number) }}</span>
                         
                     </div>
                     <div class="order-card-meeting-info">
