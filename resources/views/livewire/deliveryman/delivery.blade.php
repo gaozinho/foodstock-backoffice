@@ -1,4 +1,7 @@
 <div>
+    <div class="mt-2">
+        @livewire('util.progressbar', ['livewireListener' => 'render_dash', 'progressEnclosure' => '.dash-progress', 'seconds' => 60])
+    </div>
     <div class="full-screen mb-3">
         <h2 class="mt-3 mb-0 pb-0">Acompanhando 
             <span class="badge badge-secondary">{{ $total_orders }}</span> pedidos
@@ -70,14 +73,9 @@
              }, 60000);
         }
         $(document).ready(function() {
-
-
-
             $(".upper-on-keyup").keyup(function () {  
                 $(this).val($(this).val().toUpperCase());  
             });
-
-
 
             var reloadDataInterval = reloadPage();
 
@@ -95,6 +93,6 @@
 
         });
     </script>
-
+    <script src="{{ asset('js/jquery.progressBarTimer.js') }}" type="text/javascript" charset="utf-8"></script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>    
 @endpush

@@ -45,6 +45,10 @@ class DeliverymanPanel extends BaseConfigurationComponent
     }    
 
     public function loadData(){
+
+
+        $selectedOrders = session('selectedOrders') ?? [];
+
         $this->orderSummaries = OrderSummary::join("production_movements", "order_summaries.id", "=", "production_movements.order_summary_id")
             //->where("production_movements.production_line_id", $this->lastStepProductionLine->id)
             ->join("brokers", "brokers.id", "=", "order_summaries.broker_id")
@@ -52,7 +56,7 @@ class DeliverymanPanel extends BaseConfigurationComponent
             ->where("production_movements.step_finished", 0)
             ->whereIn("production_movements.restaurant_id", $this->restaurantIds)
             ->where("order_summaries.finalized", 0)
-            ->whereIn('friendly_number', $this->orders)
+            ->whereIn('friendly_number', $selectedOrders)
             ->select("order_summaries.*", "production_movements.production_line_id")
             ->selectRaw("restaurants.name as restaurant")
             ->selectRaw("brokers.name as broker")
@@ -84,7 +88,11 @@ class DeliverymanPanel extends BaseConfigurationComponent
             ->first();
 
         if(is_object($orderSummary)){
-            $this->orders[] = $this->order_id;
+            $selectedOrders = session('selectedOrders');
+            if(!in_array($this->order_id, $selectedOrders)){
+                $selectedOrders[] = $this->order_id;
+                session(['selectedOrders' => $selectedOrders]);
+            }
         }else{
             $this->simpleAlert('error', 'Pedido não encontrado ou já enviado.');
         }
@@ -95,9 +103,10 @@ class DeliverymanPanel extends BaseConfigurationComponent
     }
 
     public function removeOrder($friendly_number){
-
-        if (($key = array_search($friendly_number, $this->orders)) !== false) {
-            unset($this->orders[$key]);       
+        $selectedOrders = session('selectedOrders');
+        if (($key = array_search($friendly_number, $selectedOrders)) !== false) {
+            unset($selectedOrders[$key]);
+            session(['selectedOrders' => $selectedOrders]);       
         }
         $this->loadData();
         $this->emit('loaded');             
