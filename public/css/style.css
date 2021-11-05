@@ -1,3 +1,7 @@
+.disable-dbl-tap-zoom {
+  touch-action: manipulation;
+}
+
 .modal-open {
   overflow: scroll;
 }
