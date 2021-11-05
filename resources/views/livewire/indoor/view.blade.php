@@ -9,7 +9,106 @@
     </div>
 
     <div class="row">
+        
         <div class="col-lg-6 col-md-12 margin-tb">
+            <div class="card" style="background-color: #eaedd2">
+                <div class="card-body">
+                    <h3>
+                        Novo pedido
+                    </h3>
+                    <div>
+                        <div class="small mb-3">
+                        <hr class="my-2">
+                            @if(count($orderProducts) > 0)
+                            <div class="row pb-2">
+                                <div class="col-2 small font-weight-bold">Qtde</div>
+                                <div class="col-10 small font-weight-bold">Item</div>
+                            </div>
+                            @endif
+                            @forelse($orderProducts as $item)
+                                <div class="row pb-2">
+                                    <div class="col-2">
+                                        <h4 class="m-0">{{$item["quantity"]}}x</h4>
+                                    </div>
+                                    <div class="col-8 small">{{$item["product"]["foodstock_name"] ?? $item["product"]["name"]}}</div>
+                                    <div class="col-2 small text-right">
+                                        <a class="btn btn-sm btn-danger" onclick="handleRemove()" wire:click="removeProduct({{$item["product"]["id"]}})" href="javascript:;" title="Excluir">
+                                            <i wire:loading wire:target="removeProduct({{$item["product"]["id"]}})"
+                                                class="fas fa-cog fa-spin"></i>
+                                            <i class="fa fa-trash"></i>
+                                        </a>                                    
+                                    </div>
+                                </div>
+                            @empty
+                                Não há produtos neste pedido.
+                            @endforelse
+                            
+                            <script>
+                                $(document).ready(function() {
+
+                                    $(".upper-on-keyup").keyup(function () {  
+                                        $(this).val($(this).val().toUpperCase());  
+                                    });
+                                });                            
+                            </script>
+                            <hr class="my-2">
+                            <div class="row pb-0">
+                                <div class="col-6 small">
+                                    <span class="text-muted"><small>Restaurante *</small></span>
+                                    <select id="restaurant_id" name="restaurant_id" class="form-control form-control-sm" wire:model.defer='restaurant_id'>
+                                        @foreach($restaurants as $id => $restaurant)
+                                        <option value="{{$id}}">
+                                            {{$restaurant}}
+                                        </option>
+                                        @endforeach
+                                    </select>                                 
+                                </div>                            
+                                <div class="col-6 small">
+                                    <span class="text-muted"><small>Este pedido vai para *</small></span>
+                                    <select id="initial_step" name="initial_step" class="form-control form-control-sm" wire:model.defer='initial_step'>
+                                        <option value="0">Definido pelo foodStock</option>
+                                        @foreach($productionLines as $id => $productionLine)
+                                        <option value="{{$id}}">
+                                            {{$productionLine}}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-6 small">
+                                    <span class="text-muted"><small>Número do pedido</small></span>
+                                    <input type="text" class="form-control form-control-sm upper-on-keyup" wire:model.defer='friendly_number' />
+                                </div>    
+                                <div class="col-6 small">
+                                    <span class="text-muted"><small>Cliente</small></span>
+                                    <input type="text" class="form-control form-control-sm" wire:model.defer='customer_name' />
+                                </div>   
+                                <div class="col-6 small">
+                                    <span class="text-muted"><small>Endereço</small></span>
+                                    <input type="text" class="form-control form-control-sm" wire:model.defer='address' />
+                                </div>                                                                
+                                <div class="col-6 small mt-2">
+                                    <button class="btn btn-primary btn-lg form-control" wire:click="saveOrder">
+                                        <i wire:loading wire:target="saveOrder" class="fas fa-cog fa-spin"></i>
+                                        <i class="fas fa-plus"></i> Criar pedido</button>
+                                </div>
+                                @error('friendly_number')
+                                    <div class="col-12 small mt-3">
+                                        <div class="alert alert-danger">
+                                            Oops. {{ $message }}
+                                        </div>
+                                    </div>
+                                @enderror                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+
+<div class="col-lg-6 col-md-12 margin-tb">
 
             <div>
                 @if (session()->has('success'))
@@ -127,103 +226,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 col-md-12 margin-tb">
-            <div class="card" style="background-color: #eaedd2">
-                <div class="card-body">
-                    <h3>
-                        Novo pedido
-                    </h3>
-                    <div>
-                        <div class="small mb-3">
-                        <hr class="my-2">
-                            @if(count($orderProducts) > 0)
-                            <div class="row pb-2">
-                                <div class="col-2 small font-weight-bold">Qtde</div>
-                                <div class="col-10 small font-weight-bold">Item</div>
-                            </div>
-                            @endif
-                            @forelse($orderProducts as $item)
-                                <div class="row pb-2">
-                                    <div class="col-2">
-                                        <h4 class="m-0">{{$item["quantity"]}}x</h4>
-                                    </div>
-                                    <div class="col-8 small">{{$item["product"]["foodstock_name"] ?? $item["product"]["name"]}}</div>
-                                    <div class="col-2 small text-right">
-                                        <a class="btn btn-sm btn-danger" onclick="handleRemove()" wire:click="removeProduct({{$item["product"]["id"]}})" href="javascript:;" title="Excluir">
-                                            <i wire:loading wire:target="removeProduct({{$item["product"]["id"]}})"
-                                                class="fas fa-cog fa-spin"></i>
-                                            <i class="fa fa-trash"></i>
-                                        </a>                                    
-                                    </div>
-                                </div>
-                            @empty
-                                Não há produtos neste pedido.
-                            @endforelse
-                            
-                            <script>
-                                $(document).ready(function() {
 
-                                    $(".upper-on-keyup").keyup(function () {  
-                                        $(this).val($(this).val().toUpperCase());  
-                                    });
-                                });                            
-                            </script>
-                            <hr class="my-2">
-                            <div class="row pb-0">
-                                <div class="col-6 small">
-                                    <span class="text-muted"><small>Restaurante *</small></span>
-                                    <select id="restaurant_id" name="restaurant_id" class="form-control form-control-sm" wire:model.defer='restaurant_id'>
-                                        @foreach($restaurants as $id => $restaurant)
-                                        <option value="{{$id}}">
-                                            {{$restaurant}}
-                                        </option>
-                                        @endforeach
-                                    </select>                                 
-                                </div>                            
-                                <div class="col-6 small">
-                                    <span class="text-muted"><small>Este pedido vai para *</small></span>
-                                    <select id="initial_step" name="initial_step" class="form-control form-control-sm" wire:model.defer='initial_step'>
-                                        <option value="0">Definido pelo foodStock</option>
-                                        @foreach($productionLines as $id => $productionLine)
-                                        <option value="{{$id}}">
-                                            {{$productionLine}}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-6 small">
-                                    <span class="text-muted"><small>Número do pedido</small></span>
-                                    <input type="text" class="form-control form-control-sm upper-on-keyup" wire:model.defer='friendly_number' />
-                                </div>    
-                                <div class="col-6 small">
-                                    <span class="text-muted"><small>Cliente</small></span>
-                                    <input type="text" class="form-control form-control-sm" wire:model.defer='customer_name' />
-                                </div>   
-                                <div class="col-6 small">
-                                    <span class="text-muted"><small>Endereço</small></span>
-                                    <input type="text" class="form-control form-control-sm" wire:model.defer='address' />
-                                </div>                                                                
-                                <div class="col-6 small mt-2">
-                                    <button class="btn btn-primary btn-lg form-control" wire:click="saveOrder">
-                                        <i wire:loading wire:target="saveOrder" class="fas fa-cog fa-spin"></i>
-                                        <i class="fas fa-plus"></i> Criar pedido</button>
-                                </div>
-                                @error('friendly_number')
-                                    <div class="col-12 small mt-3">
-                                        <div class="alert alert-danger">
-                                            Oops. {{ $message }}
-                                        </div>
-                                    </div>
-                                @enderror                                
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            
-        </div>
     </div>
 </div>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
