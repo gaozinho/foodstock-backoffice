@@ -199,7 +199,7 @@
 
                                                 <div class="p-0" style="line-height: 1">
                                                     @if (!empty($row->external_code))
-                                                        <span class="text-muted"><small>Código externo:
+                                                        <span class="text-muted"><small>Cód. externo:
                                                                 <b>{{ strtoupper($row->external_code) }}</b></small></span>
                                                     @endif
 
