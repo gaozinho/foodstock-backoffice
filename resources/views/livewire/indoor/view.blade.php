@@ -4,8 +4,7 @@
         <h2 class="mt-3 mb-0 pb-0"><i class="fas fa-mug-hot"></i> Crie pedidos manualmente</h2>
         <small>
             <p>Insira manualmente
-                pedidos diretamente na linha de produção.
-                <br>Pesquise e selecione os itens do pedido. Em seguida, escolha "criar pedido".
+                pedidos diretamente na linha de produção. Pesquise e selecione os itens do pedido. Em seguida, escolha "criar pedido".
             </p>
         </small>
     </div>
