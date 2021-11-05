@@ -1,4 +1,10 @@
 <div>
+    <style>
+        .disable-dbl-tap-zoom {
+            touch-action: manipulation;
+        }
+
+    </style>
     <div id="countdown"></div>
     <div class="row justify-content-between align-items-center">
         <div class="col">
