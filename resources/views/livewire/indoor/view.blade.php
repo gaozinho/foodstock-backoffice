@@ -184,7 +184,7 @@
                                     <tr class="loading">
                                         <td>
                                             <a onclick="formatEditLink('{{ route('products.edit', ['id' => $row->id]) }}')"
-                                                href="javascript:;" class="text-dark h4">
+                                                href="javascript:;" class="text-dark h5">
 
                                                 @if (filter_var($row->image, FILTER_VALIDATE_URL))
                                                     <img src="{{ $row->image }}" style="height: 60px"
