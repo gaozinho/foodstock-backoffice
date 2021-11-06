@@ -209,13 +209,11 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
 @push('scripts')
     <script>
-
         $(document).ready(function() {
             Livewire.on('stopLoading', function(){
                 $(".loading").LoadingOverlay("hide");
             })
         });
     </script>
-
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 @endpush

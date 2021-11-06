@@ -144,8 +144,9 @@ class Teams extends Component
             $user = User::findOrFail($this->user->id);
             $user->email = "DELETED-" . Str::random(10) . "-" . $this->user->email;
             $user->save();
-            
-            $this->restaurant->usersPivot()->detach($this->user);
+
+            $restaurantsIds =  (new RecoverUserRestaurant())->recoverAllIds($user->user_id ?? $user->id); 
+            if(count($restaurantsIds) > 0) $user->restaurants()->detach($restaurantsIds);
             $this->reloadForm();
 			$this->simpleAlert('success', 'Integrante removido com sucesso.');
         } catch (Exception $exception) {
