@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Restaurant;
 use App\Models\ProductionLine;
 use App\Models\OrderSummary;
+use App\Models\Order;
 use App\Foodstock\Babel\OrderBabelized;
 use App\Actions\ProductionLine\ForwardProductionProccess;
 use App\Actions\ProductionLine\GenerateTrackingOrdersQr;
@@ -78,6 +79,14 @@ class DeliverymanPanel extends BaseConfigurationComponent
     public function render()
     {
         $viewName = 'livewire.deliveryman.delivery';
+        if (request()->has('o')) {
+            $qr = new GenerateTrackingOrdersQr();
+            $order_id = $qr->decode(request()->query("o"));
+            $orderSummary = OrderSummary::where("order_id", $order_id)
+                ->firstOrFail();
+            $this->order_id = $orderSummary->friendly_number;
+            $this->addOrder();
+        }
         return view($viewName, [])->layout('layouts.public-clean');
     }
 
@@ -88,13 +97,13 @@ class DeliverymanPanel extends BaseConfigurationComponent
             ->first();
 
         if(is_object($orderSummary)){
-            $selectedOrders = session('selectedOrders');
+            $selectedOrders = session('selectedOrders') ?? [];
             if(!in_array($this->order_id, $selectedOrders)){
                 $selectedOrders[] = $this->order_id;
                 session(['selectedOrders' => $selectedOrders]);
             }
         }else{
-            $this->simpleAlert('error', 'Pedido não encontrado ou já enviado.');
+            $this->simpleAlert('error', 'Pedido não encontrado ou já despachados.');
         }
         
         $this->order_id = '';

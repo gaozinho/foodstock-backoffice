@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Printer;
 
 use Livewire\Component;
 use App\Models\Printer;
+use App\Models\OrderSummary;
 use App\Http\Livewire\Configuration\BaseConfigurationComponent;
 
 class OrderPrint extends BaseConfigurationComponent
@@ -11,6 +12,7 @@ class OrderPrint extends BaseConfigurationComponent
 
     public $printerName = '';
     public $printer = null;
+    public $order_json = null;
 
     protected $rules = [
         'printerName' => 'max:255',
@@ -25,11 +27,12 @@ class OrderPrint extends BaseConfigurationComponent
         $this->printer = Printer::where('user_id', (auth()->user()->user_id ?? auth()->user()->id))->first();  
         if(is_object($this->printer)) $this->printerName = $this->printer->name;    
 
+        $this->order_json = (OrderSummary::find(11383))->order_json;
+
     }
 
     public function updatedPrinterName($value)
     {
-
         if(strlen($value) > 0){
             $this->printer = Printer::updateOrCreate(
                 ['user_id' => (auth()->user()->user_id ?? auth()->user()->id)],
@@ -47,13 +50,10 @@ class OrderPrint extends BaseConfigurationComponent
             $this->printer = null;
         }
 
-
-
         return redirect(request()->header('Referer'));
     }
 
     public function  reloadData(){
         $this->printer = Printer::where('user_id', (auth()->user()->user_id ?? auth()->user()->id))->first();  
-
     }
 }

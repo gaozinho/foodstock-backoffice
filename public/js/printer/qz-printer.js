@@ -19,6 +19,9 @@ class PrintOrder {
         certificate : '',
         signature : '',
         jobName : 'Impressao foodStock',
+        logo : '',
+        qr : '',
+        //currentPrinter : ''
     }
 
     qzConnection = null;
@@ -30,7 +33,7 @@ class PrintOrder {
     constructor(printerName, encoding, config) {
         this.encoding = encoding;
         this.printerName = printerName;
-        console.log(config);
+        //console.log(config);
         if(this.isObject(config)) this.config = config;
     }
 
@@ -68,14 +71,16 @@ class PrintOrder {
         return this;
     }
 
-    simpleLine(text){
+    simpleLine(text, tabItem){
+        if (typeof tabItem !== 'undefined' && tabItem === true) text = '   ' + text;
         this.addPrintCommand(text).breakLine();
         return this;
     }
 
     justifiedLine(itemName, quantity, value, tabItem){
         value = this.formatMoney(value);
-        quantity = ('' + quantity).padStart(2, '0') + ' ';
+        if(quantity == 0) quantity = '';
+        else quantity = ('' + quantity).padStart(2, '0') + ' ';
         if (typeof tabItem !== 'undefined' && tabItem === true) quantity = '   ' + quantity;
         var whiteSpaceSize = this.config.lineWidth - (value.length + quantity.length + itemName.length);
         var formatedString = quantity + itemName + ''.padStart(whiteSpaceSize, ' ') + value;
@@ -184,7 +189,7 @@ class PrintOrder {
             this.qzConnect().then(function(){
                 _this.doPrint(_this, callback);
             }).catch(function(err) {
-                console.log(err);
+                //console.log(err);
                 throw new QZError(err);
             });
         }
@@ -196,7 +201,7 @@ class PrintOrder {
         _this.availablePrinters().then(function(data){
             console.log('QZ available Printer', data);
         }).catch(function(err) {
-            console.log(err);
+            //console.log(err);
             throw new QZError(err);
         });
 
@@ -204,13 +209,74 @@ class PrintOrder {
         _this.qzPrint(_this.printerConfig(_this.printerName, _this.encoding, _this.config.jobName), _this.fullPrintCommands())
             .then(function(){
                 console.log('QZ Print OK');
-                callback('Tudo certo!','Uma página de teste foi enviada para sua fila de impressão. Verifique se a impressora está ligada e se a página teste foi impressa corretamente.','success');
+                callback('Tudo certo!','Pedido enviado para sua fila de impressão. Verifique se a impressora está ligada e se o pedido foi impresso corretamente.','success');
                 //Contabilizar impressão
             })
             .catch(function(err) {
                 console.log(err);
-                callback('Ops!', 'Ocorreu um erro! Verifique se a impressoara está ligada ou se escolheu a impressora térmica correta. <small>(' + err + ')</small>', 'error');
+                callback('Ops!', 'Ocorreu um erro! Verifique se a impressora está ligada ou se escolheu a impressora térmica correta. <small>(' + err + ')</small>', 'error');
                 //throw new PrintError(err);
             });                              
+    }
+
+    fromJson(jsonString){
+        var jsonObject = JSON.parse(jsonString);
+        //console.log(jsonObject);
+
+        this.alingCenter();
+        if(this.config.logo != ''){
+            this.addLogo(this.config.logo)
+                .breakLine();
+        }
+        this.startBold().simpleLine("PEDIDO " + jsonObject.shortOrderNumber)
+            .simpleLine(jsonObject.brokerName)
+            .stopBold()
+            .alignLeft()
+            .horizontalLine();
+        
+        for(var i = 0; i < jsonObject.items.length; i++){
+            var totalValue = jsonObject.items[i].quantity * jsonObject.items[i].unitPrice;
+            this.justifiedLine(jsonObject.items[i].name, jsonObject.items[i].quantity, totalValue, false);
+            if(jsonObject.items[i].observations != null && jsonObject.items[i].observations.length > 0){
+                this.startBold().simpleLine(jsonObject.items[i].observations, true).stopBold();
+            }
+            
+            for(var j = 0; j < jsonObject.items[i].subitems.length; j++){
+                var totalValueSub = jsonObject.items[i].subitems[j].quantity * jsonObject.items[i].subitems[j].unitPrice;
+                this.justifiedLine(jsonObject.items[i].subitems[j].name, jsonObject.items[i].subitems[j].quantity, totalValueSub, true);
+                if(jsonObject.items[i].subitems[j].observations != null && jsonObject.items[i].subitems[j].observations.length > 0){
+                    this.startBold().simpleLine(jsonObject.items[i].subitems[j].observations, true).stopBold();
+                }                
+            }
+        }
+
+        this.horizontalLine()
+            .justifiedLine("Subtotal", 0, jsonObject.subtotal, false)
+            .justifiedLine("Entrega (+)", 0, jsonObject.deliveryFee, false)
+            .justifiedLine("Descontos (-)", 0, jsonObject.benefitsTotal, false)
+            .startBold()
+            .justifiedLine("Total", 0, jsonObject.orderAmount, false)
+            .stopBold()
+            .horizontalLine();
+
+            if(jsonObject.customerName != null && jsonObject.customerName.length > 0)
+                this.startBold()
+                    .simpleLine("Cliente: " + jsonObject.customerName)
+                    .stopBold();
+
+            if(jsonObject.deliveryFormattedAddress != null && jsonObject.deliveryFormattedAddress.length > 0)
+                this.simpleLine(jsonObject.deliveryFormattedAddress);
+            
+            this.alingCenter()
+            .horizontalLine().breakLine();
+
+            if(this.config.qr.length > 0){
+                this.addLogo(this.config.qr)
+                    .breakLine()
+                    .simpleLine("Acompanhe este pedido pelo celular");
+            }
+
+            this.simpleLine("-- NÃO É DOCUMENTO FISCAL --");
+        return this;
     }
 }

@@ -153,7 +153,7 @@ class Teams extends Component
             if(env('APP_DEBUG')) throw $exception;
             $this->simpleAlert('error', 'Ops... ocorreu em erro ao tentar salvar o User.');
         }
-    } 
+    }
 
     public function update()
     {

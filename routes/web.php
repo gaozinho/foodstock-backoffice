@@ -25,7 +25,7 @@ use App\Http\Livewire\Dashboard\Welcome;
 use App\Http\Livewire\Dashboard\Info;
 use App\Http\Livewire\Stock\Panel;
 use App\Http\Livewire\Printer\OrderPrint;
-
+use App\Actions\ProductionLine\GenerateTrackingOrdersQr;
 use App\Http\Controllers\PrivacyPolicyController;
 
 
@@ -38,6 +38,21 @@ Route::get('/', function () {
 Route::get('/email/verify', function () {
   return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
+
+
+Route::get('/qrcode/{user_id}/{order_id}/{size}', function($user_id, $order_id, $size){
+   $qr = new GenerateTrackingOrdersQr();
+   $qrCodeUrl = route('panels.public-delivery-panel.index', [
+      "user_id" => $user_id,
+      "o" => $order_id,
+      ]
+   );
+
+   $img = (new GenerateTrackingOrdersQr())->generatePng($qrCodeUrl, $size);
+   return response($img)->header('Content-type','image/png');
+ })->name('order.qrcode');
+
+
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
   $request->fulfill();

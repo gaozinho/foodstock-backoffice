@@ -1,7 +1,9 @@
 <div class="h6 modal-title h4" id="contained-modal-title-vcenter">
 
         <h4 class="mb-1">
-            {{$orderSummaryDetail->orderBabelized->shortOrderNumber}} <a href="javascript:;" onclick="$('.order-info').toggle('show')"><i class="fas fa-info-circle"></i></a> 
+            {{$orderSummaryDetail->orderBabelized->shortOrderNumber}} 
+
+
             <span class="text-muted">
                 <small>{{is_object($orderSummaryDetail->broker) ? $orderSummaryDetail->broker->name : ''}}
                 {{\Carbon\Carbon::parse($orderSummaryDetail->orderBabelized->createdDate)->format("d/m H:i")}}
@@ -16,8 +18,12 @@
                 </small>
                 @endif                
                 
+                <a href="javascript:;" onclick="$('.order-info').toggle('show')" class="btn btn-sm btn-light"><i class="fas fa-info-circle"></i></a>
+                @livewire('printer.print-button', ["orderSummary" => $orderSummaryDetail], key(time() . $orderSummaryDetail->id))
             </span>
         </h4>
+
+        
 
     <p class="my-0"><i class="fas fa-user a-fw"></i> {{$orderSummaryDetail->orderBabelized->customerName() ?? "Cliente não informado"}}</p>
     <p class="my-0"><i class="fas fa-map-marker-alt a-fw"></i> {{strlen($orderSummaryDetail->orderBabelized->deliveryFormattedAddress) > 0 ? $orderSummaryDetail->orderBabelized->deliveryFormattedAddress : "Endereço não informado"}}</p>

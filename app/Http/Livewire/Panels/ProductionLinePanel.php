@@ -191,7 +191,6 @@ class ProductionLinePanel extends Component
         $user_id = auth()->user()->user_id ?? auth()->user()->id;
         $currentStep = $this->productionLine->step;
         $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
-        
         //(new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $user_id, $production_line_id);
 
         $forwardProductionProccess = new ForwardProductionProccess();
@@ -254,7 +253,6 @@ class ProductionLinePanel extends Component
         $this->production_line_id = $production_line_id; //Armazena o passo onde estava
         $this->orderSummaryDetail = $this->prepareOrderSummary($order_summary_id);
         $this->orderProductionLine = ProductionLine::findOrFail($production_line_id);
-        
         if($this->orderProductionLine->next_on_click == 1){ //Se passa para próximo passo no clique
             (new ForwardProductionProccess())->forward($this->orderSummaryDetail->order_id, $this->orderProductionLine->user_id, $production_line_id);
             $this->emit('moveForward');
